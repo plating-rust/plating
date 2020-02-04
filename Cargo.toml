@@ -1,0 +1,20 @@
+[package]
+name = "plating"
+description = "TODO"
+version = "0.0.1"
+edition = "2018"
+authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
+categories = ["gui", "rendering::engine", "multimedia"]
+keywords = ["gui", "ui", "css", "styles", "layout", "native"]
+documentation = "TODO"
+repository = "TODO"
+readme = "README.md"
+license = "MIT"
+
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dev-dependencies]
+clippy = "^0"
+clog-cli = "^0.9.3"
