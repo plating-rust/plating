@@ -1,0 +1,17 @@
+[book]
+authors = ["Marcel Lambert"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Plating Guide"
+description = "How to use the PLATING - the UI for RUST"
+
+[build]
+create-missing = false
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+
+git-repository-url = "https://github.com/plating-rust/plating/book"
+git-repository-icon = "fa-github"

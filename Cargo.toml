@@ -1,13 +1,13 @@
 [package]
 name = "plating"
-description = "TODO"
+description = "PLATING - the UI for RUST. Uses native widgets and gives the user complete and full control over the ui."
 version = "0.0.1"
 edition = "2018"
 authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
 categories = ["gui", "rendering::engine", "multimedia"]
 keywords = ["gui", "ui", "css", "styles", "layout", "native"]
-documentation = "TODO"
-repository = "TODO"
+documentation = "https://plating-rust.github.io/"
+repository = "https://github.com/plating-rust/plating"
 readme = "README.md"
 license = "MIT"
 
