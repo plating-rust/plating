@@ -1,0 +1,6 @@
+[clog]
+subtitle = "Plating for your rust"
+changelog = "CHANGELOG.md"
+
+[sections]
+Documentations = ["docs"]
