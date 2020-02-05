@@ -1,6 +1,6 @@
 # Installation
 
-Add the following to your Cargo.toml to install this crate from [crates.io](https://TODO)
+Add the following to your Cargo.toml to install this crate from [crates.io](https://crates.io/crates/plating)
 
 ```toml
 [Dependencies]
