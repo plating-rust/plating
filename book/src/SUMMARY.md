@@ -8,6 +8,7 @@
 - [Crates](./crates/crates.md)
 - [Showcases](./showcases/showcases.md)
     - [Calpipe](./showcases/calpipe.md)
+- [API](./api/api.md)
 - [Contributing](./contributing/contributing.md)
     - [For Developers](./contributing/develop.md)
     - [Documentation](./contributing/documentation.md)
