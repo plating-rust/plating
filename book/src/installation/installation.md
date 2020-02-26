@@ -9,13 +9,13 @@ plating = "^0.0.1"
 We follow the [semver](https://semver.org/) specification.
 
 
-Our git is usually a little ahead of the version published on crates.io. If you want to be on the bleeding edge,
+Our git can be a little ahead of the version published on crates.io. If you want to be on the bleeding edge,
 then use
 ```toml
 [Dependencies]
 plating = { git = "https://github.com/plating-rust/plating.git" }
 ````
-We only bumb the version when publishing on crates.io, so don't rely on semver if you're using the git version! You have been warned.
+We bumb the version when publishing on crates.io, not neccesarely when pushing on git, so don't rely on semver if you're using the git version! We warned You.
 
 ## Feature Flags
 Here is a list of available Feature flags:
