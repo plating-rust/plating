@@ -13,3 +13,8 @@ cargo test --all
 echo '+cargo clippy --all -- -D warnings'
 cargo clippy --all -- -D warnings
 
+
+## check outdated dependencies
+cargo outdated --root-deps-only --exit-code -1
+cargo outdated --root-deps-only --manifest-path uuid-macro/cargo.toml
+cargo outdated --root-deps-only --manifest-path uuid-macro-hack/cargo.toml
