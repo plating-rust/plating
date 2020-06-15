@@ -9,5 +9,5 @@ If you feel you're missing from this list, feel free to add yourself in a PR.
 
 ---
 
-If you want to know how helped make Plating, please also have a look at those [Contributers](https://TODO).
+If you want to know how helped make Plating, please also have a look at those [Contributors](https://TODO).
 

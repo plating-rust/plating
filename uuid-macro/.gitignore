@@ -1,5 +1,4 @@
 /target
-/uuid-macro-hack/target
 **/*.rs.bk
 **/.DS_Store
 /book/book

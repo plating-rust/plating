@@ -1,0 +1,24 @@
+[package]
+name = "plating-macros"
+description = "Macros to use internally by plating. ALPHA: do not use!"
+version = "0.0.1"
+edition = "2018"
+authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
+license = "MIT OR Apache-2.0"
+categories = ["gui"]
+keywords = ["gui", "native"]
+exclude = [
+    ".rusty-hooks/*",
+    "commitmessage",
+    "setup-git.sh",
+    ".conform.yaml",
+]
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+
+uuid = { version = "^0.8.1", features = ["v4"] }
+proc-macro-hack = "0.5.16"
+plating-uuid-macro-hack = { path = "../uuid-macro-hack", version="0.0.1" }

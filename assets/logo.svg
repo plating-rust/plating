@@ -1,0 +1,70 @@
+ <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+ <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="500" height="500" viewBox="0 0 500 500">
+
+<defs>
+  <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Sarala);</style>
+</defs>
+
+
+  <rect width="500" height="500" style="fill:transparent;stroke-width:3;stroke:rgb(0,0,0)" />
+  <rect 
+    width="300"
+    height="300"
+    transform="translate(250, 70),rotate(45)"
+    style="fill:rgb(173,55,10);" />
+
+
+    <g 
+    transform="translate(250, 0),rotate(45)">
+        <rect 
+            width="146"
+            height="146"
+            style="fill:rgb(47,45,45);" />
+        <circle r="4"
+              cx="10"
+              cy="10"
+              style="fill:rgb(223,220,220);"
+              >
+        </circle>
+        <circle r="4"
+              cx="10"
+              cy="22"
+              style="fill:rgb(153,150,150);"
+              >
+        </circle>
+        <circle r="4"
+              cx="10"
+              cy="34"
+              style="fill:rgb(153,150,150);"
+              >
+        </circle>
+
+        <rect 
+            width="146"
+            height="146"
+            transform="translate(154, 0)"
+            style="fill:rgb(37,35,35);" />
+        
+        <rect 
+            width="146"
+            height="146"
+            transform="translate(0, 154)"
+            style="fill:rgb(183,150,14);" />
+        
+        <rect 
+            width="146"
+            height="146"
+            transform="translate(154, 154)"
+            style="fill:rgb(57,55,55);" />
+  </g>  
+
+    <text
+        style="fill:rgb(183,150,14);font-size: 48.2;"
+        font-family="Sarala"
+        transform="translate(33, 213),rotate(-45)">plating</text>
+
+</svg> 

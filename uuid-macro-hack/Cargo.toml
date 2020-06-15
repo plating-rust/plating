@@ -1,0 +1,18 @@
+[package]
+name = "plating-uuid-macro-hack"
+description = "Macros to use internally"
+version = "0.0.1"
+edition = "2018"
+authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
+license = "MIT"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+uuid = { version = "^0.8.1", features = ["v4"] }
+proc-macro-hack = "^0.5.16"
+proc-quote = "^0.3.2"
+
+[lib]
+proc-macro = true

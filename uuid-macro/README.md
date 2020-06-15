@@ -1,36 +1,17 @@
 # PLATING
 
- - [Documentation](https://plating-rust.github.io/)
- - API
- - Changelog
- - Crates.io
+Macros to be used by plating.
 
+More on Plating:
 [!Version]
 [![Book](https://img.shields.io/badge/book-master-yellow.svg)](https://plating-rust.github.io/)
 [![Docs](https://docs.rs/plating/badge.svg)
 (https://docs.rs/plating/)
 
- TODO: short description of what it does
+## Disclaimer
+Do not use this yet, this is alpha software.
 
- ## The Name
-
-> "Plating is a surface covering in which a metal is deposited on a conductive surface." - [Wikipedia](https://en.wikipedia.org/wiki/Plating)
-
-Pretty Technical, but it means we use Plating for:
-- *"decorating objects"* (UI)
-- *"corrosion inhibition"* (RUST)
-
-There you have it: *****PLATING is the UI for RUST*****
-
- ## Status
-TODO
-
-Badges: Maintained, Version Badge, Build Status
-
-## Examples
-TODO
-
-
+Do nut use this directly, use [plating crate](https://crates.io/crates/plating) instead.
 
 #### License
 

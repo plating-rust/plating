@@ -1,0 +1,21 @@
+
+a,
+.content a.mod {
+    color: rgb(183,150,14);
+}
+h1, h2, h3:not(.impl):not(.method):not(.type):not(.tymethod), h4:not(.method):not(.type):not(.tymethod) {
+    color: rgb(173,55,10);
+}
+
+h1 a,
+.content .docblock h1 a:not(.scrlink):not(.test-arrow),
+.content h1 a.mod,
+
+h2 a,
+.content .docblock h2 a:not(.scrlink):not(.test-arrow),
+h3:not(.impl):not(.method):not(.type):not(.tymethod) a,
+.content .docblock h3 a:not(.scrlink):not(.test-arrow),
+h4:not(.method):not(.type):not(.tymethod) a {
+    color: rgb(173,55,10);
+    text-decoration: underline;
+}
