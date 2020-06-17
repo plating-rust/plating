@@ -11,7 +11,7 @@ cargo build
 
 # format main project, as well as subprojects
 echo '+cargo fmt'
-#cargo fmt --all -- --check
+cargo fmt --all -- --check
 
 # Run tests of the main project as well as the subprojects
 echo '+cargo test --all'

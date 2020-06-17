@@ -6,7 +6,8 @@
 set -e
 
 echo '+cargo fmt'
-#cargo fmt --all -- --check
+cargo fmt --all -- --check
+
 echo '+cargo test --all'
 #cargo test --all
 echo '+cargo clippy --all -- -D warnings'
