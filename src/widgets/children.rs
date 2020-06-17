@@ -51,7 +51,7 @@ where
 {
     fn adding_to(&self, parent: &ParentType::ParentData) {
         match self {
-            Self::GENERIC(generic) => panic!(), //todo: maybe support in future?
+            Self::GENERIC(generic) => todo!(), //todo: maybe support in future?
             Self::NATIVE(native) => native.adding_to(parent),
             Self::_N(_) => panic!(),
         }
