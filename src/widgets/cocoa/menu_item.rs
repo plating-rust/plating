@@ -5,10 +5,10 @@
 
 use crate::CheckedState;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::{CocoaMenuParentData, CocoaMenu, CocoaDefaultHandleType};
+use crate::widgets::cocoa::{CocoaSystem, CocoaMenuParentData, CocoaMenu, CocoaDefaultHandleType};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
-use crate::widgets::{MenuChildren, Child, NativeWidget, Widget, WidgetHolder};
-use crate::widgets::generic::MenuItemParameters;
+use crate::widgets::{System, MenuChildren, Child, NativeWidget, Widget, WidgetHolder};
+use crate::widgets::{WidgetType, generic::MenuItemParameters};
 
 use cocoa::base::{nil};
 use cocoa::foundation::{NSAutoreleasePool, NSString};
@@ -55,9 +55,7 @@ impl WidgetHolder for CocoaMenuItem {
     }
 }
 
-impl NativeWidget for CocoaMenuItem {
-    type InternalHandle = CocoaDefaultHandleType;
-    type ErrorType = CocoaError;
+impl NativeWidget<CocoaSystem> for CocoaMenuItem {
 
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
@@ -92,15 +90,21 @@ impl NativeWidget for CocoaMenuItem {
         Ok(())
     }
 
-    fn native(&self) -> &Self::InternalHandle {
+    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }
 }
 
-impl Child<CocoaMenu, MenuChildren> for CocoaMenuItem {
+impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenuItem {
     fn adding_to(&self, parent: &CocoaMenuParentData) {
         unsafe {
             parent.menu.addItem_(self.handle);
         }
+    }
+}
+
+impl From<CocoaMenuItem> for MenuChildren<CocoaSystem> {
+    fn from(menu_item: CocoaMenuItem) -> Self {
+        MenuChildren::ITEM(WidgetType::NATIVE(menu_item))
     }
 }

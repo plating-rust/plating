@@ -6,11 +6,11 @@
 use crate::Direction;
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{MainMenuChildren, MenuChildren, Child, ChildrenHolder, NativeWidget, Outlet, Widget, OutletAdapter, WidgetHolder};
+use crate::widgets::{System, MainMenuChildren, MenuChildren, Child, ChildrenHolder, NativeWidget, Outlet, Widget, OutletAdapter, WidgetHolder};
 use crate::widgets::generic::{MenuParameters};
-use crate::widgets::cocoa::{CocoaWindow, CocoaRoot, CocoaDefaultHandleType};
+use crate::widgets::cocoa::{CocoaSystem, CocoaWindow, CocoaRoot, CocoaDefaultHandleType};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
-use crate::widgets::cocoa::utils::make_ns_string;
+use crate::widgets::{WidgetType, cocoa::utils::make_ns_string};
 
 
 use objc::*;
@@ -58,7 +58,7 @@ pub struct CocoaMenu {
     ///Stores the MenuItem.
     item: CocoaDefaultHandleType,
     ///auto generate and add via derive(widgetParent(Window))
-    main_outlet: Outlet<MenuChildren, CocoaMenu>,
+    main_outlet: Outlet<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
 }
 impl Widget for CocoaMenu {
     type PARAMS = CocoaMenuParameters;
@@ -70,17 +70,17 @@ impl WidgetHolder for CocoaMenu {
 }
 
 // auto generate impl via derive(widgetParent(A, B    ))
-impl OutletAdapter<MenuChildren> for CocoaMenu {
-    type AdditionResult = CocoaResult<()>;
+impl OutletAdapter<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
+    type ErrorType = CocoaError;
     type ParentData = CocoaMenuParentData;
 
-    fn children(&self) -> &[ChildrenHolder<MenuChildren>] {
+    fn children(&self) -> &[ChildrenHolder<MenuChildren<CocoaSystem>>] {
         self.main_outlet.children()
     }
 
-    fn add_child<T>(&mut self, child: T) -> Self::AdditionResult
+    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
-        T: Into<MenuChildren>,
+        T: Into<MenuChildren<CocoaSystem>>,
     {
         self.main_outlet.add_child(
             child.into(), 
@@ -92,9 +92,7 @@ impl OutletAdapter<MenuChildren> for CocoaMenu {
     }
 }
 
-impl NativeWidget for CocoaMenu {
-    type InternalHandle = CocoaDefaultHandleType;
-    type ErrorType = CocoaError;
+impl NativeWidget<CocoaSystem> for CocoaMenu {
 
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
@@ -139,14 +137,14 @@ impl NativeWidget for CocoaMenu {
         Ok(())
     }
 
-    fn native(&self) -> &Self::InternalHandle {
+    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }
 }
 
-impl Child<CocoaMenu, MenuChildren> for CocoaMenu {}
-impl Child<CocoaWindow, MainMenuChildren> for CocoaMenu {
-    fn adding_to(&self, parent: &<CocoaWindow as OutletAdapter<MainMenuChildren>>::ParentData) {
+impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {}
+impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
+    fn adding_to(&self, parent: &<CocoaWindow as OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData) {
         log::info!("Adding menu to window!");
         unsafe {
             parent.menu.addItem_(self.item);
@@ -177,5 +175,17 @@ impl Child<CocoaWindow, MainMenuChildren> for CocoaMenu {
             menubar.setSubmenu_(self.item)
         }*/
 
+    }
+}
+
+impl From<CocoaMenu> for MenuChildren<CocoaSystem> {
+    fn from(menu: CocoaMenu) -> Self {
+        MenuChildren::MENU(WidgetType::NATIVE(menu))
+    }
+}
+
+impl From<CocoaMenu> for MainMenuChildren<CocoaSystem> {
+    fn from(menu: CocoaMenu) -> Self {
+        Self::MENU(WidgetType::NATIVE(menu))
     }
 }

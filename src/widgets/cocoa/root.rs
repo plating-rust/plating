@@ -5,13 +5,15 @@
 
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::generic::RootParameters;
+use crate::widgets::generic::{RootWidgetTrait, RootParameters};
+use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::{
     ChildrenHolder, NativeWidget, Outlet, RootChildren, Widget, WidgetHolder, OutletAdapter,
 };
 use crate::widgets::cocoa::error::{
     CocoaError, CocoaResult
 };
+use crate::widgets::System;
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 
 use cocoa::appkit::{
@@ -40,15 +42,15 @@ pub struct CocoaRoot {
     handle: CocoaDefaultHandleType,
 
     ///auto generate and add via derive(widgetParent(Window))
-    main_outlet: Outlet<RootChildren, CocoaRoot>,
+    main_outlet: Outlet<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
 }
 
 impl Widget for CocoaRoot {
     type PARAMS = CocoaRootParameters;
 }
 
-impl CocoaRoot {
-    pub fn run(&self) -> CocoaResult<()> {
+impl RootWidgetTrait<CocoaSystem> for CocoaRoot {
+    fn run(&self) -> CocoaResult<()> {
         unsafe {
             self.handle.run();
         };
@@ -56,9 +58,7 @@ impl CocoaRoot {
     }
 }
 
-impl NativeWidget for CocoaRoot {
-    type InternalHandle = CocoaDefaultHandleType;
-    type ErrorType = CocoaError;
+impl NativeWidget<CocoaSystem> for CocoaRoot {
 
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
@@ -87,7 +87,7 @@ impl NativeWidget for CocoaRoot {
         Ok(new_root)
     }
 
-    fn native(&self) -> &Self::InternalHandle {
+    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }
 
@@ -107,17 +107,17 @@ impl WidgetHolder for CocoaRoot {
     }
 }
 // auto generate impl via derive(widgetParent(A, B    ))
-impl OutletAdapter<RootChildren> for CocoaRoot {
-    type AdditionResult = CocoaResult<()>;
+impl OutletAdapter<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
+    type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn children(&self) -> &[ChildrenHolder<RootChildren>] {
+    fn children(&self) -> &[ChildrenHolder<RootChildren<CocoaSystem>>] {
         self.main_outlet.children()
     }
 
-    fn add_child<T>(&mut self, child: T) -> Self::AdditionResult
+    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
-        T: Into<RootChildren>,
+        T: Into<RootChildren<CocoaSystem>>,
     {
         self.main_outlet.add_child(child, &())
     }

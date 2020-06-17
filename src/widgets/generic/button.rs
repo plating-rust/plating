@@ -4,9 +4,8 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::native::{NativeButton, NativeButtonParameters};
 use crate::widgets::{
-    ButtonChildren, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder, OutletAdapter,
+    System, ButtonChildren, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder, OutletAdapter,
 };
 use crate::PlatingResult;
 
@@ -16,8 +15,8 @@ pub struct ButtonParameters {
 }
 
 #[derive(Debug)]
-pub struct Button {
-    native: NativeButton,
+pub struct Button<S: System> {
+    native: S::ButtonType,
 }
 // auto generate impl via derive(widgetParent(A, B    ))
 /*
@@ -37,27 +36,27 @@ impl OutletAdapter<ButtonChildren> for Button {
     }
 }*/
 //auto generate impl via derive(widgetParent(A, B    ))
-impl WidgetHolder for Button {
+impl<S: System> WidgetHolder for Button<S> {
     fn name(&self) -> &str {
         self.native.name()
     }
 }
-impl Widget for Button {
+impl<S: System> Widget for Button<S> {
     type PARAMS = ButtonParameters;
 }
-impl GenericWidget for Button {
-    type NativeType = NativeButton;
-    type NativeParameterType = NativeButtonParameters;
+impl<S: System> GenericWidget<S> for Button<S> {
 
-    fn native(&self) -> &Self::NativeType {
+    fn native(&self) -> &S::ButtonType {
         &self.native
     }
     fn native_mut(&mut self) -> &mut Self::NativeType {
         &mut self.native
     }
-    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self> {
-        NativeButton::new_with_name(name, settings)
+    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S> {
+        S::ButtonType::new_with_name(name, settings)
             .map(|native| Button { native })
             .map_err(|native_error| native_error.into())
     }
+    type NativeParameterType = <S::ButtonType as Widget>::PARAMS;
+    type NativeType = S::ButtonType;
 }

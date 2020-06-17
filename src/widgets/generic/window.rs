@@ -7,10 +7,9 @@
 //! for generic parameters that work across all OS's.
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::native::{NativeWindow, NativeWindowParameters};
 use crate::widgets::WindowChildren;
 use crate::widgets::{
-    OutletAdapter, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder,
+    System, OutletAdapter, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder,
 };
 use crate::PlatingResult;
 
@@ -70,23 +69,25 @@ pub struct WindowParameters {
 /// See the native implementations for more customization options (non cross-platform).
 /// - [`CocoaWindow`](crate::widgets::cocoa::CocoaWindow)
 #[derive(Debug)]
-pub struct Window {
+pub struct Window<S: System> {
     /// stores the underlying native widget.
     /// Most functions like `apply` are just forwarded to this.
-    native: NativeWindow,
+    native: S::WindowType,
 }
-impl Widget for Window {
+impl<S: System> Widget for Window<S> {
     /// Means that `new_...` and `apply` functions require [`WindowParameters`]
     type PARAMS = WindowParameters;
 }
-impl WidgetHolder for Window {
+impl<S: System> WidgetHolder for Window<S> {
     fn name(&self) -> &str {
         &self.native.name()
     }
 }
-impl GenericWidget for Window {
-    type NativeType = NativeWindow;
-    type NativeParameterType = NativeWindowParameters;
+impl<S: System> GenericWidget<S> for Window<S> {
+
+    type NativeParameterType = <S::WindowType as Widget>::PARAMS;
+    type NativeType = S::WindowType;
+
     /// does this show up?
     fn native(&self) -> &Self::NativeType {
         &self.native
@@ -94,28 +95,29 @@ impl GenericWidget for Window {
     fn native_mut(&mut self) -> &mut Self::NativeType {
         &mut self.native
     }
-    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self> {
-        NativeWindow::new_with_name(name, settings)
+    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S> {
+        S::WindowType::new_with_name(name, settings)
             .map(|native| Window { native })
             .map_err(|native_error| native_error.into())
     }
 }
 
-impl OutletAdapter<WindowChildren> for Window {
-    type AdditionResult = PlatingResult<()>;
-    type ParentData = <NativeWindow as OutletAdapter<WindowChildren>>::ParentData;
+impl<S: System> OutletAdapter<WindowChildren<S>, S> for Window<S> {
+    type ErrorType = crate::error::PlatingError<S>;
+    type ParentData = <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::ParentData;
 
-    fn children(&self) -> &[ChildrenHolder<WindowChildren>] {
-        self.native.children()
+    fn children(&self) -> &[ChildrenHolder<WindowChildren<S>>] {
+         <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::children(&self.native)
     }
 
-    fn add_child<T>(&mut self, child: T) -> Self::AdditionResult
+    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
-        T: Into<WindowChildren>,
+        T: Into<WindowChildren<S>>,
     {
+        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>
+            ::add_child(&mut self.native, child)
         //let child_into: WindowChildren = child.into();
-        self.native
-            .add_child(child)
+
             .map_err(|native_error| native_error.into())
     }
 }

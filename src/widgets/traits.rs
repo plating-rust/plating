@@ -9,11 +9,14 @@
 //! to write platform-independent code.
 
 use crate::features::serde::Deserialize;
-use crate::{PlatingResult, NativeResult};
+use crate::{PlatingResult};
 use crate::error::PlatingError;
-use crate::widgets::native::NativeDefaultHandleType;
+use crate::widgets::generic::{RootWidgetTrait, RootParameters, ButtonParameters};
+use crate::widgets::{MenuChildren, RootChildren, MainMenuChildren};
+//use crate::widgets::native::NativeDefaultHandleType;
 use crate::widgets::OutletAdapter;
 use std::rc::{Rc, Weak};
+use std::error::Error;
 
 /// Enum representing the EventState after a Event Callback was called.
 /// 
@@ -73,10 +76,11 @@ where
 /// # Error Handling
 /// Functions in this trait, that can fail, return a `PlatingResult<Self>`.
 /// If you receive a `NativeResult` by calling a function of an underlying NativeWidget you can use `from`/`into`.
-/// 
-pub trait GenericWidget
+///
+pub trait GenericWidget<S>
 where
     Self: Widget + Sized,
+    S: System,
 {
     /// The Parameter type the native widget expects.
     /// Most Parameters should be `Option`
@@ -90,7 +94,7 @@ where
     /// The underlying native widget type.
     /// 
     /// Actual Type depends on Backend.
-    type NativeType: NativeWidget<PARAMS = Self::NativeParameterType, ErrorType = crate::widgets::native::NativeError>;
+    type NativeType: NativeWidget<S, PARAMS = Self::NativeParameterType>;
 
     /// Creates a new instance of this generic widget.
     /// 
@@ -100,11 +104,11 @@ where
     /// # Requirements
     /// When overwriting, make sure to take into account that names are supposed to be unique
     /// and cannot be changer after widget creation. It is therefore a good idea to autogenerate a unique one
-    fn new(settings: Self::PARAMS) -> PlatingResult<Self> {
+    fn new(settings: Self::PARAMS) -> PlatingResult<Self, S> {
         Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
     }
 
-    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self>;
+    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S>;
     /// Returns reference to the underlying native type.
     fn native(&self) -> &Self::NativeType;
     /// Returns mut reference to the underlying native type.
@@ -120,7 +124,7 @@ where
     /// 
     /// ## Errors
     /// Returns an error when the underlying native widget returns an error.
-    fn apply<T, R>(&mut self, settings: T) -> PlatingResult<()>
+    fn apply<T, R>(&mut self, settings: T) -> PlatingResult<(), S>
     where
         T: Into<Self::NativeParameterType>,
     {
@@ -129,6 +133,43 @@ where
             .apply(settings)
             .map_err(|native_error| native_error.into())
     }
+}
+
+pub trait System where
+    Self: std::fmt::Debug + Sized,
+{
+    type ErrorType: Error + Into<PlatingError<Self>> + Clone + PartialEq + std::hash::Hash;
+    type InternalHandle;
+
+    type RootParameterTye: From<RootParameters>;
+    type RootType:
+        RootWidgetTrait<Self> +
+        NativeWidget<Self, PARAMS = Self::RootParameterTye> +
+        OutletAdapter<RootChildren<Self>, Self>;
+
+    type ButtonParameterType: From<ButtonParameters>;
+    type ButtonType:
+        NativeWidget<Self, PARAMS = Self::ButtonParameterType> +
+        Child<Self::WindowType, WindowChildren<Self>, Self>;
+
+    type WindowParameterType: From<WindowParameters>;
+    type WindowType:
+        NativeWidget<Self, PARAMS = Self::WindowParameterType> +
+        OutletAdapter<WindowChildren<Self>, Self> +
+        OutletAdapter<MainMenuChildren<Self>, Self> +
+        Child<Self::RootType, RootChildren<Self>, Self>;
+
+    type MenuParameterType: From<MenuParameters>;
+    type MenuType:
+        NativeWidget<Self, PARAMS = Self::MenuParameterType> +
+        OutletAdapter<MenuChildren<Self>, Self> +
+        Child<Self::MenuType, MenuChildren<Self>, Self> +
+        Child<Self::WindowType, MainMenuChildren<Self>, Self>;
+
+    type MenuItemParameterType: From<MenuItemParameters>;
+    type MenuItemType:
+        NativeWidget<Self, PARAMS = Self::MenuItemParameterType> +
+        Child<Self::MenuType, MenuChildren<Self>, Self>;
 }
 
 /// Trait for all Native Widget Objects.
@@ -214,34 +255,34 @@ where
 /// If the called need a `PlatingResult<Self>`, you can use `from`/`into`
 /// 
 // TODO: deal with callbacks
-pub trait NativeWidget
+pub trait NativeWidget<S>
 where
     Self: Widget + Sized,
+    S: System,
 {
-    type ErrorType;
-    type InternalHandle;
 
-    fn new<T>(settings: T) -> Result<Self, Self::ErrorType>
+    fn new<T>(settings: T) -> Result<Self, S::ErrorType>
     where
         T: Into<Self::PARAMS>,
     {
         Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
     }
-    fn new_with_name<T>(name: String, settings: T) -> Result<Self, Self::ErrorType>
+    fn new_with_name<T>(name: String, settings: T) -> Result<Self, S::ErrorType>
     where
         T: Into<Self::PARAMS>;
 
-    fn apply<T>(&mut self, settings: T) -> Result<(), Self::ErrorType>
+    fn apply<T>(&mut self, settings: T) -> Result<(), S::ErrorType>
     where
         T: Into<Self::PARAMS>;
 
-    fn native(&self) -> &Self::InternalHandle;
+    fn native(&self) -> &S::InternalHandle;
 }
 
-pub trait Child<ParentType, ChildType>
+pub trait Child<ParentType, ChildType, S>
 where
     ChildType: WidgetHolder,
-    ParentType: NativeWidget + OutletAdapter<ChildType>
+    ParentType: NativeWidget<S> + OutletAdapter<ChildType, S>,
+    S: System,
 {
     fn adding_to(&self, parent: &ParentType::ParentData) {}
 }
@@ -256,6 +297,7 @@ pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
 
 #[cfg(feature = "serde")]
 use serde::{Serialize, Serializer};
+use super::{generic::{MenuParameters, WindowParameters, MenuItemParameters}, WindowChildren};
 
 #[cfg(feature = "serde")]
 impl<T: WidgetHolder + Serialize> Serialize for ChildrenHolder<T> {

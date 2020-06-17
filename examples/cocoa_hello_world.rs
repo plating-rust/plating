@@ -9,8 +9,8 @@ use plating::widgets::cocoa::{
     CocoaWindow, CocoaWindowParameters,
     CocoaMenu, CocoaMenuParameters, CocoaMenuItem, CocoaMenuItemParameters,
 };
-use plating::widgets::{MenuChildren, MainMenuChildren};
-use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
+use plating::widgets::{default_system, MenuChildren, MainMenuChildren};
+use plating::widgets::generic::{RootWidgetTrait, Root, RootParameters, Window, WindowParameters};
 use plating::PlatingResult;
 
 #[macro_use]
@@ -18,7 +18,7 @@ extern crate log;
 extern crate simple_logger;
 
 
-fn main() -> PlatingResult<()> {
+fn main() -> PlatingResult<(), default_system> {
     simple_logger::init().unwrap(); //setting up logging
 
     warn!("Starting up");
@@ -67,13 +67,16 @@ fn main() -> PlatingResult<()> {
 
 
     x.add_child(window)?;
-    x.run().map_err(|err| err.into())
-    /*#[allow(unused_variables)]
+
+    #[allow(unused_variables)]
     let gen = create_generic();
     #[allow(unused_variables)]
     let gen_nat = gen_nat();
     #[allow(unused_variables)]
-    let nat_gen = nat_gen();*/
+    let nat_gen = nat_gen();
+
+
+    x.run().map_err(|err| err.into())
 }
 
 fn create_generic() -> Root {

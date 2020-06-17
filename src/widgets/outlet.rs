@@ -7,9 +7,9 @@
 
 use std::rc::Rc;
 
-use crate::features::serde::{Deserialize, Serialize, SerializeTrait, DeserializeTrait};
-use crate::widgets::{Child, NativeWidget, ChildrenHolder, WidgetHolder};
-use crate::NativeResult;
+use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::default_system;
+use crate::{PlatingResult, widgets::{System, Child, NativeWidget, ChildrenHolder, WidgetHolder}};
 
 type ChildIter<'a, CHILD> = std::iter::FilterMap<
     std::slice::Iter<'a, ChildrenHolder<CHILD>>,
@@ -20,8 +20,12 @@ fn get_obj<CHILD: WidgetHolder>(obj: &ChildrenHolder<CHILD>) -> Option<Rc<CHILD>
     obj.get()
 }
 
-pub trait OutletAdapter<CHILD: WidgetHolder> {
-    type AdditionResult;
+pub trait OutletAdapter<CHILD, S = default_system>
+where
+    CHILD: WidgetHolder,
+    S: System,
+{
+    type ErrorType: Into<crate::error::PlatingError<S>>;
     type ParentData;
 
     fn children(&self) -> &[ChildrenHolder<CHILD>];
@@ -42,7 +46,7 @@ pub trait OutletAdapter<CHILD: WidgetHolder> {
 
     //todo fn remove_remnants(&mut self);
 
-    fn add_child<T>(&mut self, child: T) -> Self::AdditionResult
+    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
         T: Into<CHILD>;
 
@@ -73,10 +77,11 @@ pub trait OutletAdapter<CHILD: WidgetHolder> {
 ///     <br><br>**Requirements**: Needs to implement [`WidgetHolder`] + `std::fmt::Debug`
 ///   
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Outlet<CHILD, Parent>
-where 
-    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD>,
-    Parent: NativeWidget + OutletAdapter<CHILD>
+pub struct Outlet<CHILD, Parent, S>
+where
+    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: NativeWidget<S> + OutletAdapter<CHILD, S>,
+    S: System,
 {
     ///Vector responsible for storing all the Children.
     /// 
@@ -84,27 +89,28 @@ where
     pub(crate) children: Vec<ChildrenHolder<CHILD>>,
 
     _marker: std::marker::PhantomData<Parent>,
+    _marker2: std::marker::PhantomData<S>
 }
-impl<CHILD, Parent>  Default for Outlet<CHILD, Parent>
-where 
-    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD>,
-    Parent: NativeWidget + OutletAdapter<CHILD>
+impl<CHILD, Parent, S>  Default for Outlet<CHILD, Parent, S>
+where
+    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: NativeWidget<S> + OutletAdapter<CHILD, S>,
+    S: System,
 {
-    fn default() -> Outlet<CHILD, Parent> {
-        Self { 
+    fn default() -> Outlet<CHILD, Parent, S> {
+        Self {
             children: vec![],
             _marker: std::marker::PhantomData,
+            _marker2: std::marker::PhantomData,
         }
     }
 }
-impl<CHILD, Parent> Outlet<CHILD, Parent>
-where 
-    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD>,
-    Parent: NativeWidget + OutletAdapter<CHILD>
+impl<CHILD, Parent, S> Outlet<CHILD, Parent, S>
+where
+    CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: NativeWidget<S> + OutletAdapter<CHILD, S>,
+    S: System,
 {
-    /// Creates an Outlet with no children.
- 
-
     /// Returns the capacity of the internal vector.
     /// 
     /// See [Vec::capacity]
@@ -134,7 +140,7 @@ where
         &self.children[0..self.children.len()]
     }
 
-    pub(crate) fn add_child<T>(&mut self, child: T, parent: &Parent::ParentData) -> NativeResult<()>
+    pub(crate) fn add_child<T>(&mut self, child: T, parent: &Parent::ParentData) -> std::result::Result<(), S::ErrorType>
     where
         T: Into<CHILD>,
     {

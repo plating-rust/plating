@@ -87,16 +87,18 @@ pub use traits::*;
 pub mod native {
     #[cfg(target_os = "macos")]
     #[doc(cfg(target_os = "macos"))]
-    pub use super::cocoa::native::*;
+    pub use crate::widgets::cocoa::CocoaSystem as System;
     #[cfg(target_os = "windows")]
     #[doc(cfg(target_os = "windows"))]
-    pub use self::win::native::*;
+    pub use crate::widgets::win::WinSystem as System;
 }
 
-#[cfg(feature="mock_os")]
-pub mod native {
-    #[doc(cfg(feature = "mock_os"))]
-    pub use super::mock::native::*;
-}
+//todo: #[cfg(any(feature="mock_os", test))]
+//#[doc(cfg(feature="mock_os"))]
+//pub use crate::widgets::mock::MockSystem as default_system;
+//#[cfg(all(not(feature="mock_os"), not(test)))]
+//#[doc(cfg(all(not(feature="mock_os"), not(test))))]
+pub use native::System as default_system;
+
 
 

@@ -3,5 +3,4 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-pub mod native;
 pub mod error;

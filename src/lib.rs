@@ -56,8 +56,14 @@
 
 #![doc(issue_tracker_base_url = "https://github.com/plating-rust/plating/issues/")]
 
+/////////////////////////
+// extern crates
+/////////////////////////
 #[cfg(target_os = "macos")]
 extern crate cocoa;
+#[cfg(all(not(target_os = "macos")))]
+compile_error!("Unsupported plattform.");
+
 
 pub mod widgets;
 pub mod error;
@@ -165,17 +171,6 @@ pub(crate) mod features {
 }
 
 /// Convenience definition for ```Result<T, crate::error::PlatingError>```
-pub type PlatingResult<T> = std::result::Result<T, crate::error::PlatingError>;
-/// Convenience definition for ```Result<T, crate::widgets::native::NativeError>```
-/// 
-/// Depending on platform this is equivalent to:
-/// - **cocoa**: ```Result<T, crate::widgets::cocoa::error::CocoaError>```<br>
-///   See [CocoaError](crate::widgets::cocoa::error::CocoaError)
-/// - **windows**: ```Result<T, crate::widgets::win::error::WinError>```<br>
-///    See [WinError](crate::widgets::win::error::WinError)
-/// - **mock**: ```Result<T, crate::widgets::mock::error::MockError>```<br>
-///    See[MockError](crate::widgets::mock::error::MockError)
-pub type NativeResult<T> = std::result::Result<T, crate::widgets::native::NativeError>;
-
+pub type PlatingResult<T, S> = std::result::Result<T, crate::error::PlatingError<S>>;
 
 pub use plating_macros::uuid;

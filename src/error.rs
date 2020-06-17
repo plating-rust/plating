@@ -19,38 +19,32 @@
 
 use std::error::Error;
 use std::fmt;
-use crate::widgets::native::{NativeError};
+use crate::widgets::System;
+
+
 
 /// Enum containing all kinds of errors that can occur dealing with plating.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[non_exhaustive]
-pub enum PlatingErrorKind {
+pub enum PlatingErrorKind<S: System> {
 
     /// Error occurred win the backend. 
     /// 
     /// Contains a NativeError with more detailed information.
-    BackendError(NativeError),
+    BackendError(S::ErrorType),
 }
 
 /// The Error struct for plating
 /// 
 /// Contains a [`PlatingErrorKind`] with more detailed information.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct PlatingError {
+#[derive(Debug, Clone, PartialEq, Hash)]
+pub struct PlatingError<S: System> {
     /// Holds more detailed Information.
-    kind: PlatingErrorKind,
-}
-
-impl From<NativeError> for PlatingError {
-    fn from(native_error: NativeError) -> Self {
-        PlatingError{
-            kind: PlatingErrorKind::BackendError(native_error)
-        }
-    }
+    pub(crate) kind: PlatingErrorKind<S>,
 }
 
 
-impl Error for PlatingError {
+impl<S: System> Error for PlatingError<S> {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match &self.kind {
             PlatingErrorKind::BackendError(backend_error) => backend_error.source()
@@ -58,16 +52,16 @@ impl Error for PlatingError {
     }
 }
 
-impl PlatingError {
+impl<S: System> PlatingError<S> {
     /// Returns internal error kind.
     /// 
     /// Useful to match against for more fine grained handling of errors 
-    pub fn kind(&self) -> &PlatingErrorKind {
+    pub fn kind(&self) -> &PlatingErrorKind<S> {
         &self.kind
     }
 }
 
-impl fmt::Display for PlatingError {
+impl<S: System> fmt::Display for PlatingError<S> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match &self.kind {
             PlatingErrorKind::BackendError(backend_error) => {

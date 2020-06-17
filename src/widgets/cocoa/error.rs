@@ -5,6 +5,8 @@
 
 use std::error::Error;
 use std::fmt;
+use super::CocoaSystem;
+use crate::error::{PlatingErrorKind, PlatingError};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[non_exhaustive]
@@ -36,6 +38,14 @@ impl Error for CocoaError {
 impl fmt::Display for CocoaError {
     fn fmt(&self, _f: &mut fmt::Formatter<'_>) -> fmt::Result {
         todo!()
+    }
+}
+
+impl From<CocoaError> for PlatingError<CocoaSystem> {
+    fn from(native_error: CocoaError) -> Self {
+        PlatingError{
+            kind: PlatingErrorKind::BackendError(native_error)
+        }
     }
 }
 
