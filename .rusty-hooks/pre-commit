@@ -49,7 +49,7 @@ cargo outdated --root-deps-only
 #cargo outdated --root-deps-only --manifest-path uuid-macro-hack/cargo.toml
     #--exit-code -1
 
-# ake sure writing is good
+# make sure writing is good
 #write-good */**/*.rs --parse
 #write-good *.md --parse
 #write-good *?/*.toml --parse
