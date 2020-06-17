@@ -16,3 +16,11 @@ echo '+cargo test --all'
 echo '+cargo clippy --all -- -D warnings'
 #cargo clippy --all -- -D warnings
 
+# check licences of dependencies are valid
+echo '+lichking check'
+cargo lichking check
+cd uuid-macro
+cargo lichking check
+cd ../uuid-macro-hack
+cargo lichking check
+cd ../
