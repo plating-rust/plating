@@ -57,7 +57,7 @@ impl NativeWidget<CocoaSystem> for CocoaButton {
     {
         let mut button = CocoaButton {
             name,
-            handle: todo!(),
+            handle: 0 as CocoaDefaultHandleType,
             //main_outlet: Outlet::<ButtonChildren>::default(),
         };
         button.apply(settings)?;
@@ -72,7 +72,7 @@ impl NativeWidget<CocoaSystem> for CocoaButton {
         if settings.label.is_some() {
             info!("settings label");
         }
-        todo!()
+        Ok(())
     }
 
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
