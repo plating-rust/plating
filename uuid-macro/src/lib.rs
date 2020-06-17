@@ -12,6 +12,7 @@ use proc_macro_hack::proc_macro_hack;
 /// Generate a compile time uuid.
 ///
 /// ```rust
+/// # use plating_macros::{uuid};
 /// const GENERATED_UUID: &'static str = uuid!();
 ///
 /// fn main() {
