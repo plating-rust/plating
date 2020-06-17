@@ -184,8 +184,8 @@ where
 /// ## Implementation
 /// A basic native widget implementation.
 /// ```rust
-/// use plating::widgets::{Widget, WidgetHolder, NativeWidget};
-/// use plating::widgets::cocoa::CocoaDefaultHandleType;
+/// use plating::widgets::{System, Widget, WidgetHolder, NativeWidget};
+/// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
 ///
 /// // Some imaginary config for our widget
@@ -215,10 +215,7 @@ where
 ///        &self.name.as_str()
 ///    }
 /// }
-/// impl NativeWidget for CocoaExampleWidget {
-///     type InternalHandle = CocoaDefaultHandleType; //os specific handle
-///     type ErrorType = CocoaError; //the error type we return
-///
+/// impl NativeWidget<CocoaSystem> for CocoaExampleWidget {
 ///     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
 ///    where
 ///        T: Into<Self::PARAMS> {
@@ -226,13 +223,13 @@ where
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
-///     fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+///     fn apply<T>(&mut self, settings: T) -> Result<(), CocoaError>
 ///    where
 ///        T: Into<Self::PARAMS> {
 ///        todo!() //apply settings on the backend
 ///    }
 ///
-///     fn native(&self) -> &Self::InternalHandle {
+///     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
 ///        &self.handle
 ///     }
 /// }
