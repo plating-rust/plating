@@ -19,6 +19,7 @@
 //!
 //! ```rust
 //! use plating::prelude::*;
+//! use plating::widgets::{default_system};
 //! use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
 //! #[cfg(target_os = "macos")]
 //! use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
@@ -27,7 +28,7 @@
 //!
 //! fn main() {
 //!     // create a *generic* root element
-//!     let mut root = Root::new(RootParameters::default()).unwrap();
+//!     let mut root = Root::<default_system>::new(RootParameters::default()).unwrap();
 //!     // create a *generic* window element
 //!     let mut window = Window::new(WindowParameters::default()).unwrap();
 //!
@@ -38,8 +39,10 @@
 //!     let mut button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
 //!
 //!     //mix them together
-//!     window.add_child(button);
-//!     root.add_child(window);
+//!     //TODO: window.add_child(button);
+//!     root.add_child(window).unwrap();
+//!
+//!     root.run();
 //! }
 //! ```
 //!
