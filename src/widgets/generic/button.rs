@@ -5,7 +5,8 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::{
-    System, ButtonChildren, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder, OutletAdapter,
+    ButtonChildren, ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget,
+    WidgetHolder,
 };
 use crate::PlatingResult;
 
@@ -45,7 +46,6 @@ impl<S: System> Widget for Button<S> {
     type PARAMS = ButtonParameters;
 }
 impl<S: System> GenericWidget<S> for Button<S> {
-
     fn native(&self) -> &S::ButtonType {
         &self.native
     }

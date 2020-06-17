@@ -9,27 +9,27 @@
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::WindowChildren;
 use crate::widgets::{
-    System, OutletAdapter, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder,
+    ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget, WidgetHolder,
 };
 use crate::PlatingResult;
 
 /// Generic parameters for creating and customizing Windows
-/// 
-/// All fields are optional and will either use OS Default values or sensible 
+///
+/// All fields are optional and will either use OS Default values or sensible
 /// custom default values where appropriate. Check Documentation of native Window Parameters for more details.
 /// - [`CocoaWindowParameters`](crate::widget::cocoa::CocoaWindowParameters)
-/// 
-/// The above native window parameter struct implement the `From` trait to 
+///
+/// The above native window parameter struct implement the `From` trait to
 /// get os specific parameters from this.
 /// ```rust
 /// use plating::widgets::generic::WindowParameters;
-/// 
+///
 /// let params = WindowParameters::default();
-/// 
+///
 /// #[cfg(target_os = "macos")]
 /// let native: plating::widgets::cocoa::CocoaWindowParameters = params.into();
 /// ```
-/// 
+///
 /// You cannot generate a WindowParameter from a native Parameter struct, because they have more information that might be lost.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq)] //required in cached version
@@ -49,22 +49,22 @@ pub struct WindowParameters {
     /// (Title and Main menu will still be shown)
     pub maximizable: Option<bool>,
     /// Allow the window to be fullscreen
-    /// 
+    ///
     /// (Title and main menu will not be shown)
     pub fullscreenable: Option<bool>,
 }
 
 /// Generic Window Adapter Widget
-/// 
+///
 /// # Usage
 /// - todo: creation example
-/// 
+///
 /// - todo: apply example
-/// 
+///
 /// - todo: add generic button
-/// 
+///
 /// - todo: add native button
-/// 
+///
 /// # Native Implementations
 /// See the native implementations for more customization options (non cross-platform).
 /// - [`CocoaWindow`](crate::widgets::cocoa::CocoaWindow)
@@ -84,7 +84,6 @@ impl<S: System> WidgetHolder for Window<S> {
     }
 }
 impl<S: System> GenericWidget<S> for Window<S> {
-
     type NativeParameterType = <S::WindowType as Widget>::PARAMS;
     type NativeType = S::WindowType;
 
@@ -107,17 +106,15 @@ impl<S: System> OutletAdapter<WindowChildren<S>, S> for Window<S> {
     type ParentData = <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::ParentData;
 
     fn children(&self) -> &[ChildrenHolder<WindowChildren<S>>] {
-         <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::children(&self.native)
+        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::children(&self.native)
     }
 
     fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
         T: Into<WindowChildren<S>>,
     {
-        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>
-            ::add_child(&mut self.native, child)
-        //let child_into: WindowChildren = child.into();
-
+        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::add_child(&mut self.native, child)
+            //let child_into: WindowChildren = child.into();
             .map_err(|native_error| native_error.into())
     }
 }

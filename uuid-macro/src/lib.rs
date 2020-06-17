@@ -13,7 +13,7 @@ use proc_macro_hack::proc_macro_hack;
 ///
 /// ```rust
 /// const GENERATED_UUID: &'static str = uuid!();
-/// 
+///
 /// fn main() {
 ///     println!("{}", GENERATED_UUID);
 /// }

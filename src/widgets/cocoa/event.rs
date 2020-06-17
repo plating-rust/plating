@@ -3,21 +3,21 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
- use cocoa::appkit::NSEvent;
+use cocoa::appkit::NSEvent;
 
 #[derive(Debug)]
 pub struct CocoaEvent<T>
 where
-    T: NSEvent + Sized
+    T: NSEvent + Sized,
 {
     native_event: T,
 }
 
 impl<T> CocoaEvent<T>
 where
-    T: NSEvent + Sized
+    T: NSEvent + Sized,
 {
-    pub fn native(&self) -> &T { 
+    pub fn native(&self) -> &T {
         &self.native_event
     }
 }

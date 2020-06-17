@@ -5,16 +5,14 @@
 
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::generic::{RootWidgetTrait, RootParameters};
-use crate::widgets::cocoa::CocoaSystem;
-use crate::widgets::{
-    ChildrenHolder, NativeWidget, Outlet, RootChildren, Widget, WidgetHolder, OutletAdapter,
-};
-use crate::widgets::cocoa::error::{
-    CocoaError, CocoaResult
-};
-use crate::widgets::System;
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
+use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
+use crate::widgets::cocoa::CocoaSystem;
+use crate::widgets::generic::{RootParameters, RootWidgetTrait};
+use crate::widgets::System;
+use crate::widgets::{
+    ChildrenHolder, NativeWidget, Outlet, OutletAdapter, RootChildren, Widget, WidgetHolder,
+};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -59,7 +57,6 @@ impl RootWidgetTrait<CocoaSystem> for CocoaRoot {
 }
 
 impl NativeWidget<CocoaSystem> for CocoaRoot {
-
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -96,7 +93,7 @@ impl NativeWidget<CocoaSystem> for CocoaRoot {
         T: Into<Self::PARAMS>,
     {
         let _settings = settings.into();
-        
+
         Ok(())
     }
 }

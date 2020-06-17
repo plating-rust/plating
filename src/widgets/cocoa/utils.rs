@@ -3,9 +3,9 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use cocoa::base::{id, nil};
+use cocoa::foundation::{NSAutoreleasePool, NSString};
 use objc::*;
-use cocoa::foundation::{NSString, NSAutoreleasePool};
-use cocoa::base::{nil, id};
 
 pub fn make_ns_string(s: &str) -> id {
     unsafe { NSString::alloc(nil).init_str(s).autorelease() }

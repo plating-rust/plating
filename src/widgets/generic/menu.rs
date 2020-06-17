@@ -4,7 +4,10 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{System, MenuChildren, ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder, OutletAdapter};
+use crate::widgets::{
+    ChildrenHolder, GenericWidget, MenuChildren, NativeWidget, OutletAdapter, System, Widget,
+    WidgetHolder,
+};
 use crate::PlatingResult;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
@@ -28,7 +31,6 @@ impl<S: System> WidgetHolder for Menu<S> {
     }
 }
 impl<S: System> GenericWidget<S> for Menu<S> {
-
     /// does this show up?
     fn native(&self) -> &Self::NativeType {
         &self.native

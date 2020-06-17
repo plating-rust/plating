@@ -5,21 +5,25 @@
 
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::generic::WindowParameters;
-use crate::widgets::{System, RootChildren, WindowChildren};
-use crate::widgets::{MainMenuChildren, MenuChildren, Child, ChildrenHolder, NativeWidget, Outlet, Widget, WidgetHolder, OutletAdapter};
-use crate::widgets::cocoa::{CocoaSystem, CocoaRoot, CocoaDefaultHandleType};
-use crate::widgets::{WidgetType, cocoa::error::{CocoaError, CocoaResult}};
+use crate::widgets::{
+    cocoa::error::{CocoaError, CocoaResult},
+    WidgetType,
+};
+use crate::widgets::{
+    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, Outlet, OutletAdapter,
+    Widget, WidgetHolder,
+};
+use crate::widgets::{RootChildren, System, WindowChildren};
 
-use cocoa::base::{selector, nil, NO};
-use cocoa::foundation::{NSRect, NSPoint, NSSize,
-    NSAutoreleasePool, NSProcessInfo, NSString};
-use cocoa::appkit::{NSWindowStyleMask, NSApp, NSWindowCollectionBehavior,
- NSWindowDepth,
-NSApplication, NSApplicationActivationPolicyRegular,
-NSWindow, NSBackingStoreBuffered, NSColorSpace,
-NSMenu, NSMenuItem, NSRunningApplication,
-NSApplicationActivateIgnoringOtherApps};
+use cocoa::appkit::{
+    NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
+    NSApplicationActivationPolicyRegular, NSBackingStoreBuffered, NSColorSpace, NSMenu, NSMenuItem,
+    NSRunningApplication, NSWindow, NSWindowCollectionBehavior, NSWindowDepth, NSWindowStyleMask,
+};
+use cocoa::base::{nil, selector, NO};
+use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSProcessInfo, NSRect, NSSize, NSString};
 use core_graphics::base::CGFloat;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
@@ -32,26 +36,22 @@ pub struct CocoaWindowParameters {
 
     //TODO: colors! pub backgroundColor: Option<Color>
     pub alpha_value: Option<f32>,
-    
+
     pub works_when_modal: Option<bool>,
 
     //todo: pub color_space: Option<NSColorSpace>,
-
     pub can_hide: Option<bool>,
     pub hides_on_deactivate: Option<bool>,
 
     //todo: pub collection_behavior: Option<NSWindowCollectionBehavior>,
-
     pub is_opaque: Option<bool>,
     pub has_shadow: Option<bool>,
-
 
     pub autorecalculate_content_border_thickness: Option<bool>,
     pub prevents_application_termination_when_modal: Option<bool>,
     pub can_become_visible_without_login: Option<bool>,
-    //todo: seems to be missing in cocoa: 
+    //todo: seems to be missing in cocoa:
     //pub sharing_type: Option<NSWindowSharingType>,
-
     pub depth_limit: Option<NSWindowDepth>,
 
     pub resize_increments: Option<crate::Vec2<f32>>,
@@ -66,7 +66,7 @@ impl From<WindowParameters> for CocoaWindowParameters {
     fn from(generic: WindowParameters) -> Self {
         let mut window_style = NSWindowStyleMask::NSTitledWindowMask;
         let mut custom_window_style = false;
-        
+
         if let Some(b) = generic.resizable {
             if b {
                 custom_window_style = true;
@@ -107,8 +107,11 @@ impl From<WindowParameters> for CocoaWindowParameters {
         CocoaWindowParameters {
             rect: generic.rect,
             title: generic.title,
-            window_style: if custom_window_style { Some(window_style) } else { None },
-
+            window_style: if custom_window_style {
+                Some(window_style)
+            } else {
+                None
+            },
 
             ..Default::default()
         }
@@ -118,7 +121,6 @@ impl From<WindowParameters> for CocoaWindowParameters {
 #[derive(Debug)]
 pub struct MainMenuOutlet {
     window: CocoaWindow,
-    
 }
 impl MainMenuOutlet {
     fn new(window_handle: CocoaDefaultHandleType) -> Self {
@@ -131,8 +133,8 @@ impl MainMenuOutlet {
 }*/
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct CocoaMainMenuParentData {
-   //pub menu_item: CocoaDefaultHandleType,
-   pub menu: CocoaDefaultHandleType,
+    //pub menu_item: CocoaDefaultHandleType,
+    pub menu: CocoaDefaultHandleType,
 }
 
 impl OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
@@ -159,10 +161,13 @@ impl OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
                 //self.menu_item = Some(menu_item);
             }
         }
-        self.menu_outlet.add_child(child, &CocoaMainMenuParentData {
-            //menu_item: self.menu_item.unwrap(),
-            menu: self.menubar.unwrap(),
-        }) //big todo:
+        self.menu_outlet.add_child(
+            child,
+            &CocoaMainMenuParentData {
+                //menu_item: self.menu_item.unwrap(),
+                menu: self.menubar.unwrap(),
+            },
+        ) //big todo:
     }
 }
 
@@ -180,7 +185,6 @@ pub struct CocoaWindow {
 
     menubar: Option<CocoaDefaultHandleType>,
     menu_item: Option<CocoaDefaultHandleType>,
-
 }
 
 impl Widget for CocoaWindow {
@@ -188,20 +192,21 @@ impl Widget for CocoaWindow {
 }
 
 impl NativeWidget<CocoaSystem> for CocoaWindow {
-
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
         let window = unsafe {
-            NSWindow::alloc(nil).initWithContentRect_styleMask_backing_defer_(
-                NSRect::new(NSPoint::new(0., 0.), NSSize::new(200., 200.)),
-                NSWindowStyleMask::NSTitledWindowMask,
-                NSBackingStoreBuffered,
-                NO
-            ).autorelease() 
+            NSWindow::alloc(nil)
+                .initWithContentRect_styleMask_backing_defer_(
+                    NSRect::new(NSPoint::new(0., 0.), NSSize::new(200., 200.)),
+                    NSWindowStyleMask::NSTitledWindowMask,
+                    NSBackingStoreBuffered,
+                    NO,
+                )
+                .autorelease()
         };
-        
+
         let mut new_window = CocoaWindow {
             name,
             handle: window,
@@ -223,7 +228,7 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
     {
         let settings = settings.into();
         log::info!("applying settings: {:?}", settings);
-            unsafe {
+        unsafe {
             if let Some(rect) = settings.rect {
                 todo!()
             }
@@ -234,9 +239,7 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
             if let Some(alpha_value) = settings.alpha_value {
                 self.handle.setAlphaValue_(alpha_value as CGFloat);
             }
-            if let Some(works_when_modal) = settings.works_when_modal {
-                
-            }
+            if let Some(works_when_modal) = settings.works_when_modal {}
             if let Some(can_hide) = settings.can_hide {
                 self.handle.setCanHide_(can_hide as i8);
             }
@@ -249,13 +252,19 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
             if let Some(has_shadow) = settings.has_shadow {
                 todo!()
             }
-            if let Some(autorecalculate_content_border_thickness) = settings.autorecalculate_content_border_thickness {
+            if let Some(autorecalculate_content_border_thickness) =
+                settings.autorecalculate_content_border_thickness
+            {
                 todo!()
             }
-            if let Some(prevents_application_termination_when_modal) = settings.prevents_application_termination_when_modal {
+            if let Some(prevents_application_termination_when_modal) =
+                settings.prevents_application_termination_when_modal
+            {
                 todo!()
             }
-            if let Some(can_become_visible_without_login) = settings.can_become_visible_without_login {
+            if let Some(can_become_visible_without_login) =
+                settings.can_become_visible_without_login
+            {
                 todo!()
             }
             if let Some(depth_limit) = settings.depth_limit {
@@ -282,7 +291,6 @@ impl WidgetHolder for CocoaWindow {
         &self.name.as_str()
     }
 }
-
 
 impl From<CocoaWindow> for RootChildren<CocoaSystem> {
     fn from(window: CocoaWindow) -> Self {

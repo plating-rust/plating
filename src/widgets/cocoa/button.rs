@@ -5,13 +5,16 @@
 
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::generic::ButtonParameters;
 use crate::widgets::{
-    System,
-    WindowChildren, Child, ChildrenHolder, NativeWidget, Outlet, Widget, WidgetHolder, OutletAdapter,
+    cocoa::error::{CocoaError, CocoaResult},
+    ButtonChildren, WidgetType,
 };
-use crate::widgets::cocoa::{CocoaSystem, CocoaWindow, CocoaDefaultHandleType};
-use crate::widgets::{ButtonChildren, cocoa::error::{CocoaError, CocoaResult}, WidgetType};
+use crate::widgets::{
+    Child, ChildrenHolder, NativeWidget, Outlet, OutletAdapter, System, Widget, WidgetHolder,
+    WindowChildren,
+};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CocoaButtonParameters {
@@ -30,7 +33,6 @@ impl From<ButtonParameters> for CocoaButtonParameters {
 pub struct CocoaButton {
     ///auto generate and add via derive(widgetParent(A, B    ))
     //main_outlet: Outlet<ButtonChildren, CocoaButton>,
-
     handle: CocoaDefaultHandleType,
 
     ///auto generate and add via derive(Widget)
@@ -40,12 +42,9 @@ pub struct CocoaButton {
 impl Widget for CocoaButton {
     type PARAMS = CocoaButtonParameters;
 }
-impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {
+impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {}
 
-}
-
-impl From<CocoaButton> for ButtonChildren<CocoaSystem>
-{
+impl From<CocoaButton> for ButtonChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
         ButtonChildren::BUTTON(WidgetType::NATIVE(button))
     }
@@ -58,7 +57,6 @@ impl From<CocoaButton> for WindowChildren<CocoaSystem> {
 }
 
 impl NativeWidget<CocoaSystem> for CocoaButton {
-
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,

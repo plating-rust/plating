@@ -3,8 +3,8 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
- use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{System, NativeWidget, GenericWidget, Widget, WidgetHolder};
+use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::{GenericWidget, NativeWidget, System, Widget, WidgetHolder};
 use crate::PlatingResult;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]

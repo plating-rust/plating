@@ -18,8 +18,8 @@ pub struct WinError {
 }
 impl WinError {
     /// Returns internal error kind.
-    /// 
-    /// Useful for to match against for more fine grained handling of errors 
+    ///
+    /// Useful for to match against for more fine grained handling of errors
     pub fn kind(&self) -> &WinErrorKind {
         &self.kind
     }
@@ -37,6 +37,5 @@ impl fmt::Display for WinError {
         todo!()
     }
 }
-
 
 pub type WinResult<T> = std::result::Result<T, WinError>;

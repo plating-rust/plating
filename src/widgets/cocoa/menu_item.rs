@@ -3,16 +3,16 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::CheckedState;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::{CocoaSystem, CocoaMenuParentData, CocoaMenu, CocoaDefaultHandleType};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
-use crate::widgets::{System, MenuChildren, Child, NativeWidget, Widget, WidgetHolder};
-use crate::widgets::{WidgetType, generic::MenuItemParameters};
+use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
+use crate::widgets::{generic::MenuItemParameters, WidgetType};
+use crate::widgets::{Child, MenuChildren, NativeWidget, System, Widget, WidgetHolder};
+use crate::CheckedState;
 
-use cocoa::base::{nil};
-use cocoa::foundation::{NSAutoreleasePool, NSString};
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
+use cocoa::base::nil;
+use cocoa::foundation::{NSAutoreleasePool, NSString};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq)]
@@ -56,14 +56,11 @@ impl WidgetHolder for CocoaMenuItem {
 }
 
 impl NativeWidget<CocoaSystem> for CocoaMenuItem {
-
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
-        let menu_item = unsafe {
-            NSMenuItem::new(nil).autorelease()
-        };
+        let menu_item = unsafe { NSMenuItem::new(nil).autorelease() };
         let mut new_menu_item = CocoaMenuItem {
             name,
             handle: menu_item,
@@ -78,8 +75,7 @@ impl NativeWidget<CocoaSystem> for CocoaMenuItem {
     {
         let settings = settings.into();
         log::info!("applying settings: {:?}", settings);
-            unsafe {
-
+        unsafe {
             if let Some(title) = settings.title {
                 let title = NSString::alloc(nil).init_str(&title);
                 self.handle.setTitle_(title);

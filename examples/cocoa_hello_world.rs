@@ -5,18 +5,16 @@
 
 use plating::prelude::*;
 use plating::widgets::cocoa::{
-    CocoaRoot, CocoaRootParameters,
-    CocoaWindow, CocoaWindowParameters,
-    CocoaMenu, CocoaMenuParameters, CocoaMenuItem, CocoaMenuItemParameters,
+    CocoaMenu, CocoaMenuItem, CocoaMenuItemParameters, CocoaMenuParameters, CocoaRoot,
+    CocoaRootParameters, CocoaWindow, CocoaWindowParameters,
 };
-use plating::widgets::{default_system, MenuChildren, MainMenuChildren};
-use plating::widgets::generic::{RootWidgetTrait, Root, RootParameters, Window, WindowParameters};
+use plating::widgets::generic::{Root, RootParameters, RootWidgetTrait, Window, WindowParameters};
+use plating::widgets::{default_system, MainMenuChildren, MenuChildren};
 use plating::PlatingResult;
 
 #[macro_use]
 extern crate log;
 extern crate simple_logger;
-
 
 fn main() -> PlatingResult<(), default_system> {
     simple_logger::init().unwrap(); //setting up logging
@@ -31,40 +29,40 @@ fn main() -> PlatingResult<(), default_system> {
             closable: Some(true),
             miniaturizable: Some(true),
             ..Default::default()
-        }.into()
-    }).unwrap();
-    
+        }
+        .into()
+    })
+    .unwrap();
+
     let mut menu = CocoaMenu::new(CocoaMenuParameters {
         title: Some(String::from("Process")),
         ..Default::default()
-    }).unwrap();
+    })
+    .unwrap();
 
     let edit = CocoaMenu::new(CocoaMenuParameters {
         title: Some(String::from("Edit")),
         ..Default::default()
-    }).unwrap();
-
+    })
+    .unwrap();
 
     let process_item1 = CocoaMenuItem::new(CocoaMenuItemParameters {
         title: Some(String::from("Yay")),
         ..Default::default()
-    }).unwrap();
+    })
+    .unwrap();
     let process_item2 = CocoaMenuItem::new(CocoaMenuItemParameters {
         title: Some(String::from("it works :)")),
         ..Default::default()
-    }).unwrap();
-    
+    })
+    .unwrap();
+
     OutletAdapter::<MenuChildren>::add_child(&mut menu, process_item1);
     OutletAdapter::<MenuChildren>::add_child(&mut menu, process_item2);
 
-
     OutletAdapter::<MainMenuChildren>::add_child(&mut window, menu)?;
 
-    
     OutletAdapter::<MainMenuChildren>::add_child(&mut window, edit)?;
-
-
-
 
     x.add_child(window)?;
 
@@ -74,7 +72,6 @@ fn main() -> PlatingResult<(), default_system> {
     let gen_nat = gen_nat();
     #[allow(unused_variables)]
     let nat_gen = nat_gen();
-
 
     x.run().map_err(|err| err.into())
 }

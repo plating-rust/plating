@@ -5,8 +5,9 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::RootChildren;
-use crate::widgets::{ default_system, System, OutletAdapter,
-    ChildrenHolder, GenericWidget, NativeWidget, Widget, WidgetHolder,
+use crate::widgets::{
+    default_system, ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget,
+    WidgetHolder,
 };
 use crate::PlatingResult;
 
@@ -41,7 +42,6 @@ impl<S: System> WidgetHolder for Root<S> {
     }
 }
 impl<S: System> GenericWidget<S> for Root<S> {
-
     fn native(&self) -> &Self::NativeType {
         &self.native
     }

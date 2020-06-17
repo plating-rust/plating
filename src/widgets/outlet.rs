@@ -9,7 +9,10 @@ use std::rc::Rc;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::default_system;
-use crate::{PlatingResult, widgets::{System, Child, NativeWidget, ChildrenHolder, WidgetHolder}};
+use crate::{
+    widgets::{Child, ChildrenHolder, NativeWidget, System, WidgetHolder},
+    PlatingResult,
+};
 
 type ChildIter<'a, CHILD> = std::iter::FilterMap<
     std::slice::Iter<'a, ChildrenHolder<CHILD>>,
@@ -36,7 +39,7 @@ where
     }
 
     /// Convenience Function that gives you an iterator directly to the children instead of ChildrenHolder.
-    /// 
+    ///
     /// This will also filter out dangling weak references beforehand.
     fn child_iter(&self) -> ChildIter<CHILD> {
         self.children()
@@ -53,29 +56,28 @@ where
     //todo: removing children
 }
 
-
 /// Outlets are a concepts for widgets to have children.
-/// 
+///
 /// Widgets can have zero, one or more outlets. For example the [Window](crate::widgets::generic::window) Widget
-/// has two outlets. 
+/// has two outlets.
 /// - one for storing all the content inside it
 /// - the other one for storing the main menu
-/// 
+///
 /// Both outlets are strongly typed so you cannot add a Button to the Main Menu outlet and you cannot add
 /// a Menu Item to the content outlet of the window.
-/// 
+///
 /// The way to interact with a Outlet is usually via the [WidgetParent](`crate::widgets::traits::WidgetParent`) trait.
 /// Most Widgets usually have some sort of 'default' outlet. Those Widgets implement the WidgetParent trait themselves
 /// and pass those function calls forward to an internal instance of Outlet. The aforementioned 'content' outlet is the main outlet.
-/// 
+///
 /// Outlets store the children in vectors of [`ChildrenHolders`](crate::widgets::traits::ChildrenHolder).
 /// Make sure to read up on them to understand ownership and memory management of plating
-/// 
+///
 /// # Template Parameters
 /// - `CHILD`: the kind of elements this Outlet can store.<br>
 ///     Usually realized by enums. See [`WindowChildren`](crate::widgets::WindowChildren) for an example.
 ///     <br><br>**Requirements**: Needs to implement [`WidgetHolder`] + `std::fmt::Debug`
-///   
+///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Outlet<CHILD, Parent, S>
 where
@@ -84,14 +86,14 @@ where
     S: System,
 {
     ///Vector responsible for storing all the Children.
-    /// 
+    ///
     /// Uses a [`ChildrenHolder`] instead of the children directly
     pub(crate) children: Vec<ChildrenHolder<CHILD>>,
 
     _marker: std::marker::PhantomData<Parent>,
-    _marker2: std::marker::PhantomData<S>
+    _marker2: std::marker::PhantomData<S>,
 }
-impl<CHILD, Parent, S>  Default for Outlet<CHILD, Parent, S>
+impl<CHILD, Parent, S> Default for Outlet<CHILD, Parent, S>
 where
     CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: NativeWidget<S> + OutletAdapter<CHILD, S>,
@@ -112,25 +114,25 @@ where
     S: System,
 {
     /// Returns the capacity of the internal vector.
-    /// 
+    ///
     /// See [Vec::capacity]
     pub fn capacity(&self) -> usize {
         self.children.capacity()
     }
     /// Reserves space for the specified amount of *additional* children.
-    /// 
+    ///
     /// See [Vec::reserve]
     pub fn reserve(&mut self, additional: usize) {
         self.children.reserve(additional)
     }
     /// Reserves space for the specified amount of children *in total*.
-    /// 
+    ///
     /// See [Vec::reserve_exact]
     pub fn reserve_exact(&mut self, additional: usize) {
         self.children.reserve_exact(additional)
     }
     /// Resizes the vector to fit the current amount of children.
-    /// 
+    ///
     /// See [Vec::shrink_to_fit]
     pub fn shrink_to_fit(&mut self) {
         self.children.shrink_to_fit();
@@ -140,7 +142,11 @@ where
         &self.children[0..self.children.len()]
     }
 
-    pub(crate) fn add_child<T>(&mut self, child: T, parent: &Parent::ParentData) -> std::result::Result<(), S::ErrorType>
+    pub(crate) fn add_child<T>(
+        &mut self,
+        child: T,
+        parent: &Parent::ParentData,
+    ) -> std::result::Result<(), S::ErrorType>
     where
         T: Into<CHILD>,
     {

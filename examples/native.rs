@@ -3,23 +3,21 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
- #[macro_use]
+#[macro_use]
 extern crate log;
-extern crate simple_logger;
 extern crate libc;
+extern crate simple_logger;
 
+use cocoa::appkit::{
+    NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
+    NSApplicationActivationPolicyRegular, NSAutoresizingMaskOptions, NSBackingStoreBuffered,
+    NSColorSpace, NSEventModifierFlags, NSLeftArrowFunctionKey, NSMenu, NSMenuItem,
+    NSRightArrowFunctionKey, NSRunningApplication, NSView, NSViewHeightSizable, NSViewWidthSizable,
+    NSWindow, NSWindowCollectionBehavior, NSWindowDepth, NSWindowStyleMask,
+};
+use cocoa::base::{id, nil, selector, BOOL, NO, YES};
+use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSProcessInfo, NSRect, NSSize, NSString};
 use objc::*;
-use cocoa::base::{selector, nil, NO, YES, BOOL, id};
-use cocoa::foundation::{NSRect, NSPoint, NSSize,
-    NSAutoreleasePool, NSProcessInfo, NSString};
-use cocoa::appkit::{NSAutoresizingMaskOptions, NSView,
-    NSViewWidthSizable, NSViewHeightSizable,NSEventModifierFlags,
-    NSWindowStyleMask, NSApp, NSWindowCollectionBehavior,
- NSWindowDepth,NSRightArrowFunctionKey, NSLeftArrowFunctionKey, 
-NSApplication, NSApplicationActivationPolicyRegular,
-NSWindow, NSBackingStoreBuffered, NSColorSpace,
-NSMenu, NSMenuItem, NSRunningApplication,
-NSApplicationActivateIgnoringOtherApps};
 
 pub fn assert_main_thread() {
     unsafe {
@@ -32,16 +30,13 @@ pub fn make_ns_string(s: &str) -> id {
     unsafe { NSString::alloc(nil).init_str(s).autorelease() }
 }
 pub fn string_with_characters(character: libc::c_ushort) -> id {
-    unsafe { 
-        msg_send![class!(NSString), stringWithCharacters:&character length:1]
-    }
+    unsafe { msg_send![class!(NSString), stringWithCharacters:&character length:1] }
 }
 
 fn main() {
     simple_logger::init().unwrap(); //setting up logging
 
     info!("Creating window");
-
 
     unsafe {
         let _pool = NSAutoreleasePool::new(nil);
@@ -53,7 +48,6 @@ fn main() {
         let menubar = NSMenu::new(nil).autorelease();
         let app_menu_item = NSMenuItem::new(nil).autorelease();
         menubar.addItem_(app_menu_item);
-        
 
         // create Application menu
         let app_menu = NSMenu::new(nil).autorelease();
@@ -71,11 +65,10 @@ fn main() {
         let edit_menu_item = NSMenuItem::alloc(nil);
         edit_menu_item.autorelease();
         menubar.addItem_(edit_menu_item);
-        
+
         let edit_menu = NSMenu::alloc(nil);
         edit_menu.initWithTitle_(make_ns_string("Bearbeiten"));
         edit_menu.autorelease();
-
 
         let undo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_ns_string("Undo"),
@@ -84,15 +77,14 @@ fn main() {
         );
         edit_menu.addItem_(undo);
         edit_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
-        
+
         let redo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_ns_string("Redo"),
             sel!(redo:),
             make_ns_string("z"),
         );
         redo.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSShiftKeyMask | 
-            NSEventModifierFlags::NSCommandKeyMask
+            NSEventModifierFlags::NSShiftKeyMask | NSEventModifierFlags::NSCommandKeyMask,
         );
         edit_menu.addItem_(redo);
 
@@ -100,11 +92,12 @@ fn main() {
 
         // create Window
         let window = NSWindow::alloc(nil)
-            .initWithContentRect_styleMask_backing_defer_(NSRect::new(NSPoint::new(0., 0.),
-                                                                      NSSize::new(200., 200.)),
-                                                          NSWindowStyleMask::NSTitledWindowMask | NSWindowStyleMask::NSClosableWindowMask,
-                                                          NSBackingStoreBuffered,
-                                                          NO)
+            .initWithContentRect_styleMask_backing_defer_(
+                NSRect::new(NSPoint::new(0., 0.), NSSize::new(200., 200.)),
+                NSWindowStyleMask::NSTitledWindowMask | NSWindowStyleMask::NSClosableWindowMask,
+                NSBackingStoreBuffered,
+                NO,
+            )
             .autorelease();
         window.cascadeTopLeftFromPoint_(NSPoint::new(20., 20.));
         window.center();
@@ -117,8 +110,8 @@ fn main() {
         app.run();
     }
 
-/*
-    
+    /*
+
     let rect = NSRect::new(
         NSPoint::new(0., 0.),
         NSSize::new(300., 300.),  //TODO: get from settings!
@@ -133,7 +126,7 @@ fn main() {
                    | NSWindowStyleMask::NSTitledWindowMask;
 
     let options: NSAutoresizingMaskOptions = NSViewWidthSizable | NSViewHeightSizable;
-    
+
 
     assert_main_thread();
 
@@ -142,7 +135,7 @@ fn main() {
         ///////// Main Menu
         let menubar = NSMenu::alloc(nil);
         menubar.autorelease();
-        
+
 
 
         let app_menu_item = NSMenuItem::alloc(nil);
@@ -168,7 +161,7 @@ fn main() {
         let help_menu_item = NSMenuItem::alloc(nil);
         help_menu_item.autorelease();
         menubar.addItem_(help_menu_item);
-        
+
 
         let app_menu = NSMenu::alloc(nil);
         app_menu.initWithTitle_(make_ns_string("Calpipe"));
@@ -194,7 +187,7 @@ fn main() {
         help_menu.initWithTitle_(make_nsstring("Help"));
         help_menu.autorelease();
 
-        
+
 
         let about = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("About calpipe"),
@@ -216,7 +209,7 @@ fn main() {
 
         //Services -> submenu
         //TODO:
-        
+
         //let services = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
         //    make_nsstring("Services"),
         //    sel!(services:),
@@ -226,14 +219,14 @@ fn main() {
         //let services_menu = NSMenu::alloc(nil);
         //let i : id = msg_send![NSMenu(), services];
         //let _ : BOOL = msg_send![services_menu, init:make_nsstring("Services") identifier:i];
-        
+
         //services_menu.initWithTitle_(make_nsstring("Calpipe"));
         //services_menu.autorelease();
         //services.setSubmenu_(services_menu);
         //NSApp().setWindowsMenu_(services_menu);
 
         //app_menu.addItem_(services);
-        
+
 
         app_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
 
@@ -250,7 +243,7 @@ fn main() {
             make_nsstring("h"),
         );
         hide_others.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSAlternateKeyMask | 
+            NSEventModifierFlags::NSAlternateKeyMask |
             NSEventModifierFlags::NSCommandKeyMask
         );
         app_menu.addItem_(hide_others);
@@ -275,7 +268,7 @@ fn main() {
 
         //////////
         // File Menu
-        ////////// 
+        //////////
         let new_menu_item = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("New"),
             sel!(new:),
@@ -329,18 +322,18 @@ fn main() {
 
 
         file_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
-        
+
         let print_menu_item = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("Print"),
             sel!(print:),
             make_nsstring("p"),
         );
         file_menu.addItem_(print_menu_item);
-        
+
         //////////
         // Edit Menu
         //////////
-        
+
         let undo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("Undo"),
             sel!(undo:),
@@ -354,13 +347,13 @@ fn main() {
             make_nsstring("z"),
         );
         redo.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSShiftKeyMask | 
+            NSEventModifierFlags::NSShiftKeyMask |
             NSEventModifierFlags::NSCommandKeyMask
         );
         edit_menu.addItem_(redo);
 
         edit_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
-        
+
         let cut = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("Cut"),
             sel!(cut:),
@@ -399,16 +392,16 @@ fn main() {
 
         //edit_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
 
-       
+
         ////////
         // View Menu
         ////////
-        
-        
+
+
         ///Show/Hide Tab Bar
-        ///Show All Tabs/Exit Tab Overview	
-        
-        
+        ///Show All Tabs/Exit Tab Overview
+
+
         let day = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("Tagesansicht"),
             sel!(day:),
@@ -443,10 +436,10 @@ fn main() {
             make_nsstring("5"),
         );
         view_menu.addItem_(list);
-        
+
         view_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
 
-        
+
         let find = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("Search"),
             sel!(find:),
@@ -460,7 +453,7 @@ fn main() {
             make_nsstring("f"),
         );
         toggle_filter.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSShiftKeyMask | 
+            NSEventModifierFlags::NSShiftKeyMask |
             NSEventModifierFlags::NSCommandKeyMask
         );
         view_menu.addItem_(toggle_filter);
@@ -506,7 +499,7 @@ fn main() {
         view_menu.addItem_(today);
 
         view_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
-        
+
         //////////////
         // windows
         //////////////
@@ -523,7 +516,7 @@ fn main() {
             make_nsstring("m"),
         );
         minimize_all.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSAlternateKeyMask | 
+            NSEventModifierFlags::NSAlternateKeyMask |
             NSEventModifierFlags::NSCommandKeyMask
         );
         window_menu.addItem_(minimize_all);
@@ -536,7 +529,7 @@ fn main() {
             make_nsstring("\t"),
         );
         previous_tab.setKeyEquivalentModifierMask_(
-            NSEventModifierFlags::NSControlKeyMask | 
+            NSEventModifierFlags::NSControlKeyMask |
             NSEventModifierFlags::NSShiftKeyMask
         );
         window_menu.addItem_(previous_tab);
@@ -567,7 +560,7 @@ fn main() {
             sel!(mergeAllWindows:),
             make_nsstring(""),
         );
-        window_menu.addItem_(merge_all_window); 
+        window_menu.addItem_(merge_all_window);
 
         window_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
 
@@ -596,7 +589,7 @@ fn main() {
             make_nsstring(""),
         );
         help_menu.addItem_(keyboard_shortcuts);
-        
+
         help_menu.addItem_(NSMenuItem::separatorItem(nil).autorelease());
 
         let links_entry = NSMenuItem::alloc(nil).autorelease();
@@ -609,7 +602,7 @@ fn main() {
         //////////////////
         // Links
         //////////////////
-        
+
         ///website
         let website = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             make_nsstring("www.WEBSITE_TODO.de"),
@@ -639,8 +632,8 @@ fn main() {
         window_menu_item.setSubmenu_(window_menu);
         help_menu_item.setSubmenu_(help_menu);
 
-        
-        
+
+
         ////////// Window
         let window = NSWindow::alloc(nil).initWithContentRect_styleMask_backing_defer_(
             rect,
@@ -652,7 +645,7 @@ fn main() {
         info!("window created");
 
         window.cascadeTopLeftFromPoint_(NSPoint::new(20.0, 20.0)); //TODO: get from settings
-        
+
         //window.setTitle_(make_nsstring("Test"));
 
         //TODO: window.addTitlebarAccessoryViewController_();
@@ -673,7 +666,7 @@ fn main() {
 
         //let (view, idle_queue) = make_view(self.handler.expect("view"));
         //let view: id = msg_send![VIEW_CLASS.0, new];
-        
+
         //TODO: set to window, not app in general
         //NSApp().setMainMenu_(menubar);
        // window.setMainMenu(menubar);

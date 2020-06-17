@@ -3,20 +3,22 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::Direction;
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{System, MainMenuChildren, MenuChildren, Child, ChildrenHolder, NativeWidget, Outlet, Widget, OutletAdapter, WidgetHolder};
-use crate::widgets::generic::{MenuParameters};
-use crate::widgets::cocoa::{CocoaSystem, CocoaWindow, CocoaRoot, CocoaDefaultHandleType};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
-use crate::widgets::{WidgetType, cocoa::utils::make_ns_string};
+use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem, CocoaWindow};
+use crate::widgets::generic::MenuParameters;
+use crate::widgets::{cocoa::utils::make_ns_string, WidgetType};
+use crate::widgets::{
+    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, Outlet, OutletAdapter,
+    System, Widget, WidgetHolder,
+};
+use crate::Direction;
 
-
-use objc::*;
-use cocoa::base::{selector, nil};
+use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
+use cocoa::base::{nil, selector};
 use cocoa::foundation::{NSAutoreleasePool, NSString};
-use cocoa::appkit::{NSMenu, NSWindow, NSMenuItem, NSEventModifierFlags};
+use objc::*;
 
 ///Data passed to child when they are added
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
@@ -30,7 +32,6 @@ pub struct CocoaMenuParentData {
 pub struct CocoaMenuParameters {
     // generic
     pub title: Option<String>,
-
 
     //cocoa specific
     pub autoenables_items: Option<bool>,
@@ -83,17 +84,16 @@ impl OutletAdapter<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
         T: Into<MenuChildren<CocoaSystem>>,
     {
         self.main_outlet.add_child(
-            child.into(), 
+            child.into(),
             &CocoaMenuParentData {
                 item: self.item,
                 menu: self.handle,
-            }
+            },
         )
     }
 }
 
 impl NativeWidget<CocoaSystem> for CocoaMenu {
-
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -125,8 +125,7 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
     {
         let settings = settings.into();
         log::info!("applying settings: {:?}", settings);
-            unsafe {
-
+        unsafe {
             if let Some(title) = settings.title {
                 let title = NSString::alloc(nil).init_str(&title);
                 self.handle.setTitle_(title);
@@ -144,29 +143,30 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
 
 impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {}
 impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
-    fn adding_to(&self, parent: &<CocoaWindow as OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData) {
+    fn adding_to(
+        &self,
+        parent: &<CocoaWindow as OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
+    ) {
         log::info!("Adding menu to window!");
         unsafe {
             parent.menu.addItem_(self.item);
-        
-        
-            
+
             let undo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
                 make_ns_string("sfsadf"),
                 sel!(day:),
                 make_ns_string("z"),
             );
             self.handle.addItem_(undo);
-            self.handle.addItem_(NSMenuItem::separatorItem(nil).autorelease());
-            
+            self.handle
+                .addItem_(NSMenuItem::separatorItem(nil).autorelease());
+
             let redo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
                 make_ns_string("Redo"),
                 sel!(week:),
                 make_ns_string("z"),
             );
             redo.setKeyEquivalentModifierMask_(
-                NSEventModifierFlags::NSShiftKeyMask | 
-                NSEventModifierFlags::NSCommandKeyMask
+                NSEventModifierFlags::NSShiftKeyMask | NSEventModifierFlags::NSCommandKeyMask,
             );
             self.handle.addItem_(redo);
         }
@@ -174,7 +174,6 @@ impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMen
         unsafe {
             menubar.setSubmenu_(self.item)
         }*/
-
     }
 }
 

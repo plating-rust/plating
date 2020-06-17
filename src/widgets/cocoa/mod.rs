@@ -6,23 +6,22 @@
 mod defs;
 
 mod button;
-mod root;
-mod window;
 mod event;
 mod menu;
 mod menu_item;
+mod root;
+mod window;
 
 pub mod error;
 
 pub use button::*;
-pub use root::*;
-pub use window::*;
 pub use defs::*;
 pub use menu::*;
 pub use menu_item::*;
+pub use root::*;
+pub use window::*;
 
 pub(self) mod utils;
-
 
 use crate::widgets::System;
 
@@ -40,7 +39,6 @@ impl System for CocoaSystem {
     type ButtonParameterType = CocoaButtonParameters;
     /// Define NativeButton to [CocoaButton](crate::widgets::cocoa::CocoaButton)
     type ButtonType = CocoaButton;
-
 
     type WindowType = CocoaWindow;
     type WindowParameterType = CocoaWindowParameters;

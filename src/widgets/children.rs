@@ -4,16 +4,13 @@
  */
 
 //! Contains the generic definitions for what widgets type can the children of a given type.
-//! 
+//!
 
-use crate::widgets::generic::{
-    Button,
-    Window,
-    Menu,
-    MenuItem,
+use crate::widgets::generic::{Button, Menu, MenuItem, Window};
+
+use crate::widgets::{
+    default_system, Child, GenericWidget, NativeWidget, OutletAdapter, System, WidgetHolder,
 };
-
-use crate::widgets::{default_system, System, OutletAdapter, Child, GenericWidget, NativeWidget, WidgetHolder};
 
 /// Helper enum to differentiate between native and generic widget types
 #[derive(Debug)]
@@ -43,7 +40,8 @@ where
         }
     }
 }
-impl<GenericType, NativeType, ParentType, ChildType, S> Child<ParentType, ChildType, S> for WidgetType<GenericType, NativeType, S>
+impl<GenericType, NativeType, ParentType, ChildType, S> Child<ParentType, ChildType, S>
+    for WidgetType<GenericType, NativeType, S>
 where
     GenericType: GenericWidget<S>,
     NativeType: NativeWidget<S> + Child<ParentType, ChildType, S>,
@@ -72,7 +70,6 @@ impl<S: System> From<Button<S>> for ButtonChildren<S> {
     }
 }
 
-
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 impl<S: System> WidgetHolder for ButtonChildren<S> {
     fn name(&self) -> &str {
@@ -100,7 +97,7 @@ impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S>
         parent: &<S::WindowType as OutletAdapter<WindowChildren<S>, S>>::ParentData,
     ) {
         match self {
-            Self::BUTTON(button) => button.adding_to(parent)
+            Self::BUTTON(button) => button.adding_to(parent),
         }
     }
 }
@@ -135,7 +132,7 @@ impl<S: System> WidgetHolder for RootChildren<S> {
 impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
     fn adding_to(&self, parent: &<S::RootType as OutletAdapter<RootChildren<S>, S>>::ParentData) {
         match self {
-            Self::WINDOW(button) => button.adding_to(parent)
+            Self::WINDOW(button) => button.adding_to(parent),
         }
     }
 }
@@ -143,8 +140,7 @@ impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
 // todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum MenuChildren<S: System = default_system>
-{
+pub enum MenuChildren<S: System = default_system> {
     ITEM(WidgetType<MenuItem<S>, S::MenuItemType, S>), //todo
     MENU(WidgetType<Menu<S>, S::MenuType, S>),
 }
@@ -160,8 +156,6 @@ impl<S: System> From<MenuItem<S>> for MenuChildren<S> {
     }
 }
 
-
-
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 impl<S: System> WidgetHolder for MenuChildren<S> {
     fn name(&self) -> &str {
@@ -175,16 +169,14 @@ impl<S: System> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
     fn adding_to(&self, parent: &<S::MenuType as OutletAdapter<Self, S>>::ParentData) {
         match self {
             Self::MENU(menu) => <Child<S::MenuType, MenuChildren<S>, S>>::adding_to(menu, parent),
-            Self::ITEM(item) => item.adding_to(parent)
+            Self::ITEM(item) => item.adding_to(parent),
         }
     }
 }
 
-
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum MainMenuChildren<S: System = default_system>
-{
+pub enum MainMenuChildren<S: System = default_system> {
     MENU(WidgetType<Menu<S>, S::MenuType, S>),
 }
 impl<S: System> From<Menu<S>> for MainMenuChildren<S> {
@@ -192,7 +184,6 @@ impl<S: System> From<Menu<S>> for MainMenuChildren<S> {
         Self::MENU(WidgetType::GENERIC(menu))
     }
 }
-
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 impl<S: System> WidgetHolder for MainMenuChildren<S> {
@@ -202,11 +193,15 @@ impl<S: System> WidgetHolder for MainMenuChildren<S> {
         }
     }
 }
-impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S>
-{
-    fn adding_to(&self, parent: &<S::WindowType as OutletAdapter<MainMenuChildren<S>, S>>::ParentData) {
+impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
+    fn adding_to(
+        &self,
+        parent: &<S::WindowType as OutletAdapter<MainMenuChildren<S>, S>>::ParentData,
+    ) {
         match self {
-            Self::MENU(menu) => <Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent),
+            Self::MENU(menu) => {
+                <Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent)
+            }
         }
     }
 }
