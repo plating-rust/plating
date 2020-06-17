@@ -8,7 +8,7 @@ use plating::widgets::cocoa::{
     CocoaMenu, CocoaMenuItem, CocoaMenuItemParameters, CocoaMenuParameters, CocoaRoot,
     CocoaRootParameters, CocoaWindow, CocoaWindowParameters,
 };
-use plating::widgets::generic::{Root, RootParameters, RootWidgetTrait, Window, WindowParameters};
+use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
 use plating::widgets::{default_system, MainMenuChildren, MenuChildren};
 use plating::PlatingResult;
 
