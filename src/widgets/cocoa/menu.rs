@@ -6,7 +6,7 @@
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
-use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem, CocoaWindow};
+use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::generic::MenuParameters;
 use crate::widgets::{cocoa::utils::make_ns_string, WidgetType};
 use crate::widgets::{
@@ -16,7 +16,7 @@ use crate::widgets::{
 use crate::Direction;
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
-use cocoa::base::{nil, selector};
+use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 use objc::*;
 

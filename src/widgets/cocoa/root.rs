@@ -3,7 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
@@ -61,7 +60,7 @@ impl NativeWidget<CocoaSystem> for CocoaRoot {
     where
         T: Into<Self::PARAMS>,
     {
-        let mut app = unsafe {
+        let app = unsafe {
             let _pool = NSAutoreleasePool::new(nil);
 
             let app = NSApp();

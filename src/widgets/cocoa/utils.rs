@@ -5,7 +5,6 @@
 
 use cocoa::base::{id, nil};
 use cocoa::foundation::{NSAutoreleasePool, NSString};
-use objc::*;
 
 pub fn make_ns_string(s: &str) -> id {
     unsafe { NSString::alloc(nil).init_str(s).autorelease() }

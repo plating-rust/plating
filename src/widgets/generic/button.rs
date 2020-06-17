@@ -4,10 +4,7 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{
-    ButtonChildren, ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget,
-    WidgetHolder,
-};
+use crate::widgets::{GenericWidget, NativeWidget, System, Widget, WidgetHolder};
 use crate::PlatingResult;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]

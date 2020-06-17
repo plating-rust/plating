@@ -10,10 +10,8 @@ extern crate simple_logger;
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
-    NSApplicationActivationPolicyRegular, NSAutoresizingMaskOptions, NSBackingStoreBuffered,
-    NSColorSpace, NSEventModifierFlags, NSLeftArrowFunctionKey, NSMenu, NSMenuItem,
-    NSRightArrowFunctionKey, NSRunningApplication, NSView, NSViewHeightSizable, NSViewWidthSizable,
-    NSWindow, NSWindowCollectionBehavior, NSWindowDepth, NSWindowStyleMask,
+    NSApplicationActivationPolicyRegular, NSBackingStoreBuffered, NSEventModifierFlags, NSMenu,
+    NSMenuItem, NSRunningApplication, NSWindow, NSWindowStyleMask,
 };
 use cocoa::base::{id, nil, selector, BOOL, NO, YES};
 use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSProcessInfo, NSRect, NSSize, NSString};

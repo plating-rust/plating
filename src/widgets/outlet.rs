@@ -9,10 +9,7 @@ use std::rc::Rc;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::default_system;
-use crate::{
-    widgets::{Child, ChildrenHolder, NativeWidget, System, WidgetHolder},
-    PlatingResult,
-};
+use crate::widgets::{Child, ChildrenHolder, NativeWidget, System, WidgetHolder};
 
 type ChildIter<'a, CHILD> = std::iter::FilterMap<
     std::slice::Iter<'a, ChildrenHolder<CHILD>>,

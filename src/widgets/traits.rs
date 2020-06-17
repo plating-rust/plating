@@ -276,7 +276,7 @@ where
     ParentType: NativeWidget<S> + OutletAdapter<ChildType, S>,
     S: System,
 {
-    fn adding_to(&self, parent: &ParentType::ParentData) {}
+    fn adding_to(&self, _parent: &ParentType::ParentData) {}
 }
 
 #[derive(Debug, Clone)]

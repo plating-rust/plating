@@ -12,18 +12,17 @@ use crate::widgets::{
     WidgetType,
 };
 use crate::widgets::{
-    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, Outlet, OutletAdapter,
-    Widget, WidgetHolder,
+    Child, ChildrenHolder, MainMenuChildren, NativeWidget, Outlet, OutletAdapter, Widget,
+    WidgetHolder,
 };
 use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{
-    NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
-    NSApplicationActivationPolicyRegular, NSBackingStoreBuffered, NSColorSpace, NSMenu, NSMenuItem,
-    NSRunningApplication, NSWindow, NSWindowCollectionBehavior, NSWindowDepth, NSWindowStyleMask,
+    NSApp, NSApplication, NSBackingStoreBuffered, NSMenu, NSWindow, NSWindowDepth,
+    NSWindowStyleMask,
 };
-use cocoa::base::{nil, selector, NO};
-use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSProcessInfo, NSRect, NSSize, NSString};
+use cocoa::base::{nil, NO};
+use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
 use core_graphics::base::CGFloat;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful

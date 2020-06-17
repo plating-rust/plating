@@ -168,7 +168,9 @@ impl<S: System> WidgetHolder for MenuChildren<S> {
 impl<S: System> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
     fn adding_to(&self, parent: &<S::MenuType as OutletAdapter<Self, S>>::ParentData) {
         match self {
-            Self::MENU(menu) => <Child<S::MenuType, MenuChildren<S>, S>>::adding_to(menu, parent),
+            Self::MENU(menu) => {
+                <dyn Child<S::MenuType, MenuChildren<S>, S>>::adding_to(menu, parent)
+            }
             Self::ITEM(item) => item.adding_to(parent),
         }
     }
@@ -200,7 +202,7 @@ impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildre
     ) {
         match self {
             Self::MENU(menu) => {
-                <Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent)
+                <dyn Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent)
             }
         }
     }

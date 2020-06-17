@@ -4,7 +4,7 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
+use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::{generic::MenuItemParameters, WidgetType};
 use crate::widgets::{Child, MenuChildren, NativeWidget, System, Widget, WidgetHolder};
