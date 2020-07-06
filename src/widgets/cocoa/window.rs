@@ -118,20 +118,7 @@ impl From<WindowParameters> for CocoaWindowParameters {
         }
     }
 }
-/*
-#[derive(Debug)]
-pub struct MainMenuOutlet {
-    window: CocoaWindow,
-}
-impl MainMenuOutlet {
-    fn new(window_handle: CocoaDefaultHandleType) -> Self {
-        MainMenuOutlet {
-            menubar: None,
-            outlet: Default::default(),
-        }
 
-    }
-}*/
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct CocoaMainMenuParentData {
     //pub menu_item: CocoaDefaultHandleType,
