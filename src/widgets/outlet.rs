@@ -7,15 +7,6 @@ use crate::widgets::utils::{Named, OutletIterator, WidgetPointer};
 use crate::widgets::{default_system, System};
 use std::rc::Rc;
 
-type ChildIter<'a, CHILD> = std::iter::FilterMap<
-    std::slice::Iter<'a, WidgetPointer<CHILD>>,
-    fn(&WidgetPointer<CHILD>) -> Option<Rc<CHILD>>,
->;
-
-fn get_obj<CHILD: Named>(obj: &WidgetPointer<CHILD>) -> Option<Rc<CHILD>> {
-    obj.get()
-}
-
 pub trait Outlet<CHILD, S = default_system>
 where
     CHILD: Named,
