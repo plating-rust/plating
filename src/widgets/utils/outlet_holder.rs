@@ -180,7 +180,6 @@ where
     #[inline]
     fn next(&mut self) -> Option<Rc<CHILD>> {
         let n = self.internal_iter.next();
-        let n = self.internal_iter.next_back();
         if let Some(pointer) = n {
             match pointer.get() {
                 Some(p) => Some(p),
