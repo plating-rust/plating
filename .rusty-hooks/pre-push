@@ -12,7 +12,8 @@ echo '+cargo fmt'
 cargo fmt --all -- --check
 
 echo '+cargo test --all'
-#cargo test --all
+#cargo test --all --no-fail-fast --quiet
+
 echo '+cargo clippy --all -- -D warnings'
 #cargo clippy --all -- -D warnings
 
