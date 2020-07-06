@@ -10,12 +10,12 @@
 
 use crate::error::PlatingError;
 use crate::features::serde::Deserialize;
-use crate::widgets::generic::{ButtonParameters, RootParameters};
-use crate::widgets::{MainMenuChildren, MenuChildren, RootChildren};
-use crate::PlatingResult;
-//use crate::widgets::native::NativeDefaultHandleType;
-use crate::widgets::native::traits::{NativeButton, NativeMenu, NativeWindow};
+use crate::widgets::generic::{
+    ButtonParameters, NativeButton, NativeMenu, NativeMenuItem, NativeRoot, NativeWindow,
+    RootParameters,
+};
 use crate::widgets::OutletAdapter;
+use crate::PlatingResult;
 use std::error::Error;
 use std::rc::{Rc, Weak};
 
@@ -196,8 +196,7 @@ where
     type MenuType: NativeMenu<Self>;
 
     type MenuItemParameterType: From<MenuItemParameters>;
-    type MenuItemType: NativeWidget<Self, PARAMS = Self::MenuItemParameterType>
-        + Child<Self::MenuType, MenuChildren<Self>, Self>;
+    type MenuItemType: NativeMenuItem<Self>;
 }
 
 /// Trait for all Native Widget Objects.
@@ -327,7 +326,6 @@ pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
 
 use super::{
     generic::{MenuItemParameters, MenuParameters, WindowHandlerTrait, WindowParameters},
-    native::traits::NativeRoot,
     WindowChildren,
 };
 #[cfg(feature = "serde")]

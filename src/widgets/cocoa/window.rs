@@ -6,20 +6,14 @@
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
+use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
-use crate::widgets::generic::{WindowHandlerTrait, WindowParameters};
-use crate::widgets::{
-    cocoa::error::{CocoaError, CocoaResult},
-    WidgetType,
-};
+use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::{
     Child, ChildrenHolder, MainMenuChildren, NativeWidget, Outlet, OutletAdapter, Widget,
     WidgetHolder,
 };
-use crate::{
-    prelude::NativeWindow,
-    widgets::{RootChildren, System, WindowChildren},
-};
+use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSBackingStoreBuffered, NSMenu, NSWindow, NSWindowDepth,
@@ -303,7 +297,7 @@ impl WidgetHolder for CocoaWindow {
 
 impl From<CocoaWindow> for RootChildren<CocoaSystem> {
     fn from(window: CocoaWindow) -> Self {
-        RootChildren::WINDOW(WidgetType::NATIVE(window))
+        RootChildren::WINDOW(window)
     }
 }
 
@@ -327,14 +321,10 @@ impl OutletAdapter<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
 impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {}
 
 impl WindowHandlerTrait for CocoaWindow {
-    fn setResizeHandler(&mut self, handler: Box<impl FnMut()>) {
+    fn set_resize_handler(&mut self, handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn addResizeListener(
-        &mut self,
-        when: crate::widgets::generic::ListenerType,
-        handler: Box<impl FnMut()>,
-    ) {
+    fn add_resize_listener(&mut self, when: crate::data::ListenerType, handler: Box<impl FnMut()>) {
         todo!()
     }
 }

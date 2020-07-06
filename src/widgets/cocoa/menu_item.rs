@@ -4,10 +4,9 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
-use crate::widgets::{generic::MenuItemParameters, WidgetType};
+use crate::widgets::generic::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
 use crate::widgets::{Child, MenuChildren, NativeWidget, System, Widget, WidgetHolder};
 use crate::CheckedState;
 
@@ -47,6 +46,11 @@ pub struct CocoaMenuItem {
 
     handle: CocoaDefaultHandleType,
 }
+
+impl NativeMenuItem<CocoaSystem> for CocoaMenuItem {}
+
+impl MenuItemHandlerTrait for CocoaMenuItem {}
+
 impl Widget for CocoaMenuItem {
     type PARAMS = CocoaMenuItemParameters;
 }
@@ -105,6 +109,6 @@ impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenuItem 
 
 impl From<CocoaMenuItem> for MenuChildren<CocoaSystem> {
     fn from(menu_item: CocoaMenuItem) -> Self {
-        MenuChildren::ITEM(WidgetType::NATIVE(menu_item))
+        MenuChildren::ITEM(menu_item)
     }
 }

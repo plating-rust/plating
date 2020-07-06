@@ -6,10 +6,9 @@
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
-use crate::widgets::generic::ButtonParameters;
-use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren, WidgetType};
+use crate::widgets::generic::{ButtonHandlerTrait, ButtonParameters, NativeButton};
+use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren};
 use crate::widgets::{Child, NativeWidget, System, Widget, WidgetHolder, WindowChildren};
-use crate::{prelude::NativeButton, widgets::cocoa::delegates::CocoaWindowDelegate};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CocoaButtonParameters {
@@ -41,13 +40,13 @@ impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButto
 
 impl From<CocoaButton> for ButtonChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
-        ButtonChildren::BUTTON(WidgetType::NATIVE(button))
+        ButtonChildren::BUTTON(button)
     }
 }
 
 impl From<CocoaButton> for WindowChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
-        WindowChildren::BUTTON(WidgetType::NATIVE(button))
+        WindowChildren::BUTTON(button)
     }
 }
 
@@ -91,6 +90,15 @@ impl WidgetHolder for CocoaButton {
 }
 
 impl NativeButton<CocoaSystem> for CocoaButton {}
+
+impl ButtonHandlerTrait for CocoaButton {
+    fn set_exit_handler(&mut self, handler: Box<impl FnMut()>) {
+        todo!()
+    }
+    fn add_exit_listener(&mut self, when: crate::data::ListenerType, handler: Box<impl FnMut()>) {
+        todo!()
+    }
+}
 
 // auto generate impl via derive(widgetParent(A, B    ))
 /*

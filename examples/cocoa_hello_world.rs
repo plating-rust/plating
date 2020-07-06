@@ -8,8 +8,8 @@ use plating::widgets::cocoa::{
     CocoaMenu, CocoaMenuItem, CocoaMenuItemParameters, CocoaMenuParameters, CocoaRoot,
     CocoaRootParameters, CocoaWindow, CocoaWindowParameters,
 };
-use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
-use plating::widgets::{default_system, MainMenuChildren, MenuChildren};
+use plating::widgets::generic::{NativeRoot, RootParameters, WindowParameters};
+use plating::widgets::{default_system, MainMenuChildren, MenuChildren, System};
 use plating::PlatingResult;
 
 #[macro_use]
@@ -73,25 +73,26 @@ fn main() -> PlatingResult<(), default_system> {
     //#[allow(unused_variables)]
     //let nat_gen = nat_gen();
 
-    x.run(); //.map_err(|err| err.into());
+    x.run().map_err(|err| err.into())
 
+    /*
     let mut x = Root::new(RootParameters::default()).unwrap();
     let child = Window::new(WindowParameters::default()).unwrap();
     x.add_child(child).unwrap();
 
-    x.run().map_err(|err| err.into())
+    x.run().map_err(|err| err.into())*/
 }
 
-fn create_generic() -> Root {
-    let mut x = Root::new(RootParameters::default()).unwrap();
-    let child = Window::new(WindowParameters::default()).unwrap();
-    x.add_child(child).unwrap();
+fn create_generic() -> <default_system as System>::RootType {
+    let mut x = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
+    /*let child = Window::new(WindowParameters::default()).unwrap();
+    x.add_child(child).unwrap();*/
 
     x
 }
 
-fn gen_nat() -> Root {
-    let mut x = Root::new(RootParameters::default()).unwrap();
+fn gen_nat() -> <default_system as System>::RootType {
+    let mut x = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
     let child1 = CocoaWindow::new(CocoaWindowParameters::default()).unwrap();
     let child2 = CocoaWindow::new(WindowParameters::default()).unwrap();
     x.add_child(child1).unwrap();
@@ -101,7 +102,7 @@ fn gen_nat() -> Root {
 
 fn nat_gen() -> CocoaRoot {
     let mut x = CocoaRoot::new(CocoaRootParameters::default()).unwrap();
-    let child = Window::new(WindowParameters::default()).unwrap();
-    x.add_child(child).unwrap();
+    /*let child = Window::new(WindowParameters::default()).unwrap();
+    x.add_child(child).unwrap();*/
     x
 }

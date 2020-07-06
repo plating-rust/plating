@@ -4,17 +4,29 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{
-    ChildrenHolder, GenericWidget, MenuChildren, NativeWidget, OutletAdapter, System, Widget,
-    WidgetHolder,
-};
-use crate::PlatingResult;
+use crate::widgets::{Child, MainMenuChildren, MenuChildren, NativeWidget, OutletAdapter, System};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct MenuParameters {
     pub title: Option<String>,
 }
 
+pub trait MenuHandlerTrait {
+    //todo:
+    //opening menu
+    //closing menu
+}
+
+pub trait NativeMenu<S: System>:
+    NativeWidget<S, PARAMS = S::MenuParameterType>
+    + MenuHandlerTrait
+    + OutletAdapter<MenuChildren<S>, S>
+    + Child<S::MenuType, MenuChildren<S>, S>
+    + Child<S::WindowType, MainMenuChildren<S>, S>
+{
+}
+
+/*
 #[derive(Debug)]
 pub struct Menu<S: System> {
     /// stores the underlying native widget.
@@ -64,3 +76,4 @@ impl<S: System> OutletAdapter<MenuChildren<S>, S> for Menu<S> {
             .map_err(|native_error| native_error.into())
     }
 }
+*/

@@ -5,16 +5,18 @@
 
 use plating::prelude::*;
 #[cfg(target_os = "macos")]
-use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
-use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
+use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters, CocoaWindow};
+use plating::widgets::generic::{RootParameters, WindowParameters};
 #[cfg(target_os = "win")]
 use plating::widgets::win::{WinButton, WinButtonParameters};
+use plating::widgets::{default_system, System, WindowChildren};
 
 fn main() {
     // create a *generic* root element
-    let mut root = Root::new(RootParameters::default()).unwrap();
+    let mut root = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
     // create a *generic* window element
-    let mut window = Window::new(WindowParameters::default()).unwrap();
+    let mut window =
+        <default_system as System>::WindowType::new(WindowParameters::default()).unwrap();
 
     // create a *native* element for more control
     #[cfg(target_os = "macos")]
@@ -23,6 +25,6 @@ fn main() {
     let button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
 
     //mix and match them together
-    window.add_child(button).unwrap();
+    OutletAdapter::<WindowChildren>::add_child(&mut window, button).unwrap();
     root.add_child(window).unwrap();
 }

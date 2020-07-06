@@ -3,15 +3,34 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::data::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{GenericWidget, NativeWidget, System, Widget, WidgetHolder};
-use crate::PlatingResult;
+use crate::widgets::{Child, NativeWidget, System, WindowChildren};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct ButtonParameters {
     pub label: Option<String>,
 }
 
+pub trait ButtonHandlerTrait {
+    fn set_exit_handler(&mut self, handler: Box<impl FnMut()>);
+    fn add_exit_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+}
+
+/// native Button widgets need to implement this trait
+///
+/// #Requirements
+/// Widgets implementing this trait, also need to implement
+/// - NativeWidget
+/// - Child
+pub trait NativeButton<S: System>:
+    NativeWidget<S, PARAMS = S::ButtonParameterType>
+    + ButtonHandlerTrait
+    + Child<S::WindowType, WindowChildren<S>, S>
+{
+}
+
+/*
 #[derive(Debug)]
 pub struct Button<S: System> {
     native: S::ButtonType,
@@ -56,4 +75,4 @@ impl<S: System> GenericWidget<S> for Button<S> {
     }
     type NativeParameterType = <S::ButtonType as Widget>::PARAMS;
     type NativeType = S::ButtonType;
-}
+}*/

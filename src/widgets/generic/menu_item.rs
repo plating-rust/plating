@@ -4,8 +4,7 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{GenericWidget, NativeWidget, System, Widget, WidgetHolder};
-use crate::PlatingResult;
+use crate::widgets::{Child, MenuChildren, NativeWidget, System};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct MenuItemParameters {
@@ -14,6 +13,20 @@ pub struct MenuItemParameters {
     pub is_hidden: Option<bool>,
 }
 
+pub trait MenuItemHandlerTrait {
+    //todo:
+    //clicking on item
+    //focusing on item
+}
+
+pub trait NativeMenuItem<S: System>:
+    NativeWidget<S, PARAMS = S::MenuItemParameterType>
+    + MenuItemHandlerTrait
+    + Child<S::MenuType, MenuChildren<S>, S>
+{
+}
+
+/*
 #[derive(Debug)]
 pub struct MenuItem<S: System> {
     /// stores the underlying native widget.
@@ -46,4 +59,4 @@ impl<S: System> GenericWidget<S> for MenuItem<S> {
 
     type NativeParameterType = <S::MenuItemType as Widget>::PARAMS;
     type NativeType = S::MenuItemType;
-}
+}*/

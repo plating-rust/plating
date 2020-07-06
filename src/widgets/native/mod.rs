@@ -17,4 +17,3 @@ pub use crate::widgets::cocoa::CocoaSystem as System;
 #[doc(cfg(target_os = "windows"))]
 pub use crate::widgets::win::WinSystem as System;
 
-pub mod traits;

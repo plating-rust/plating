@@ -6,12 +6,10 @@
 //! Module contains a generic [`Window`] adapter and a structure
 //! for generic parameters that work across all OS's.
 
+use crate::data::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::WindowChildren;
-use crate::widgets::{
-    ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget, WidgetHolder,
-};
-use crate::PlatingResult;
+use crate::widgets::{Child, MainMenuChildren, NativeWidget, OutletAdapter, RootChildren, System};
 
 /// Generic parameters for creating and customizing Windows
 ///
@@ -54,6 +52,7 @@ pub struct WindowParameters {
     pub fullscreenable: Option<bool>,
 }
 
+/* TODO: remove
 /// Generic Window Adapter Widget
 ///
 /// # Usage
@@ -117,19 +116,23 @@ impl<S: System> OutletAdapter<WindowChildren<S>, S> for Window<S> {
             //let child_into: WindowChildren = child.into();
             .map_err(|native_error| native_error.into())
     }
-}
-
-#[derive(Debug, Eq, PartialEq, Hash)]
-pub enum ListenerType {
-    Before,
-    After,
-}
+}*/
 
 pub trait WindowHandlerTrait {
-    fn setResizeHandler(&mut self, handler: Box<impl FnMut()>);
-    fn addResizeListener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+    fn set_resize_handler(&mut self, handler: Box<impl FnMut()>);
+    fn add_resize_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
 }
 
+pub trait NativeWindow<S: System>:
+    NativeWidget<S, PARAMS = S::WindowParameterType>
+    + OutletAdapter<WindowChildren<S>, S>
+    + OutletAdapter<MainMenuChildren<S>, S>
+    + WindowHandlerTrait
+    + Child<S::RootType, RootChildren<S>, S>
+{
+}
+
+/*
 impl<S> WindowHandlerTrait for Window<S>
 where
     S: System,
@@ -142,3 +145,4 @@ where
         self.native.addResizeListener(when, Box::new(|| handler()));
     }
 }
+*/

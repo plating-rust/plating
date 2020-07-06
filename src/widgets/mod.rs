@@ -19,8 +19,8 @@
 //!
 //! ```rust
 //! use plating::prelude::*;
-//! use plating::widgets::{default_system};
-//! use plating::widgets::generic::{Root, RootParameters, Window, WindowParameters};
+//! use plating::widgets::{default_system, System};
+//! use plating::widgets::generic::{RootParameters, WindowParameters};
 //! #[cfg(target_os = "macos")]
 //! use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
 //! #[cfg(target_os = "win")]
@@ -28,9 +28,9 @@
 //!
 //! fn main() {
 //!     // create a *generic* root element
-//!     let mut root = Root::<default_system>::new(RootParameters::default()).unwrap();
+//!     let mut root = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
 //!     // create a *generic* window element
-//!     let mut window = Window::new(WindowParameters::default()).unwrap();
+//!     let mut window = <default_system as System>::WindowType::new(WindowParameters::default()).unwrap();
 //!
 //!     // create a *native* element for more control
 //!     #[cfg(target_os = "macos")]
@@ -42,7 +42,8 @@
 //!     //TODO: window.add_child(button);
 //!     root.add_child(window).unwrap();
 //!
-//!     root.run();
+//!     //after you are done initialising: root.run();
+//!     //todo: manually exit after root.run()
 //! }
 //! ```
 //!
