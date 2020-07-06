@@ -15,7 +15,6 @@ pub enum EventState {
     UNHANDLED,
 }
 
-//todo: decide where to put
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum ListenerType {
     Before,
