@@ -133,6 +133,7 @@ where
     where
         T: Into<Self::PARAMS>;
 
+    //todo: move out of obvious api so we prevent accidental non cross-plattformness
     fn native(&self) -> &S::InternalHandle;
     unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
 }
