@@ -16,7 +16,6 @@
 //! - [`cocoa::error`](crate::widgets::cocoa::error)
 //! - [`windows::error`](crate::widgets::win::error)
 //! - [`mock::error`](crate::widgets::mock::error)
-
 use crate::widgets::System;
 use std::error::Error;
 use std::fmt;
