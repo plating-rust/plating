@@ -166,6 +166,21 @@ where
     }
 }
 
+impl<'a, CHILD, Parent, S> IntoIterator for &'a OutletHolder<CHILD, Parent, S>
+where
+    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
+    S: System,
+{
+    type Item = Rc<CHILD>;
+    type IntoIter = OutletIterator<'a, CHILD>;
+
+    fn into_iter(self) -> OutletIterator<'a, CHILD> {
+        let iter = self.children.iter();
+        OutletIterator::new(iter)
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct OutletIterator<'a, CHILD>
 where
