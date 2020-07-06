@@ -72,6 +72,13 @@ impl CocoaMenu {
     }
 }
 
+impl PartialEq for CocoaMenu {
+    fn eq(&self, other: &Self) -> bool {
+        self.handle == other.handle
+    }
+}
+impl Eq for CocoaMenu {}
+
 impl Named for CocoaMenu {
     fn name(&self) -> &str {
         &self.name.as_str()

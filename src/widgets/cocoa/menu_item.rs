@@ -50,6 +50,13 @@ pub struct CocoaMenuItem {
     handle: CocoaDefaultHandleType,
 }
 
+impl PartialEq for CocoaMenuItem {
+    fn eq(&self, other: &Self) -> bool {
+        self.handle == other.handle
+    }
+}
+impl Eq for CocoaMenuItem {}
+
 impl NativeMenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}

@@ -42,6 +42,13 @@ pub struct CocoaRoot {
     main_outlet: OutletHolder<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
 }
 
+impl PartialEq for CocoaRoot {
+    fn eq(&self, other: &Self) -> bool {
+        self.handle == other.handle
+    }
+}
+impl Eq for CocoaRoot {}
+
 impl NativeRoot<CocoaSystem> for CocoaRoot {
     fn run(&self) -> CocoaResult<()> {
         unsafe {

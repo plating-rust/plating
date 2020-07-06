@@ -179,6 +179,13 @@ impl CocoaWindow {
     }
 }
 
+impl PartialEq for CocoaWindow {
+    fn eq(&self, other: &Self) -> bool {
+        self.handle == other.handle
+    }
+}
+impl Eq for CocoaWindow {}
+
 impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
 

@@ -36,6 +36,13 @@ pub struct CocoaButton {
     name: String,
 }
 
+impl PartialEq for CocoaButton {
+    fn eq(&self, other: &Self) -> bool {
+        self.handle == other.handle
+    }
+}
+impl Eq for CocoaButton {}
+
 impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {}
 
 impl From<CocoaButton> for ButtonChildren<CocoaSystem> {
