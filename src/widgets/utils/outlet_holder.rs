@@ -153,6 +153,19 @@ where
     }
 }
 
+impl<CHILD, Parent, S> std::ops::Index<usize> for OutletHolder<CHILD, Parent, S>
+where
+    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
+    S: System,
+{
+    type Output = WidgetPointer<CHILD>;
+
+    fn index(&self, index: usize) -> &WidgetPointer<CHILD> {
+        &self.children[index]
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct OutletIterator<'a, CHILD>
 where
