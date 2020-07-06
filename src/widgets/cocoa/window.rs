@@ -8,6 +8,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
+use crate::widgets::events::ListenerType;
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::OutletHolder;
@@ -325,11 +326,7 @@ impl WindowHandlerTrait for CocoaWindow {
     fn set_resize_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_resize_listener(
-        &mut self,
-        _when: crate::data::ListenerType,
-        _handler: Box<impl FnMut()>,
-    ) {
+    fn add_resize_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
     }
 }

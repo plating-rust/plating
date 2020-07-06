@@ -3,8 +3,8 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::data::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::RootChildren;
 use crate::widgets::{NativeWidget, System};

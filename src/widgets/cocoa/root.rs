@@ -7,6 +7,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
+use crate::widgets::events::ListenerType;
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::OutletHolder;
@@ -59,7 +60,7 @@ impl RootHandlerTrait for CocoaRoot {
     fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_exit_listener(&mut self, _when: crate::data::ListenerType, _handler: Box<impl FnMut()>) {
+    fn add_exit_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
     }
 }

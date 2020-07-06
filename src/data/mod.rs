@@ -248,8 +248,3 @@ impl Default for Color {
         Self::RGB(RGB::black())
     }
 }
-#[derive(Debug, Eq, PartialEq, Hash)]
-pub enum ListenerType {
-    Before,
-    After,
-}

@@ -6,6 +6,7 @@
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
+use crate::widgets::events::ListenerType;
 use crate::widgets::generic::{ButtonHandlerTrait, ButtonParameters, NativeButton};
 use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren};
 use crate::widgets::{Child, NativeWidget, System, Widget, WidgetHolder, WindowChildren};
@@ -95,7 +96,7 @@ impl ButtonHandlerTrait for CocoaButton {
     fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_exit_listener(&mut self, _when: crate::data::ListenerType, _handler: Box<impl FnMut()>) {
+    fn add_exit_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
     }
 }

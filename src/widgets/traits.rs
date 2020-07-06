@@ -13,22 +13,6 @@ use crate::widgets::outlet::Outlet;
 use crate::widgets::System;
 use std::rc::{Rc, Weak};
 
-/// Enum representing the EventState after a Event Callback was called.
-///
-/// # Example
-/// todo: example callback return handled and unhandled on some condition
-#[derive(Debug, Eq, PartialEq, Clone, Hash)]
-pub enum EventState {
-    /// represent that the event was handled and no further event handlers should be called
-    HANDLED,
-    /// this event has not yet been handled.
-    UNHANDLED,
-}
-/// Callback type definition.
-///
-/// Callback handlers must adhere to this type definition.
-pub type Callback<T, W, E = ()> = dyn FnMut(&T, &mut W) -> Result<EventState, E>;
-
 /// Very basic trait implemented bothy by widgets themselves and
 /// any kind of `Pointer` or other Widget indirection.
 ///
@@ -248,17 +232,4 @@ impl<T: WidgetHolder> std::fmt::Pointer for ChildrenHolder<T> {
             Self::Ours(o) => std::fmt::Pointer::fmt(&o, f),
         }
     }
-}
-
-trait LifecycleDelegate
-where
-    Self: Sized + std::fmt::Debug,
-{
-    fn created();
-
-    fn before_display();
-    fn displayed();
-
-    fn before_destroy();
-    fn destroyed();
 }

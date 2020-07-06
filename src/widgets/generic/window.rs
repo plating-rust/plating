@@ -6,8 +6,8 @@
 //! Module contains a generic [`Window`] adapter and a structure
 //! for generic parameters that work across all OS's.
 
-use crate::data::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::WindowChildren;
 use crate::widgets::{Child, MainMenuChildren, NativeWidget, RootChildren, System};

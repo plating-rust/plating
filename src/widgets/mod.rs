@@ -50,10 +50,17 @@
 //! This module contains several traits that are common to several different widget types.
 //! For basic usage of `plating` it should be enough to import them via `use plating::prelude::*`
 
-mod children;
-pub mod generic;
-pub mod mock;
-mod traits;
+pub mod events;
+pub mod outlet;
+pub mod utils;
+
+mod system;
+pub use system::System;
+
+////////////////////
+//Systems:
+////////////////////
+pub mod mock; //Always included, even without `mock_os` feature flag
 
 #[cfg(any(target_os = "macos", doc))]
 #[doc(cfg(target_os = "macos"))]
@@ -67,17 +74,9 @@ pub mod win;
 //todo: pub mod android;
 //todo: pub mod ios;
 
-pub use children::*;
-
-pub mod outlet;
-
-pub use traits::*;
-
-pub mod utils;
-
-mod system;
-pub use system::System;
-
+/// Prelude for the widget subsystem
+///
+/// Automatically included in ```plating::prelude::*```
 pub mod prelude {
     /// used by all widgets that can have children
     pub use crate::widgets::outlet::Outlet; //TODO: do we really need this?
@@ -114,3 +113,15 @@ pub mod native {
 //#[cfg(all(not(feature="mock_os"), not(test)))]
 //#[doc(cfg(all(not(feature="mock_os"), not(test))))]
 pub use crate::widgets::native::System as default_system;
+
+////////////////////////////////////////////////////////
+///
+//////////////////////////////////////
+mod children;
+pub mod generic;
+
+mod traits;
+
+pub use children::*;
+
+pub use traits::*;
