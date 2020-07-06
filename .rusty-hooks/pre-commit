@@ -16,11 +16,7 @@ cargo fmt --all -- --check
 # Run tests of the main project as well as the subprojects
 echo '+cargo test --all'
 #cargo test --all --no-fail-fast --quiet
-cd uuid-macro
-#cargo test --all --no-fail-fast --quiet
-cd ../uuid-macro-hack
-#cargo test --all --no-fail-fast --quiet
-cd ../
+
 
 # run clippy
 echo '+cargo clippy --all -- -D warnings'
