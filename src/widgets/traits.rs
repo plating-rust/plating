@@ -401,9 +401,9 @@ where
 {
     fn created();
 
-    fn beforeDisplay();
+    fn before_display();
     fn displayed();
 
-    fn beforeDestroy();
+    fn before_destroy();
     fn destroyed();
 }
