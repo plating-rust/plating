@@ -3,9 +3,9 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::widgets::utils::WidgetHolder;
+use crate::widgets::ChildrenHolder;
 use crate::widgets::{default_system, System};
-
-use crate::widgets::{ChildrenHolder, WidgetHolder};
 use std::rc::Rc;
 
 type ChildIter<'a, CHILD> = std::iter::FilterMap<

@@ -8,7 +8,8 @@ use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
-use crate::widgets::{Child, MenuChildren, System, Widget, WidgetHolder};
+use crate::widgets::utils::WidgetHolder;
+use crate::widgets::{Child, MenuChildren, System, Widget};
 use crate::CheckedState;
 
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};

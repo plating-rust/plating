@@ -11,19 +11,10 @@
 use crate::features::serde::Deserialize;
 use crate::widgets::events::LifecycleHandler;
 use crate::widgets::outlet::Outlet;
+use crate::widgets::utils::WidgetHolder;
 use crate::widgets::System;
 use std::rc::{Rc, Weak};
 
-/// Very basic trait implemented bothy by widgets themselves and
-/// any kind of `Pointer` or other Widget indirection.
-///
-/// # Requirements
-/// When implementing this trait, make sure that `name()`always returns the same value
-/// and does not change during the lifetime of this instance.
-pub trait WidgetHolder {
-    /// Get the name of this widget or the widget this object is pointing to.
-    fn name(&self) -> &str;
-}
 
 /// Trait for all Native Widget Objects.
 ///
@@ -46,7 +37,8 @@ pub trait WidgetHolder {
 /// ## Implementation
 /// A basic native widget implementation.
 /// ```rust
-/// use plating::widgets::{System, Widget, WidgetHolder};
+/// use plating::widgets::{System, Widget};
+/// use plating::widgets::utils::{WidgetHolder};
 /// use plating::widgets::events::{ListenerType, LifecycleHandler};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};

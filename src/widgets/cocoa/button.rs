@@ -8,8 +8,9 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{ButtonHandlerTrait, ButtonParameters, NativeButton};
+use crate::widgets::utils::WidgetHolder;
 use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren};
-use crate::widgets::{Child, System, Widget, WidgetHolder, WindowChildren};
+use crate::widgets::{Child, System, Widget, WindowChildren};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CocoaButtonParameters {

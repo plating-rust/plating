@@ -11,8 +11,8 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::OutletHolder;
-use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, Widget, WidgetHolder};
+use crate::widgets::utils::{OutletHolder, WidgetHolder};
+use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, Widget};
 use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{

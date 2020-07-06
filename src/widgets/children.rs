@@ -7,7 +7,8 @@
 //!
 
 use crate::widgets::outlet::Outlet;
-use crate::widgets::{default_system, Child, System, WidgetHolder};
+use crate::widgets::utils::WidgetHolder;
+use crate::widgets::{default_system, Child, System};
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
