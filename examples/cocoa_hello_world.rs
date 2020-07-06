@@ -66,12 +66,18 @@ fn main() -> PlatingResult<(), default_system> {
 
     x.add_child(window)?;
 
-    #[allow(unused_variables)]
-    let gen = create_generic();
-    #[allow(unused_variables)]
-    let gen_nat = gen_nat();
-    #[allow(unused_variables)]
-    let nat_gen = nat_gen();
+    //#[allow(unused_variables)]
+    //let gen = create_generic();
+    //#[allow(unused_variables)]
+    //let gen_nat = gen_nat();
+    //#[allow(unused_variables)]
+    //let nat_gen = nat_gen();
+
+    x.run(); //.map_err(|err| err.into());
+
+    let mut x = Root::new(RootParameters::default()).unwrap();
+    let child = Window::new(WindowParameters::default()).unwrap();
+    x.add_child(child).unwrap();
 
     x.run().map_err(|err| err.into())
 }
