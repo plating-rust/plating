@@ -7,7 +7,7 @@
 //!
 
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::WidgetHolder;
+use crate::widgets::utils::Named;
 use crate::widgets::{default_system, Child, System};
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
@@ -18,7 +18,7 @@ pub enum ButtonChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> WidgetHolder for ButtonChildren<S> {
+impl<S: System> Named for ButtonChildren<S> {
     fn name(&self) -> &str {
         match self {
             Self::BUTTON(button) => button.name(),
@@ -41,7 +41,7 @@ impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S>
     }
 }
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> WidgetHolder for WindowChildren<S> {
+impl<S: System> Named for WindowChildren<S> {
     fn name(&self) -> &str {
         match self {
             Self::BUTTON(button) => button.name(),
@@ -56,7 +56,7 @@ pub enum RootChildren<S: System = default_system> {
     WINDOW(S::WindowType),
 }
 
-impl<S: System> WidgetHolder for RootChildren<S> {
+impl<S: System> Named for RootChildren<S> {
     fn name(&self) -> &str {
         match self {
             Self::WINDOW(window) => window.name(),
@@ -80,7 +80,7 @@ pub enum MenuChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> WidgetHolder for MenuChildren<S> {
+impl<S: System> Named for MenuChildren<S> {
     fn name(&self) -> &str {
         match self {
             Self::MENU(menu) => menu.name(),
@@ -106,7 +106,7 @@ pub enum MainMenuChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> WidgetHolder for MainMenuChildren<S> {
+impl<S: System> Named for MainMenuChildren<S> {
     fn name(&self) -> &str {
         match self {
             Self::MENU(menu) => menu.name(),

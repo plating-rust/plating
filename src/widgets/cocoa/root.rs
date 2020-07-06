@@ -10,8 +10,8 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
 use crate::widgets::outlet::Outlet;
+use crate::widgets::utils::Named;
 use crate::widgets::utils::OutletHolder;
-use crate::widgets::utils::WidgetHolder;
 use crate::widgets::System;
 use crate::widgets::{ChildrenHolder, RootChildren, Widget};
 
@@ -127,7 +127,7 @@ impl LifecycleHandler for CocoaRoot {
     }
 }
 
-impl WidgetHolder for CocoaRoot {
+impl Named for CocoaRoot {
     fn name(&self) -> &str {
         &self.name.as_str()
     }

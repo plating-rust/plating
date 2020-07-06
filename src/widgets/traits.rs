@@ -11,10 +11,9 @@
 use crate::features::serde::Deserialize;
 use crate::widgets::events::LifecycleHandler;
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::WidgetHolder;
+use crate::widgets::utils::Named;
 use crate::widgets::System;
 use std::rc::{Rc, Weak};
-
 
 /// Trait for all Native Widget Objects.
 ///
@@ -38,7 +37,7 @@ use std::rc::{Rc, Weak};
 /// A basic native widget implementation.
 /// ```rust
 /// use plating::widgets::{System, Widget};
-/// use plating::widgets::utils::{WidgetHolder};
+/// use plating::widgets::utils::{Named};
 /// use plating::widgets::events::{ListenerType, LifecycleHandler};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
@@ -59,7 +58,7 @@ use std::rc::{Rc, Weak};
 ///     handle: CocoaDefaultHandleType,
 /// }
 ///
-/// impl WidgetHolder for CocoaExampleWidget { //trait impl required by widget
+/// impl Named for CocoaExampleWidget { //trait impl required by widget
 ///     // Returns the plating name (not a backend internal one)
 ///     // *NOTE*: no setter because the name should not change.
 ///     fn name(&self) -> &str {
@@ -122,7 +121,7 @@ use std::rc::{Rc, Weak};
 ///
 pub trait Widget<S>
 where
-    Self: WidgetHolder + std::fmt::Debug + Sized + LifecycleHandler,
+    Self: Named + std::fmt::Debug + Sized + LifecycleHandler,
     S: System,
 {
     /// The Parameter type this struct requires when creating or applying changes to it.
@@ -148,7 +147,7 @@ where
 
 pub trait Child<ParentType, ChildType, S>
 where
-    ChildType: WidgetHolder,
+    ChildType: Named,
     ParentType: Widget<S> + Outlet<ChildType, S>,
     S: System,
 {
@@ -157,14 +156,14 @@ where
 
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Deserialize))]
-pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
+pub enum ChildrenHolder<T: ?Sized + Named> {
     #[serde(skip)]
     Weak(Weak<T>),
     Ours(Rc<T>),
 }
 
 #[cfg(feature = "serde")]
-impl<T: WidgetHolder + serde::Serialize> serde::Serialize for ChildrenHolder<T> {
+impl<T: Named + serde::Serialize> serde::Serialize for ChildrenHolder<T> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -178,7 +177,7 @@ impl<T: WidgetHolder + serde::Serialize> serde::Serialize for ChildrenHolder<T> 
     }
 }
 
-impl<T: WidgetHolder> ChildrenHolder<T> {
+impl<T: Named> ChildrenHolder<T> {
     pub fn new(value: T) -> Self {
         Self::Ours(Rc::new(value))
     }
@@ -211,7 +210,7 @@ impl<T: WidgetHolder> ChildrenHolder<T> {
         }
     }
 }
-impl<T: ?Sized + PartialEq + WidgetHolder> PartialEq for ChildrenHolder<T> {
+impl<T: ?Sized + PartialEq + Named> PartialEq for ChildrenHolder<T> {
     fn eq(&self, other: &ChildrenHolder<T>) -> bool {
         match (self, other) {
             (Self::Weak(lhs), Self::Weak(rhs)) => lhs.ptr_eq(rhs),
@@ -221,7 +220,7 @@ impl<T: ?Sized + PartialEq + WidgetHolder> PartialEq for ChildrenHolder<T> {
     }
 }
 
-impl<T: WidgetHolder> std::fmt::Pointer for ChildrenHolder<T> {
+impl<T: Named> std::fmt::Pointer for ChildrenHolder<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Weak(w) => std::fmt::Pointer::fmt(&w, f),

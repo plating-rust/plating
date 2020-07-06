@@ -11,7 +11,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{OutletHolder, WidgetHolder};
+use crate::widgets::utils::{Named, OutletHolder};
 use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, Widget};
 use crate::widgets::{RootChildren, System, WindowChildren};
 
@@ -307,7 +307,7 @@ impl LifecycleHandler for CocoaWindow {
     }
 }
 
-impl WidgetHolder for CocoaWindow {
+impl Named for CocoaWindow {
     fn name(&self) -> &str {
         &self.name.as_str()
     }

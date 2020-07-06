@@ -8,7 +8,7 @@ use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
-use crate::widgets::utils::WidgetHolder;
+use crate::widgets::utils::Named;
 use crate::widgets::{Child, MenuChildren, System, Widget};
 use crate::CheckedState;
 
@@ -53,7 +53,7 @@ impl NativeMenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}
 
-impl WidgetHolder for CocoaMenuItem {
+impl Named for CocoaMenuItem {
     fn name(&self) -> &str {
         &self.name.as_str()
     }

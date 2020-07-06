@@ -8,7 +8,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{ButtonHandlerTrait, ButtonParameters, NativeButton};
-use crate::widgets::utils::WidgetHolder;
+use crate::widgets::utils::Named;
 use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren};
 use crate::widgets::{Child, System, Widget, WindowChildren};
 
@@ -84,7 +84,7 @@ impl Widget<CocoaSystem> for CocoaButton {
     }
 }
 
-impl WidgetHolder for CocoaButton {
+impl Named for CocoaButton {
     fn name(&self) -> &str {
         &self.name.as_str()
     }

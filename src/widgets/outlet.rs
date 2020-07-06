@@ -3,7 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::widgets::utils::WidgetHolder;
+use crate::widgets::utils::Named;
 use crate::widgets::ChildrenHolder;
 use crate::widgets::{default_system, System};
 use std::rc::Rc;
@@ -13,13 +13,13 @@ type ChildIter<'a, CHILD> = std::iter::FilterMap<
     fn(&ChildrenHolder<CHILD>) -> Option<Rc<CHILD>>,
 >;
 
-fn get_obj<CHILD: WidgetHolder>(obj: &ChildrenHolder<CHILD>) -> Option<Rc<CHILD>> {
+fn get_obj<CHILD: Named>(obj: &ChildrenHolder<CHILD>) -> Option<Rc<CHILD>> {
     obj.get()
 }
 
 pub trait Outlet<CHILD, S = default_system>
 where
-    CHILD: WidgetHolder,
+    CHILD: Named,
     S: System,
 {
     type ErrorType: Into<crate::error::PlatingError<S>>;

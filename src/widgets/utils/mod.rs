@@ -12,7 +12,7 @@ pub use outlet_holder::OutletHolder;
 /// # Requirements
 /// When implementing this trait, make sure that `name()`always returns the same value
 /// and does not change during the lifetime of this instance.
-pub trait WidgetHolder {
+pub trait Named {
     /// Get the name of this widget or the widget this object is pointing to.
     fn name(&self) -> &str;
 }
@@ -21,5 +21,5 @@ pub trait WidgetHolder {
 ///
 /// Automatically included in ```plating::prelude::*``` and ```plating::widgets::prelude::*`
 pub mod prelude {
-    pub use super::WidgetHolder;
+    pub use super::Named;
 }
