@@ -182,16 +182,11 @@ pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
     Ours(Rc<T>),
 }
 
-use super::generic::{MenuItemParameters, MenuParameters, WindowHandlerTrait, WindowParameters};
-
 #[cfg(feature = "serde")]
-use serde::{Serialize, Serializer};
-
-#[cfg(feature = "serde")]
-impl<T: WidgetHolder + Serialize> Serialize for ChildrenHolder<T> {
+impl<T: WidgetHolder + serde::Serialize> serde::Serialize for ChildrenHolder<T> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: serde::Serializer,
     {
         match self.get() {
             Some(pointer) => pointer.as_ref().serialize(serializer),
