@@ -9,7 +9,7 @@
 //! to write platform-independent code.
 
 use crate::features::serde::Deserialize;
-use crate::widgets::{ System, OutletAdapter};
+use crate::widgets::{OutletAdapter, System};
 use std::rc::{Rc, Weak};
 
 /// Enum representing the EventState after a Event Callback was called.

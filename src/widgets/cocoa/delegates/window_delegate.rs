@@ -18,7 +18,11 @@ impl WindowHandlerTrait for CocoaWindowDelegate {
     fn set_resize_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_resize_listener(&mut self, _when: crate::data::ListenerType, _handler: Box<impl FnMut()>) {
+    fn add_resize_listener(
+        &mut self,
+        _when: crate::data::ListenerType,
+        _handler: Box<impl FnMut()>,
+    ) {
         todo!()
     }
 }
