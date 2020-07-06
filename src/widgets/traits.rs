@@ -267,6 +267,9 @@ where
 ///     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
 ///        &self.handle
 ///     }
+///     unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
+///         &mut self.handle
+///     }
 /// }
 /// ```
 ///

@@ -140,6 +140,9 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }
+    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
+        &mut self.handle
+    }
 }
 
 impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {}
