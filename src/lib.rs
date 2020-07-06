@@ -58,7 +58,7 @@
 #[cfg(target_os = "macos")]
 extern crate cocoa;
 #[cfg(all(not(target_os = "macos")))]
-compile_error!("Unsupported plattform.");
+compile_error!("Unsupported platform.");
 
 pub mod error;
 pub mod widgets;
@@ -76,7 +76,7 @@ pub use data::*;
 /// ```
 pub mod prelude {
     pub use crate::widgets::NativeWidget;
-    /// used by all widgets that can have children (native and generic)
+    /// used by all widgets that can have children
     pub use crate::widgets::OutletAdapter;
     pub use crate::widgets::Widget;
 }
