@@ -9,7 +9,7 @@ use crate::widgets::utils::{Child, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{default_system, System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct ButtonParameters {
     pub label: Option<String>,
 }

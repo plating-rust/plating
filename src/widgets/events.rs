@@ -3,11 +3,13 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::features::serde::{Deserialize, Serialize};
+
 /// Enum representing the EventState after a Event Callback was called.
 ///
 /// # Example
 /// todo: example callback return handled and unhandled on some condition
-#[derive(Debug, Eq, PartialEq, Clone, Hash)]
+#[derive(Debug, Eq, PartialEq, Clone, Copy, Hash, Serialize, Deserialize)]
 pub enum EventState {
     /// represent that the event was handled and no further event handlers should be called
     HANDLED,
@@ -15,7 +17,7 @@ pub enum EventState {
     UNHANDLED,
 }
 
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(Debug, Eq, PartialEq, Clone, Copy, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum ListenerType {
     Before,
     After,

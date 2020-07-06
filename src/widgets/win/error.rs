@@ -6,13 +6,13 @@
 use std::error::Error;
 use std::fmt;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum WinErrorKind {
     TODO,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct WinError {
     kind: WinErrorKind,
 }

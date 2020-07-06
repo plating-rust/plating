@@ -22,7 +22,7 @@ use std::error::Error;
 use std::fmt;
 
 /// Enum containing all kinds of errors that can occur dealing with plating.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 #[non_exhaustive]
 pub enum PlatingErrorKind<S: System> {
     /// Error occurred in the backend.

@@ -8,7 +8,7 @@ use crate::widgets::menu::MenuChildren;
 use crate::widgets::utils::Child;
 use crate::widgets::{System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct MenuItemParameters {
     pub title: Option<String>,
     pub is_enabled: Option<bool>,

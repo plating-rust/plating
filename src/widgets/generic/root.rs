@@ -10,7 +10,7 @@ use crate::widgets::utils::{Child, Named};
 use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq)] //required in cached version
+#[derive(Eq, PartialEq, Hash)] //required in cached version
 pub struct RootParameters {}
 
 pub trait RootHandlerTrait {

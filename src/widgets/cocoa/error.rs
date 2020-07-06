@@ -8,7 +8,7 @@ use crate::error::{PlatingError, PlatingErrorKind};
 use std::error::Error;
 use std::fmt;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 #[non_exhaustive]
 pub enum CocoaErrorKind {
     TODO,

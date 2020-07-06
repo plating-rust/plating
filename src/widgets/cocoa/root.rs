@@ -21,7 +21,7 @@ use cocoa::base::nil;
 use cocoa::foundation::NSAutoreleasePool;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq)] //required in cached version
+#[derive(Eq, PartialEq, Hash)] //required in cached version
 pub struct CocoaRootParameters {
     //todo
 }

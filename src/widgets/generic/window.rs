@@ -32,7 +32,7 @@ use crate::widgets::{default_system, System, Widget};
 ///
 /// You cannot generate a WindowParameter from a native Parameter struct, because they have more information that might be lost.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq)] //required in cached version
+#[derive(Eq, PartialEq, Hash)] //required in cached version
 pub struct WindowParameters {
     /// Sets the Position and Size of the window
     pub rect: Option<crate::Rect>,

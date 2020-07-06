@@ -18,7 +18,7 @@ pub type Vec3<T> = (T, T, T);
 /// The state of checkable objects like e.g. check boxes.
 ///
 /// See also [`OptionalCheckedState`]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub enum CheckedState {
     /// This items state is 'not checked'
     Off,
@@ -54,7 +54,7 @@ impl TryFrom<OptionalCheckedState> for CheckedState {
 
 /// The state of optionally checkable objects like menu items.
 /// The difference to [`CheckedState`] is that this supports are 'None' option.
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub enum OptionalCheckedState {
     /// This item has its checked state turned off
     None,
@@ -84,7 +84,7 @@ impl From<CheckedState> for OptionalCheckedState {
 /// Generic Enum for representing a horizontal direction.
 ///
 /// Can be used to represent text direction as well as layout direction
-#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub enum Direction {
     ///
     LeftToRight,
@@ -93,7 +93,7 @@ pub enum Direction {
 }
 
 /// Specifies a rectangular area.
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct Rect {
     /// the position of the top left of this rectangular area.
     ///
@@ -106,7 +106,7 @@ pub struct Rect {
 }
 
 /// Data representing a rgba color.
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct RGBA {
     /// stores the red part of the color.
     ///
@@ -176,13 +176,14 @@ impl RGBA {
 /// Converts a RGB Color to an RGBA color by keeping the rgb part and
 /// setting the alpha value to `0`.
 impl From<RGB> for RGBA {
+    #[inline]
     fn from(rgb: RGB) -> RGBA {
         RGBA::new(rgb.r, rgb.g, rgb.b, 0)
     }
 }
 
 /// Data representing a RGB color.
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct RGB {
     /// stores the red part of the color.
     ///
@@ -233,7 +234,7 @@ impl RGB {
 ///
 /// Chose between an [`RGB`] or [`RGBA`] presentation.
 //todo: allow changing between different types
-#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Eq, PartialEq)]
 pub enum Color {
     /// Stores an RGBA value
     RGBA(RGBA),

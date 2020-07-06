@@ -5,7 +5,7 @@
 
 use cocoa::appkit::NSEvent;
 
-#[derive(Debug)]
+#[derive(Debug, Hash, Eq, PartialEq, Clone)]
 pub struct CocoaEvent<T>
 where
     T: NSEvent + Sized,

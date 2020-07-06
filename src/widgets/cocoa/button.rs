@@ -13,7 +13,7 @@ use crate::widgets::utils::{Child, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CocoaButtonParameters {
     pub label: Option<String>,
 }

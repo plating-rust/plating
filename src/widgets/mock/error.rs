@@ -5,11 +5,12 @@
 
 //! Contains [`MockError`] which is the error type for [`MockSystem`].
 
+use crate::features::serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt;
 
 /// A Mock error kind containing 3 different Error types.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum MockErrorKind {
     ///
@@ -32,7 +33,7 @@ impl fmt::Display for MockErrorKind {
 /// Mock Error using [`MockErrorKind`] as the kind data.
 ///
 /// Implements everything required by `System::ErrorType` to be used as a Systems error type.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct MockError {
     kind: MockErrorKind,
 }

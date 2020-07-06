@@ -18,7 +18,7 @@ use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq)]
+#[derive(Eq, PartialEq, Hash)]
 pub struct CocoaMenuItemParameters {
     // generic
     pub title: Option<String>,
