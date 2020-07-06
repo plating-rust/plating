@@ -57,6 +57,9 @@ pub mod utils;
 mod system;
 pub use system::System;
 
+mod widget;
+pub use widget::Widget;
+
 ////////////////////
 //Systems:
 ////////////////////
