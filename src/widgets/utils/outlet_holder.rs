@@ -94,11 +94,40 @@ where
         self.children.shrink_to_fit();
     }
 
-    pub(crate) fn children(&self) -> &[WidgetPointer<CHILD>] {
-        &self.children[0..self.children.len()]
+    pub fn as_slice(&self) -> &[WidgetPointer<CHILD>] {
+        self.children.as_slice()
     }
 
-    pub(crate) fn add_child<T>(
+    pub fn clear(&mut self) {
+        self.children.clear()
+    }
+
+    pub fn len(&self) -> usize {
+        self.children.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.children.is_empty()
+    }
+
+    pub(crate) fn insert_child<T>(
+        &mut self,
+        index: usize,
+        child: T,
+        parent: &Parent::ParentData,
+    ) -> std::result::Result<(), S::ErrorType>
+    where
+        T: Into<CHILD>,
+    {
+        let into_child = child.into();
+        into_child.adding_to(parent);
+        self.children
+            .insert(index, WidgetPointer::Ours(Rc::new(into_child)));
+
+        Ok(())
+    }
+
+    pub(crate) fn push_child<T>(
         &mut self,
         child: T,
         parent: &Parent::ParentData,
@@ -112,4 +141,74 @@ where
 
         Ok(())
     }
+
+    //
+
+    pub(crate) fn iter<'a>(&'a self) -> OutletIterator<'a, CHILD> {
+        OutletIterator::new(self.children.iter())
+    }
 }
+
+#[derive(Debug)]
+pub struct OutletIterator<'a, CHILD>
+where
+    CHILD: Named,
+{
+    internal_iter: std::slice::Iter<'a, WidgetPointer<CHILD>>,
+}
+impl<'a, CHILD> OutletIterator<'a, CHILD>
+where
+    CHILD: Named,
+{
+    fn new(iter: std::slice::Iter<'a, WidgetPointer<CHILD>>) -> Self {
+        Self {
+            internal_iter: iter,
+        }
+    }
+}
+
+impl<'a, CHILD> Iterator for OutletIterator<'a, CHILD>
+where
+    CHILD: Named,
+{
+    type Item = Rc<CHILD>;
+    fn next(&mut self) -> Option<Rc<CHILD>> {
+        let n = self.internal_iter.next();
+        let n = self.internal_iter.next_back();
+        if let Some(pointer) = n {
+            match pointer.get() {
+                Some(p) => Some(p),
+                None => self.next(),
+            }
+        } else {
+            None
+        }
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.internal_iter.size_hint()
+    }
+}
+
+impl<'a, CHILD> DoubleEndedIterator for OutletIterator<'a, CHILD>
+where
+    CHILD: Named,
+{
+    #[inline]
+    fn next_back(&mut self) -> Option<Rc<CHILD>> {
+        let n = self.internal_iter.next_back();
+        if let Some(pointer) = n {
+            match pointer.get() {
+                Some(p) => Some(p),
+                None => self.next(),
+            }
+        } else {
+            None
+        }
+    }
+}
+
+impl<'a, CHILD> ExactSizeIterator for OutletIterator<'_, CHILD> where CHILD: Named {}
+
+impl<'a, CHILD> core::iter::FusedIterator for OutletIterator<'_, CHILD> where CHILD: Named {}

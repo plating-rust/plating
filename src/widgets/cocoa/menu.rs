@@ -11,7 +11,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, OutletHolder, WidgetPointer};
+use crate::widgets::utils::{Child, Named, OutletHolder, OutletIterator, WidgetPointer};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::Direction;
@@ -63,6 +63,15 @@ pub struct CocoaMenu {
     main_outlet: OutletHolder<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
 }
 
+impl CocoaMenu {
+    pub(self) fn create_cocoa_menu_parent_data(&self) -> CocoaMenuParentData {
+        CocoaMenuParentData {
+            item: self.item,
+            menu: self.handle,
+        }
+    }
+}
+
 impl Named for CocoaMenu {
     fn name(&self) -> &str {
         &self.name.as_str()
@@ -74,21 +83,49 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     type ErrorType = CocoaError;
     type ParentData = CocoaMenuParentData;
 
-    fn children(&self) -> &[WidgetPointer<MenuChildren<CocoaSystem>>] {
-        self.main_outlet.children()
+    fn iter<'a>(&'a self) -> OutletIterator<'a, MenuChildren<CocoaSystem>> {
+        self.main_outlet.iter()
     }
 
-    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
         T: Into<MenuChildren<CocoaSystem>>,
     {
-        self.main_outlet.add_child(
-            child.into(),
-            &CocoaMenuParentData {
-                item: self.item,
-                menu: self.handle,
-            },
-        )
+        self.main_outlet
+            .push_child(child.into(), &self.create_cocoa_menu_parent_data())
+    }
+
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    where
+        T: Into<MenuChildren<CocoaSystem>>,
+    {
+        self.main_outlet
+            .insert_child(index, child.into(), &self.create_cocoa_menu_parent_data())
+    }
+
+    fn capacity(&self) -> usize {
+        self.main_outlet.capacity()
+    }
+    fn reserve(&mut self, additional: usize) {
+        self.main_outlet.reserve(additional)
+    }
+    fn reserve_exact(&mut self, additional: usize) {
+        self.main_outlet.reserve_exact(additional)
+    }
+    fn shrink_to_fit(&mut self) {
+        self.main_outlet.shrink_to_fit()
+    }
+    fn as_slice(&self) -> &[WidgetPointer<MenuChildren<CocoaSystem>>] {
+        self.main_outlet.as_slice()
+    }
+    fn clear(&mut self) {
+        self.main_outlet.clear()
+    }
+    fn len(&self) -> usize {
+        self.main_outlet.len()
+    }
+    fn is_empty(&self) -> bool {
+        self.main_outlet.is_empty()
     }
 }
 

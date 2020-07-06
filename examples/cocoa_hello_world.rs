@@ -59,14 +59,14 @@ fn main() -> PlatingResult<(), default_system> {
     })
     .unwrap();
 
-    Outlet::<MenuChildren>::add_child(&mut menu, process_item1).unwrap();
-    Outlet::<MenuChildren>::add_child(&mut menu, process_item2).unwrap();
+    Outlet::<MenuChildren>::push_child(&mut menu, process_item1).unwrap();
+    Outlet::<MenuChildren>::push_child(&mut menu, process_item2).unwrap();
 
-    Outlet::<MainMenuChildren>::add_child(&mut window, menu)?;
+    Outlet::<MainMenuChildren>::push_child(&mut window, menu)?;
 
-    Outlet::<MainMenuChildren>::add_child(&mut window, edit)?;
+    Outlet::<MainMenuChildren>::push_child(&mut window, edit)?;
 
-    x.add_child(window)?;
+    x.push_child(window)?;
 
     //#[allow(unused_variables)]
     //let gen = create_generic();
@@ -97,8 +97,8 @@ fn gen_nat() -> <default_system as System>::RootType {
     let mut x = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
     let child1 = CocoaWindow::new(CocoaWindowParameters::default()).unwrap();
     let child2 = CocoaWindow::new(WindowParameters::default()).unwrap();
-    x.add_child(child1).unwrap();
-    x.add_child(child2).unwrap();
+    x.push_child(child1).unwrap();
+    x.push_child(child2).unwrap();
     x
 }
 

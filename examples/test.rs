@@ -27,6 +27,6 @@ fn main() {
     let button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
 
     //mix and match them together
-    Outlet::<WindowChildren>::add_child(&mut window, button).unwrap();
-    root.add_child(window).unwrap();
+    Outlet::<WindowChildren>::push_child(&mut window, button).unwrap();
+    root.push_child(window).unwrap();
 }

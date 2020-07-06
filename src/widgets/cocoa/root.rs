@@ -10,7 +10,7 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
-use crate::widgets::utils::{Named, OutletHolder, WidgetPointer};
+use crate::widgets::utils::{Named, OutletHolder, OutletIterator, WidgetPointer};
 use crate::widgets::{System, Widget};
 
 use cocoa::appkit::{
@@ -135,14 +135,46 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn children(&self) -> &[WidgetPointer<RootChildren<CocoaSystem>>] {
-        self.main_outlet.children()
+    fn iter<'a>(&'a self) -> OutletIterator<'a, RootChildren<CocoaSystem>> {
+        self.main_outlet.iter()
     }
 
-    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
         T: Into<RootChildren<CocoaSystem>>,
     {
-        self.main_outlet.add_child(child, &())
+        self.main_outlet.push_child(child, &())
+    }
+
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    where
+        T: Into<RootChildren<CocoaSystem>>,
+    {
+        self.main_outlet.insert_child(index, child.into(), &())
+    }
+
+    fn capacity(&self) -> usize {
+        self.main_outlet.capacity()
+    }
+    fn reserve(&mut self, additional: usize) {
+        self.main_outlet.reserve(additional)
+    }
+    fn reserve_exact(&mut self, additional: usize) {
+        self.main_outlet.reserve_exact(additional)
+    }
+    fn shrink_to_fit(&mut self) {
+        self.main_outlet.shrink_to_fit()
+    }
+    fn as_slice(&self) -> &[WidgetPointer<RootChildren<CocoaSystem>>] {
+        self.main_outlet.as_slice()
+    }
+    fn clear(&mut self) {
+        self.main_outlet.clear()
+    }
+    fn len(&self) -> usize {
+        self.main_outlet.len()
+    }
+    fn is_empty(&self) -> bool {
+        self.main_outlet.is_empty()
     }
 }

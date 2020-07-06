@@ -10,7 +10,7 @@ use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, OutletHolder, WidgetPointer};
+use crate::widgets::utils::{Child, Named, OutletHolder, OutletIterator, WidgetPointer};
 use crate::widgets::{
     root::RootChildren,
     window::{
@@ -138,40 +138,6 @@ pub struct CocoaMainMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
-impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
-    type ErrorType = CocoaError;
-    type ParentData = CocoaMainMenuParentData;
-
-    fn children(&self) -> &[WidgetPointer<MainMenuChildren<CocoaSystem>>] {
-        &self.menu_outlet.children()
-    }
-
-    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
-    where
-        T: Into<MainMenuChildren<CocoaSystem>>,
-    {
-        if self.menubar.is_none() {
-            log::info!("Initialize main menu");
-            unsafe {
-                let menubar = NSMenu::new(nil).autorelease();
-                self.menubar = Some(menubar);
-                NSApp().setMainMenu_(menubar);
-
-                //let menu_item = NSMenuItem::new(nil).autorelease();
-                //menubar.addItem_(menu_item);
-                //self.menu_item = Some(menu_item);
-            }
-        }
-        self.menu_outlet.add_child(
-            child,
-            &CocoaMainMenuParentData {
-                //menu_item: self.menu_item.unwrap(),
-                menu: self.menubar.unwrap(),
-            },
-        ) //big todo:
-    }
-}
-
 #[derive(Debug)]
 pub struct CocoaWindow {
     ///auto generate and add via derive(Widget)
@@ -188,6 +154,29 @@ pub struct CocoaWindow {
 
     menubar: Option<CocoaDefaultHandleType>,
     menu_item: Option<CocoaDefaultHandleType>,
+}
+
+impl CocoaWindow {
+    pub(self) fn prepare_insertion(&mut self) {
+        if self.menubar.is_none() {
+            log::info!("Initialize main menu");
+            unsafe {
+                let menubar = NSMenu::new(nil).autorelease();
+                self.menubar = Some(menubar);
+                NSApp().setMainMenu_(menubar);
+
+                //let menu_item = NSMenuItem::new(nil).autorelease();
+                //menubar.addItem_(menu_item);
+                //self.menu_item = Some(menu_item);
+            }
+        }
+    }
+    pub(self) fn create_main_menu_parent_data(&self) -> CocoaMainMenuParentData {
+        CocoaMainMenuParentData {
+            //menu_item: self.menu_item.unwrap(),
+            menu: self.menubar.unwrap(),
+        }
+    }
 }
 
 impl Widget<CocoaSystem> for CocoaWindow {
@@ -293,6 +282,58 @@ impl Widget<CocoaSystem> for CocoaWindow {
     }
 }
 
+impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
+    type ErrorType = CocoaError;
+    type ParentData = CocoaMainMenuParentData;
+
+    fn iter<'a>(&'a self) -> OutletIterator<'a, MainMenuChildren<CocoaSystem>> {
+        self.menu_outlet.iter()
+    }
+
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    where
+        T: Into<MainMenuChildren<CocoaSystem>>,
+    {
+        self.prepare_insertion();
+        self.menu_outlet
+            .push_child(child, &self.create_main_menu_parent_data())
+    }
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    where
+        T: Into<MainMenuChildren<CocoaSystem>>,
+    {
+        self.prepare_insertion();
+
+        self.menu_outlet
+            .insert_child(index, child, &self.create_main_menu_parent_data())
+    }
+
+    fn capacity(&self) -> usize {
+        self.menu_outlet.capacity()
+    }
+    fn reserve(&mut self, additional: usize) {
+        self.menu_outlet.reserve(additional)
+    }
+    fn reserve_exact(&mut self, additional: usize) {
+        self.menu_outlet.reserve_exact(additional)
+    }
+    fn shrink_to_fit(&mut self) {
+        self.menu_outlet.shrink_to_fit()
+    }
+    fn as_slice(&self) -> &[WidgetPointer<MainMenuChildren<CocoaSystem>>] {
+        self.menu_outlet.as_slice()
+    }
+    fn clear(&mut self) {
+        self.menu_outlet.clear()
+    }
+    fn len(&self) -> usize {
+        self.menu_outlet.len()
+    }
+    fn is_empty(&self) -> bool {
+        self.menu_outlet.is_empty()
+    }
+}
+
 impl LifecycleHandler for CocoaWindow {
     fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
@@ -328,15 +369,50 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn children(&self) -> &[WidgetPointer<WindowChildren<CocoaSystem>>] {
-        self.main_outlet.children()
+    fn iter<'a>(&'a self) -> OutletIterator<'a, WindowChildren<CocoaSystem>> {
+        self.main_outlet.iter()
     }
 
-    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
     where
         T: Into<WindowChildren<CocoaSystem>>,
     {
-        self.main_outlet.add_child(child, &())
+        self.main_outlet.push_child(child, &())
+    }
+
+    fn insert_child<T>(
+        &mut self,
+        index: usize,
+        child: T,
+    ) -> std::result::Result<(), Self::ErrorType>
+    where
+        T: Into<WindowChildren<CocoaSystem>>,
+    {
+        self.main_outlet.insert_child(index, child, &())
+    }
+    fn capacity(&self) -> usize {
+        self.main_outlet.capacity()
+    }
+    fn reserve(&mut self, additional: usize) {
+        self.main_outlet.reserve(additional)
+    }
+    fn reserve_exact(&mut self, additional: usize) {
+        self.main_outlet.reserve_exact(additional)
+    }
+    fn shrink_to_fit(&mut self) {
+        self.main_outlet.shrink_to_fit()
+    }
+    fn as_slice(&self) -> &[WidgetPointer<WindowChildren<CocoaSystem>>] {
+        self.main_outlet.as_slice()
+    }
+    fn clear(&mut self) {
+        self.main_outlet.clear()
+    }
+    fn len(&self) -> usize {
+        self.main_outlet.len()
+    }
+    fn is_empty(&self) -> bool {
+        self.main_outlet.is_empty()
     }
 }
 

@@ -39,10 +39,10 @@
 //!     let mut button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
 //!
 //!     //mix them together
-//!     //TODO: window.add_child(button);
-//!     root.add_child(window).unwrap();
+//!     //TODO: window.push_child(button);
+//!     root.push_child(window).unwrap();
 //!
-//!     //after you are done initialising: root.run();
+//!     //after you are done initializing: root.run();
 //!     //todo: manually exit after root.run()
 //! }
 //! ```

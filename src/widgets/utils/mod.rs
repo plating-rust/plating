@@ -5,6 +5,7 @@
 
 mod outlet_holder;
 pub use outlet_holder::OutletHolder;
+pub use outlet_holder::OutletIterator;
 
 mod widget_pointer;
 pub use widget_pointer::WidgetPointer;
