@@ -57,12 +57,12 @@ fn main() -> PlatingResult<(), default_system> {
     })
     .unwrap();
 
-    OutletAdapter::<MenuChildren>::add_child(&mut menu, process_item1).unwrap();
-    OutletAdapter::<MenuChildren>::add_child(&mut menu, process_item2).unwrap();
+    Outlet::<MenuChildren>::add_child(&mut menu, process_item1).unwrap();
+    Outlet::<MenuChildren>::add_child(&mut menu, process_item2).unwrap();
 
-    OutletAdapter::<MainMenuChildren>::add_child(&mut window, menu)?;
+    Outlet::<MainMenuChildren>::add_child(&mut window, menu)?;
 
-    OutletAdapter::<MainMenuChildren>::add_child(&mut window, edit)?;
+    Outlet::<MainMenuChildren>::add_child(&mut window, edit)?;
 
     x.add_child(window)?;
 

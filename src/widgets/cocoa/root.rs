@@ -8,10 +8,10 @@ use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
+use crate::widgets::outlet::Outlet;
+use crate::widgets::utils::OutletHolder;
 use crate::widgets::System;
-use crate::widgets::{
-    ChildrenHolder, NativeWidget, Outlet, OutletAdapter, RootChildren, Widget, WidgetHolder,
-};
+use crate::widgets::{ChildrenHolder, NativeWidget, RootChildren, Widget, WidgetHolder};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -39,7 +39,7 @@ pub struct CocoaRoot {
     handle: CocoaDefaultHandleType,
 
     ///auto generate and add via derive(widgetParent(Window))
-    main_outlet: Outlet<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
+    main_outlet: OutletHolder<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
 }
 
 impl Widget for CocoaRoot {
@@ -84,7 +84,7 @@ impl NativeWidget<CocoaSystem> for CocoaRoot {
         let mut new_root = CocoaRoot {
             name,
             handle: app,
-            main_outlet: Outlet::default(),
+            main_outlet: OutletHolder::default(),
         };
 
         new_root.apply(settings)?;
@@ -115,7 +115,7 @@ impl WidgetHolder for CocoaRoot {
     }
 }
 // auto generate impl via derive(widgetParent(A, B    ))
-impl OutletAdapter<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
+impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     type ErrorType = CocoaError;
     type ParentData = ();
 

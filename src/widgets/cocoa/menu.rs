@@ -9,9 +9,11 @@ use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::generic::{MenuHandlerTrait, MenuParameters, NativeMenu};
+use crate::widgets::outlet::Outlet;
+use crate::widgets::utils::OutletHolder;
 use crate::widgets::{
-    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, Outlet, OutletAdapter,
-    System, Widget, WidgetHolder,
+    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, System, Widget,
+    WidgetHolder,
 };
 use crate::Direction;
 
@@ -59,7 +61,7 @@ pub struct CocoaMenu {
     ///Stores the MenuItem.
     item: CocoaDefaultHandleType,
     ///auto generate and add via derive(widgetParent(Window))
-    main_outlet: Outlet<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
+    main_outlet: OutletHolder<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
 }
 impl Widget for CocoaMenu {
     type PARAMS = CocoaMenuParameters;
@@ -71,7 +73,7 @@ impl WidgetHolder for CocoaMenu {
 }
 
 // auto generate impl via derive(widgetParent(A, B    ))
-impl OutletAdapter<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
+impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     type ErrorType = CocoaError;
     type ParentData = CocoaMenuParentData;
 
@@ -113,7 +115,7 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
             name,
             handle: menu,
             item: menu_item,
-            main_outlet: Outlet::default(),
+            main_outlet: OutletHolder::default(),
         };
         new_menu.apply(settings)?;
         Ok(new_menu)
@@ -148,7 +150,7 @@ impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {}
 impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     fn adding_to(
         &self,
-        parent: &<CocoaWindow as OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
+        parent: &<CocoaWindow as Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
     ) {
         log::info!("Adding menu to window!");
         unsafe {

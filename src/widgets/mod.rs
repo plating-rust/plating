@@ -53,7 +53,6 @@
 mod children;
 pub mod generic;
 pub mod mock;
-mod outlet;
 mod traits;
 
 #[cfg(any(target_os = "macos", doc))]
@@ -69,11 +68,22 @@ pub mod win;
 //todo: pub mod ios;
 
 pub use children::*;
-pub use outlet::*;
+
+pub mod outlet;
+
 pub use traits::*;
+
+pub mod utils;
 
 mod system;
 pub use system::System;
+
+pub mod prelude {
+    /// used by all widgets that can have children
+    pub use crate::widgets::outlet::Outlet; //TODO: do we really need this?
+    pub use crate::widgets::NativeWidget;
+    pub use crate::widgets::Widget;
+}
 
 /// Typedef to the native widgets
 ///

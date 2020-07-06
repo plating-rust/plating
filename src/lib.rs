@@ -75,10 +75,7 @@ pub use data::*;
 /// use plating::prelude::*;
 /// ```
 pub mod prelude {
-    pub use crate::widgets::NativeWidget;
-    /// used by all widgets that can have children
-    pub use crate::widgets::OutletAdapter;
-    pub use crate::widgets::Widget;
+    pub use crate::widgets::prelude::*;
 }
 
 /// Define feature specific objects with the goal to remove `#cfg[]` as much as possible from actual implementation code.

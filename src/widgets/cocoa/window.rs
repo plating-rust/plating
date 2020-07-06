@@ -9,10 +9,9 @@ use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
-use crate::widgets::{
-    Child, ChildrenHolder, MainMenuChildren, NativeWidget, Outlet, OutletAdapter, Widget,
-    WidgetHolder,
-};
+use crate::widgets::outlet::Outlet;
+use crate::widgets::utils::OutletHolder;
+use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, NativeWidget, Widget, WidgetHolder};
 use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{
@@ -134,7 +133,7 @@ pub struct CocoaMainMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
-impl OutletAdapter<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
+impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ErrorType = CocoaError;
     type ParentData = CocoaMainMenuParentData;
 
@@ -178,9 +177,9 @@ pub struct CocoaWindow {
     event_delegate: CocoaWindowDelegate,
 
     ///auto generate and add via derive(widgetParent(Window))
-    main_outlet: Outlet<WindowChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
+    main_outlet: OutletHolder<WindowChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
 
-    menu_outlet: Outlet<MainMenuChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
+    menu_outlet: OutletHolder<MainMenuChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
 
     menubar: Option<CocoaDefaultHandleType>,
     menu_item: Option<CocoaDefaultHandleType>,
@@ -209,8 +208,8 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
         let mut new_window = CocoaWindow {
             name,
             handle: window,
-            main_outlet: Outlet::default(),
-            menu_outlet: Outlet::default(),
+            main_outlet: OutletHolder::default(),
+            menu_outlet: OutletHolder::default(),
             menubar: None,
             menu_item: None,
             event_delegate: CocoaWindowDelegate::new(),
@@ -304,7 +303,7 @@ impl From<CocoaWindow> for RootChildren<CocoaSystem> {
 }
 
 // auto generate impl via derive(widgetParent(A, B    ))
-impl OutletAdapter<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
+impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ErrorType = CocoaError;
     type ParentData = ();
 

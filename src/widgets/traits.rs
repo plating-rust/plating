@@ -9,7 +9,8 @@
 //! to write platform-independent code.
 
 use crate::features::serde::Deserialize;
-use crate::widgets::{OutletAdapter, System};
+use crate::widgets::outlet::Outlet;
+use crate::widgets::System;
 use std::rc::{Rc, Weak};
 
 /// Enum representing the EventState after a Event Callback was called.
@@ -168,7 +169,7 @@ where
 pub trait Child<ParentType, ChildType, S>
 where
     ChildType: WidgetHolder,
-    ParentType: NativeWidget<S> + OutletAdapter<ChildType, S>,
+    ParentType: NativeWidget<S> + Outlet<ChildType, S>,
     S: System,
 {
     fn adding_to(&self, _parent: &ParentType::ParentData) {}

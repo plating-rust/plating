@@ -8,8 +8,9 @@
 
 use crate::data::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::outlet::Outlet;
 use crate::widgets::WindowChildren;
-use crate::widgets::{Child, MainMenuChildren, NativeWidget, OutletAdapter, RootChildren, System};
+use crate::widgets::{Child, MainMenuChildren, NativeWidget, RootChildren, System};
 
 /// Generic parameters for creating and customizing Windows
 ///
@@ -125,8 +126,8 @@ pub trait WindowHandlerTrait {
 
 pub trait NativeWindow<S: System>:
     NativeWidget<S, PARAMS = S::WindowParameterType>
-    + OutletAdapter<WindowChildren<S>, S>
-    + OutletAdapter<MainMenuChildren<S>, S>
+    + Outlet<WindowChildren<S>, S>
+    + Outlet<MainMenuChildren<S>, S>
     + WindowHandlerTrait
     + Child<S::RootType, RootChildren<S>, S>
 {
