@@ -5,7 +5,6 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
-use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};

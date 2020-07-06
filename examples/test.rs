@@ -5,7 +5,7 @@
 
 use plating::prelude::*;
 #[cfg(target_os = "macos")]
-use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters, CocoaWindow};
+use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
 use plating::widgets::generic::{RootParameters, WindowParameters};
 #[cfg(target_os = "win")]
 use plating::widgets::win::{WinButton, WinButtonParameters};

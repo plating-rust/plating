@@ -15,7 +15,6 @@ use crate::widgets::generic::{
     RootParameters,
 };
 use crate::widgets::OutletAdapter;
-use crate::PlatingResult;
 use std::error::Error;
 use std::rc::{Rc, Weak};
 
@@ -324,10 +323,8 @@ pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
     Ours(Rc<T>),
 }
 
-use super::{
-    generic::{MenuItemParameters, MenuParameters, WindowHandlerTrait, WindowParameters},
-    WindowChildren,
-};
+use super::generic::{MenuItemParameters, MenuParameters, WindowHandlerTrait, WindowParameters};
+
 #[cfg(feature = "serde")]
 use serde::{Serialize, Serializer};
 

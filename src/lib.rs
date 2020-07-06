@@ -75,7 +75,6 @@ pub use data::*;
 /// use plating::prelude::*;
 /// ```
 pub mod prelude {
-    pub use crate::widgets::GenericWidget;
     pub use crate::widgets::NativeWidget;
     /// used by all widgets that can have children (native and generic)
     pub use crate::widgets::OutletAdapter;

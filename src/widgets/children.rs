@@ -6,9 +6,7 @@
 //! Contains the generic definitions for what widgets type can the children of a given type.
 //!
 
-use crate::widgets::{
-    default_system, Child, GenericWidget, NativeWidget, OutletAdapter, System, WidgetHolder,
-};
+use crate::widgets::{default_system, Child, OutletAdapter, System, WidgetHolder};
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
