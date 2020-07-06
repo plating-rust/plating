@@ -6,10 +6,10 @@
 use plating::prelude::*;
 #[cfg(target_os = "macos")]
 use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
-use plating::widgets::generic::{RootParameters, WindowParameters};
+use plating::widgets::generic::{RootParameters, WindowChildren, WindowParameters};
 #[cfg(target_os = "win")]
 use plating::widgets::win::{WinButton, WinButtonParameters};
-use plating::widgets::{default_system, System, WindowChildren};
+use plating::widgets::{default_system, System};
 
 fn main() {
     // create a *generic* root element

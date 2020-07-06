@@ -5,8 +5,9 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
-use crate::widgets::utils::Child;
-use crate::widgets::{System, Widget, WindowChildren};
+use crate::widgets::generic::WindowChildren;
+use crate::widgets::utils::{Child, Named};
+use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct ButtonParameters {
@@ -29,4 +30,20 @@ pub trait NativeButton<S: System>:
     + ButtonHandlerTrait
     + Child<S::WindowType, WindowChildren<S>, S>
 {
+}
+
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum ButtonChildren<S: System = default_system> {
+    BUTTON(S::ButtonType),
+}
+
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+impl<S: System> Named for ButtonChildren<S> {
+    fn name(&self) -> &str {
+        match self {
+            Self::BUTTON(button) => button.name(),
+        }
+    }
 }

@@ -7,9 +7,11 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
-use crate::widgets::generic::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
+use crate::widgets::generic::{
+    MenuChildren, MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem,
+};
 use crate::widgets::utils::{Child, Named};
-use crate::widgets::{MenuChildren, System, Widget};
+use crate::widgets::{System, Widget};
 use crate::CheckedState;
 
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};

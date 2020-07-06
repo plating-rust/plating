@@ -5,12 +5,14 @@
 
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
-use crate::widgets::generic::{ButtonHandlerTrait, ButtonParameters, NativeButton};
+use crate::widgets::generic::{
+    ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton, WindowChildren,
+};
 use crate::widgets::utils::{Child, Named};
-use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren};
-use crate::widgets::{System, Widget, WindowChildren};
+use crate::widgets::{System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CocoaButtonParameters {

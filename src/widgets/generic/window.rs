@@ -8,10 +8,10 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
+use crate::widgets::generic::RootChildren;
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::Child;
-use crate::widgets::WindowChildren;
-use crate::widgets::{MainMenuChildren, RootChildren, System, Widget};
+use crate::widgets::utils::{Child, Named};
+use crate::widgets::{default_system, System, Widget};
 
 /// Generic parameters for creating and customizing Windows
 ///
@@ -54,72 +54,6 @@ pub struct WindowParameters {
     pub fullscreenable: Option<bool>,
 }
 
-/* TODO: remove
-/// Generic Window Adapter Widget
-///
-/// # Usage
-/// - todo: creation example
-///
-/// - todo: apply example
-///
-/// - todo: add generic button
-///
-/// - todo: add native button
-///
-/// # Native Implementations
-/// See the native implementations for more customization options (non cross-platform).
-/// - [`CocoaWindow`](crate::widgets::cocoa::CocoaWindow)
-#[derive(Debug)]
-pub struct Window<S: System> {
-    /// stores the underlying native widget.
-    /// Most functions like `apply` are just forwarded to this.
-    native: S::WindowType,
-}
-impl<S: System> Widget for Window<S> {
-    /// Means that `new_...` and `apply` functions require [`WindowParameters`]
-    type PARAMS = WindowParameters;
-}
-impl<S: System> WidgetHolder for Window<S> {
-    fn name(&self) -> &str {
-        &self.native.name()
-    }
-}
-impl<S: System> GenericWidget<S> for Window<S> {
-    type NativeParameterType = <S::WindowType as Widget>::PARAMS;
-    type NativeType = S::WindowType;
-
-    /// does this show up?
-    fn native(&self) -> &Self::NativeType {
-        &self.native
-    }
-    fn native_mut(&mut self) -> &mut Self::NativeType {
-        &mut self.native
-    }
-    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S> {
-        S::WindowType::new_with_name(name, settings)
-            .map(|native| Window { native })
-            .map_err(|native_error| native_error.into())
-    }
-}
-
-impl<S: System> OutletAdapter<WindowChildren<S>, S> for Window<S> {
-    type ErrorType = crate::error::PlatingError<S>;
-    type ParentData = <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::ParentData;
-
-    fn children(&self) -> &[ChildrenHolder<WindowChildren<S>>] {
-        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::children(&self.native)
-    }
-
-    fn add_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
-    where
-        T: Into<WindowChildren<S>>,
-    {
-        <S::WindowType as OutletAdapter<WindowChildren<S>, S>>::add_child(&mut self.native, child)
-            //let child_into: WindowChildren = child.into();
-            .map_err(|native_error| native_error.into())
-    }
-}*/
-
 pub trait WindowHandlerTrait {
     fn set_resize_handler(&mut self, handler: Box<impl FnMut()>);
     fn add_resize_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
@@ -132,4 +66,51 @@ pub trait NativeWindow<S: System>:
     + WindowHandlerTrait
     + Child<S::RootType, RootChildren<S>, S>
 {
+}
+
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum WindowChildren<S: System = default_system> {
+    BUTTON(S::ButtonType),
+}
+
+impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
+    fn adding_to(&self, parent: &<S::WindowType as Outlet<WindowChildren<S>, S>>::ParentData) {
+        match self {
+            Self::BUTTON(button) => button.adding_to(parent),
+        }
+    }
+}
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+impl<S: System> Named for WindowChildren<S> {
+    fn name(&self) -> &str {
+        match self {
+            Self::BUTTON(button) => button.name(),
+        }
+    }
+}
+
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum MainMenuChildren<S: System = default_system> {
+    MENU(S::MenuType),
+}
+
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+impl<S: System> Named for MainMenuChildren<S> {
+    fn name(&self) -> &str {
+        match self {
+            Self::MENU(menu) => menu.name(),
+        }
+    }
+}
+impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
+    fn adding_to(&self, parent: &<S::WindowType as Outlet<MainMenuChildren<S>, S>>::ParentData) {
+        match self {
+            Self::MENU(menu) => {
+                <dyn Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent)
+            }
+        }
+    }
 }

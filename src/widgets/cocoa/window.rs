@@ -9,10 +9,13 @@ use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
-use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
+use crate::widgets::generic::{
+    MainMenuChildren, NativeWindow, RootChildren, WindowChildren, WindowHandlerTrait,
+    WindowParameters,
+};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Named, OutletHolder, WidgetPointer};
-use crate::widgets::{MainMenuChildren, RootChildren, System, Widget, WindowChildren};
+use crate::widgets::{System, Widget};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSBackingStoreBuffered, NSMenu, NSWindow, NSWindowDepth,

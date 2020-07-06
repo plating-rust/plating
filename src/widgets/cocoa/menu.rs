@@ -9,10 +9,12 @@ use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
-use crate::widgets::generic::{MenuHandlerTrait, MenuParameters, NativeMenu};
+use crate::widgets::generic::{
+    MainMenuChildren, MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu,
+};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Named, OutletHolder, WidgetPointer};
-use crate::widgets::{MainMenuChildren, MenuChildren, System, Widget};
+use crate::widgets::{System, Widget};
 use crate::Direction;
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};

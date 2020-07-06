@@ -6,8 +6,8 @@
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
-use crate::widgets::RootChildren;
-use crate::widgets::{System, Widget};
+use crate::widgets::utils::{Child, Named};
+use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq)] //required in cached version
@@ -29,4 +29,26 @@ pub trait NativeRoot<S: System>:
     /// Calling this function starts the main loop.
     /// Only returns once the app is closed.
     fn run(&self) -> std::result::Result<(), S::ErrorType>;
+}
+
+/// todo auto generate via derive(widgetParent(BUTTON, B    ))
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum RootChildren<S: System = default_system> {
+    WINDOW(S::WindowType),
+}
+
+impl<S: System> Named for RootChildren<S> {
+    fn name(&self) -> &str {
+        match self {
+            Self::WINDOW(window) => window.name(),
+        }
+    }
+}
+impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
+    fn adding_to(&self, parent: &<S::RootType as Outlet<RootChildren<S>, S>>::ParentData) {
+        match self {
+            Self::WINDOW(button) => button.adding_to(parent),
+        }
+    }
 }
