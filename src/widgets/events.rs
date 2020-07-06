@@ -16,6 +16,11 @@ pub enum EventState {
     /// this event has not yet been handled.
     UNHANDLED,
 }
+impl Default for EventState {
+    fn default() -> EventState {
+        EventState::UNHANDLED
+    }
+}
 
 #[derive(Debug, Eq, PartialEq, Clone, Copy, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum ListenerType {
