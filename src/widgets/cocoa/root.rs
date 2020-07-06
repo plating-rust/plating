@@ -7,12 +7,12 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
-use crate::widgets::events::ListenerType;
+use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::OutletHolder;
 use crate::widgets::System;
-use crate::widgets::{ChildrenHolder, NativeWidget, RootChildren, Widget, WidgetHolder};
+use crate::widgets::{ChildrenHolder, RootChildren, Widget, WidgetHolder};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -43,10 +43,6 @@ pub struct CocoaRoot {
     main_outlet: OutletHolder<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
 }
 
-impl Widget for CocoaRoot {
-    type PARAMS = CocoaRootParameters;
-}
-
 impl NativeRoot<CocoaSystem> for CocoaRoot {
     fn run(&self) -> CocoaResult<()> {
         unsafe {
@@ -65,7 +61,9 @@ impl RootHandlerTrait for CocoaRoot {
     }
 }
 
-impl NativeWidget<CocoaSystem> for CocoaRoot {
+impl Widget<CocoaSystem> for CocoaRoot {
+    type PARAMS = CocoaRootParameters;
+
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -107,6 +105,24 @@ impl NativeWidget<CocoaSystem> for CocoaRoot {
         let _settings = settings.into();
 
         Ok(())
+    }
+}
+
+impl LifecycleHandler for CocoaRoot {
+    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
     }
 }
 

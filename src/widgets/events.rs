@@ -27,7 +27,7 @@ pub enum ListenerType {
 /// Callback handlers must adhere to this type definition.
 pub type Callback<T, W, E = ()> = dyn FnMut(&T, &mut W) -> Result<EventState, E>;
 
-trait LifecycleHandler
+pub trait LifecycleHandler
 where
     Self: Sized + std::fmt::Debug,
 {
@@ -36,4 +36,6 @@ where
     fn add_display_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
 
     fn add_destroy_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+
+    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>);
 }

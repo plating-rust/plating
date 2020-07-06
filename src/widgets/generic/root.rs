@@ -7,7 +7,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::RootChildren;
-use crate::widgets::{NativeWidget, System};
+use crate::widgets::{System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq)] //required in cached version
@@ -24,7 +24,7 @@ pub trait RootHandlerTrait {
 /// Widgets implementing this trait, also need to implement NativeWidget as well
 /// as OutletAdapter<RootChildren<S>>
 pub trait NativeRoot<S: System>:
-    NativeWidget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait
+    Widget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait
 {
     /// Calling this function starts the main loop.
     /// Only returns once the app is closed.

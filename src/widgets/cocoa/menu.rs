@@ -8,12 +8,12 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
+use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{MenuHandlerTrait, MenuParameters, NativeMenu};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::OutletHolder;
 use crate::widgets::{
-    Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, System, Widget,
-    WidgetHolder,
+    Child, ChildrenHolder, MainMenuChildren, MenuChildren, System, Widget, WidgetHolder,
 };
 use crate::Direction;
 
@@ -63,9 +63,7 @@ pub struct CocoaMenu {
     ///auto generate and add via derive(widgetParent(Window))
     main_outlet: OutletHolder<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
 }
-impl Widget for CocoaMenu {
-    type PARAMS = CocoaMenuParameters;
-}
+
 impl WidgetHolder for CocoaMenu {
     fn name(&self) -> &str {
         &self.name.as_str()
@@ -95,7 +93,9 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     }
 }
 
-impl NativeWidget<CocoaSystem> for CocoaMenu {
+impl Widget<CocoaSystem> for CocoaMenu {
+    type PARAMS = CocoaMenuParameters;
+
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -143,6 +143,24 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
     }
     unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
         &mut self.handle
+    }
+}
+
+impl LifecycleHandler for CocoaMenu {
+    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
     }
 }
 

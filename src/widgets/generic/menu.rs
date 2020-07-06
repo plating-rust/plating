@@ -5,7 +5,7 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::{Child, MainMenuChildren, MenuChildren, NativeWidget, System};
+use crate::widgets::{Child, MainMenuChildren, MenuChildren, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct MenuParameters {
@@ -19,7 +19,7 @@ pub trait MenuHandlerTrait {
 }
 
 pub trait NativeMenu<S: System>:
-    NativeWidget<S, PARAMS = S::MenuParameterType>
+    Widget<S, PARAMS = S::MenuParameterType>
     + MenuHandlerTrait
     + Outlet<MenuChildren<S>, S>
     + Child<S::MenuType, MenuChildren<S>, S>

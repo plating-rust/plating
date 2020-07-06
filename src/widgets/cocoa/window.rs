@@ -8,11 +8,11 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
-use crate::widgets::events::ListenerType;
+use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::OutletHolder;
-use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, NativeWidget, Widget, WidgetHolder};
+use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, Widget, WidgetHolder};
 use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{
@@ -186,11 +186,9 @@ pub struct CocoaWindow {
     menu_item: Option<CocoaDefaultHandleType>,
 }
 
-impl Widget for CocoaWindow {
+impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
-}
 
-impl NativeWidget<CocoaSystem> for CocoaWindow {
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -288,6 +286,24 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
     }
     unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
         &mut self.handle
+    }
+}
+
+impl LifecycleHandler for CocoaWindow {
+    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
     }
 }
 

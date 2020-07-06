@@ -6,8 +6,9 @@
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
+use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
-use crate::widgets::{Child, MenuChildren, NativeWidget, System, Widget, WidgetHolder};
+use crate::widgets::{Child, MenuChildren, System, Widget, WidgetHolder};
 use crate::CheckedState;
 
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
@@ -51,16 +52,15 @@ impl NativeMenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}
 
-impl Widget for CocoaMenuItem {
-    type PARAMS = CocoaMenuItemParameters;
-}
 impl WidgetHolder for CocoaMenuItem {
     fn name(&self) -> &str {
         &self.name.as_str()
     }
 }
 
-impl NativeWidget<CocoaSystem> for CocoaMenuItem {
+impl Widget<CocoaSystem> for CocoaMenuItem {
+    type PARAMS = CocoaMenuItemParameters;
+
     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
     where
         T: Into<Self::PARAMS>,
@@ -96,6 +96,24 @@ impl NativeWidget<CocoaSystem> for CocoaMenuItem {
     }
     unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
         &mut self.handle
+    }
+}
+
+impl LifecycleHandler for CocoaMenuItem {
+    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
+    }
+
+    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+        todo!()
     }
 }
 

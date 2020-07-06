@@ -10,7 +10,7 @@ use std::rc::Rc;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
 
-use crate::widgets::{Child, ChildrenHolder, NativeWidget, System, WidgetHolder};
+use crate::widgets::{Child, ChildrenHolder, System, Widget, WidgetHolder};
 
 /// Outlets are a concepts for widgets to have children.
 ///
@@ -38,7 +38,7 @@ use crate::widgets::{Child, ChildrenHolder, NativeWidget, System, WidgetHolder};
 pub struct OutletHolder<CHILD, Parent, S>
 where
     CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
-    Parent: NativeWidget<S> + Outlet<CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
     ///Vector responsible for storing all the Children.
@@ -52,7 +52,7 @@ where
 impl<CHILD, Parent, S> Default for OutletHolder<CHILD, Parent, S>
 where
     CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
-    Parent: NativeWidget<S> + Outlet<CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
     fn default() -> OutletHolder<CHILD, Parent, S> {
@@ -66,7 +66,7 @@ where
 impl<CHILD, Parent, S> OutletHolder<CHILD, Parent, S>
 where
     CHILD: WidgetHolder + std::fmt::Debug + Child<Parent, CHILD, S>,
-    Parent: NativeWidget<S> + Outlet<CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
     /// Returns the capacity of the internal vector.

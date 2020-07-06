@@ -78,10 +78,10 @@ pub mod win;
 ///
 /// Automatically included in ```plating::prelude::*```
 pub mod prelude {
+    pub use super::events::LifecycleHandler;
     /// used by all widgets that can have children
-    pub use crate::widgets::outlet::Outlet; //TODO: do we really need this?
-    pub use crate::widgets::NativeWidget;
-    pub use crate::widgets::Widget;
+    pub use super::outlet::Outlet; //TODO: do we really need this?
+    pub use super::Widget;
 }
 
 /// Typedef to the native widgets

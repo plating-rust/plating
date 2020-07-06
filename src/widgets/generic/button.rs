@@ -5,7 +5,7 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
-use crate::widgets::{Child, NativeWidget, System, WindowChildren};
+use crate::widgets::{Child, System, Widget, WindowChildren};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct ButtonParameters {
@@ -24,7 +24,7 @@ pub trait ButtonHandlerTrait {
 /// - NativeWidget
 /// - Child
 pub trait NativeButton<S: System>:
-    NativeWidget<S, PARAMS = S::ButtonParameterType>
+    Widget<S, PARAMS = S::ButtonParameterType>
     + ButtonHandlerTrait
     + Child<S::WindowType, WindowChildren<S>, S>
 {

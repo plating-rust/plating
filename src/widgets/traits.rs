@@ -9,6 +9,7 @@
 //! to write platform-independent code.
 
 use crate::features::serde::Deserialize;
+use crate::widgets::events::LifecycleHandler;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::System;
 use std::rc::{Rc, Weak};
@@ -24,24 +25,6 @@ pub trait WidgetHolder {
     fn name(&self) -> &str;
 }
 
-// todo: EQ implementation should check 'native' handle on backend as well as 'name'
-/// Base Widget trait. (used by native and generic widgets)
-///
-/// ## Requirements
-/// `Widgets` implementing this trait should also implement `std::fmt::Debug`
-/// as well as [`WidgetHolder`].
-///
-/// ## See also
-/// When you implement a widget you probably want to also implement one of the more specific
-/// widget traits. See [`GenericWidget`] and [`NativeWidget`]
-pub trait Widget
-where
-    Self: WidgetHolder + std::fmt::Debug,
-{
-    /// The Parameter type this struct requires when creating or applying changes to.
-    type PARAMS;
-}
-
 /// Trait for all Native Widget Objects.
 ///
 /// `NativeWidgets` have the following responsibilities:
@@ -54,14 +37,17 @@ where
 /// - [`plating::widgets::mock`](crate::widgets::mock)
 ///
 /// # Requirements
-/// `NativeWidget`s need the [`Widget`] trait.<br>
-/// `NativeWidget`s need the `Sized` trait.
+/// `NativeWidget`s needs to implement the [`Widget`] trait.<br>
+/// `NativeWidget`s need the `Sized` trait.<br>
+/// `NativeWidget`s need to implement the [`WidgetHolder`] trait.
+/// `NativeWidget`s need to implement the `std::fmt::Debug` trait.
 ///
 /// # Example
 /// ## Implementation
 /// A basic native widget implementation.
 /// ```rust
-/// use plating::widgets::{System, Widget, WidgetHolder, NativeWidget};
+/// use plating::widgets::{System, Widget, WidgetHolder};
+/// use plating::widgets::events::{ListenerType, LifecycleHandler};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
 ///
@@ -80,11 +66,7 @@ where
 ///
 ///     handle: CocoaDefaultHandleType,
 /// }
-/// impl Widget for CocoaExampleWidget { //trait impl required by generic widget
-///    // A struct containing parameters to customize a Widget.
-///    // Empty struct in our case, but could be anything
-///    type PARAMS = CocoaExampleParameters;
-/// }
+///
 /// impl WidgetHolder for CocoaExampleWidget { //trait impl required by widget
 ///     // Returns the plating name (not a backend internal one)
 ///     // *NOTE*: no setter because the name should not change.
@@ -92,8 +74,12 @@ where
 ///        &self.name.as_str()
 ///    }
 /// }
-/// impl NativeWidget<CocoaSystem> for CocoaExampleWidget {
-///     fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+/// impl Widget<CocoaSystem> for CocoaExampleWidget {
+///    // A struct containing parameters to customize a Widget.
+///    // Empty struct in our case, but could be anything
+///    type PARAMS = CocoaExampleParameters;
+///
+///    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
 ///    where
 ///        T: Into<Self::PARAMS> {
 ///        let mut result = Self {name, handle: todo!() };
@@ -113,6 +99,24 @@ where
 ///         &mut self.handle
 ///     }
 /// }
+///
+/// impl LifecycleHandler for CocoaExampleWidget {
+///     fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+///         todo!()
+///     }
+///
+///     fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+///         todo!()
+///     }
+///
+///     fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+///         todo!()
+///     }
+///
+///     fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
+///         todo!()
+///     }
+/// }
 /// ```
 ///
 /// Now that's a lot of boilerplate for a simple widget.
@@ -124,11 +128,14 @@ where
 /// Functions in this trait, that can fail, return a `NativeResult<Self>`.
 /// If the called need a `PlatingResult<Self>`, you can use `from`/`into`
 ///
-pub trait NativeWidget<S>
+pub trait Widget<S>
 where
-    Self: Widget + Sized,
+    Self: WidgetHolder + std::fmt::Debug + Sized + LifecycleHandler,
     S: System,
 {
+    /// The Parameter type this struct requires when creating or applying changes to it.
+    type PARAMS;
+
     fn new<T>(settings: T) -> Result<Self, S::ErrorType>
     where
         T: Into<Self::PARAMS>,
@@ -145,15 +152,12 @@ where
 
     fn native(&self) -> &S::InternalHandle;
     unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
-
-    //todo: remove fn get_handler(&self) -> &Self::EventHandlerType;
-    //todo: remove fn get_handler_mut(&mut self) -> &mut Self::EventHandlerType;
 }
 
 pub trait Child<ParentType, ChildType, S>
 where
     ChildType: WidgetHolder,
-    ParentType: NativeWidget<S> + Outlet<ChildType, S>,
+    ParentType: Widget<S> + Outlet<ChildType, S>,
     S: System,
 {
     fn adding_to(&self, _parent: &ParentType::ParentData) {}
