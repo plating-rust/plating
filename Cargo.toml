@@ -41,14 +41,14 @@ plating-macros = { path = "./uuid-macro", version="0.0.1" }
 
 log = { version = "0.4.8", optional = true }
 serde = { version = "^1.0", features = ["derive", "rc"], optional = true }
-noop_proc_macro = "0.2.1" #todo: disable when serde is activated
+noop_proc_macro = "0.3.0" #todo: disable when serde is activated
 
 [dev-dependencies]
 simple_logger = "1.6.0" #required to build & run examples
 
 [target.'cfg(target_os = "macos")'.dependencies]
-cocoa = "0.20.1"
-core-graphics = "0.19.0"
+cocoa = "0.22.0"
+core-graphics = "0.21.0"
 objc = "^0.2"
 libc = "0.2.71"
 
