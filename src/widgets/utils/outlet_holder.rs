@@ -49,6 +49,10 @@ where
     _marker: std::marker::PhantomData<Parent>,
     _marker2: std::marker::PhantomData<S>,
 }
+
+//todo: implement fromIterator
+//todo: implement Extend
+
 impl<CHILD, Parent, S> Default for OutletHolder<CHILD, Parent, S>
 where
     CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
