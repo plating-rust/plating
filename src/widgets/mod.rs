@@ -85,7 +85,7 @@ pub mod prelude {
     /// used by all widgets that can have children
     pub use super::outlet::Outlet; //TODO: do we really need this?
     pub use super::utils::*;
-    pub use super::Widget;
+    pub use super::widget::Widget;
 }
 
 /// Typedef to the native widgets
@@ -124,8 +124,4 @@ pub use crate::widgets::native::System as default_system;
 mod children;
 pub mod generic;
 
-mod traits;
-
 pub use children::*;
-
-pub use traits::*;

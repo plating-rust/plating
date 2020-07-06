@@ -5,7 +5,8 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
-use crate::widgets::{Child, System, Widget, WindowChildren};
+use crate::widgets::utils::Child;
+use crate::widgets::{System, Widget, WindowChildren};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct ButtonParameters {

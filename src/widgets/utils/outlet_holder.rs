@@ -9,8 +9,8 @@ use std::rc::Rc;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Named, WidgetPointer};
-use crate::widgets::{Child, System, Widget};
+use crate::widgets::utils::{Child, Named, WidgetPointer};
+use crate::widgets::{System, Widget};
 
 /// Outlets are a concepts for widgets to have children.
 ///

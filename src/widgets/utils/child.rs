@@ -3,11 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-//! Module containing traits used for all widgets.
-//!
-//! These are non-Platform specific and can safely be used
-//! to write platform-independent code.
-
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::Named;
 use crate::widgets::{System, Widget};

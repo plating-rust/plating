@@ -4,7 +4,8 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::{Child, MenuChildren, System, Widget};
+use crate::widgets::utils::Child;
+use crate::widgets::{MenuChildren, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct MenuItemParameters {

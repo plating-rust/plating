@@ -9,6 +9,9 @@ pub use outlet_holder::OutletHolder;
 mod widget_pointer;
 pub use widget_pointer::WidgetPointer;
 
+mod child;
+pub use child::Child;
+
 /// Very basic trait implemented both by widgets themselves and
 /// any kind of `Pointer` or other Widget indirection.
 ///

@@ -11,8 +11,7 @@ use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Named, OutletHolder, WidgetPointer};
-use crate::widgets::System;
-use crate::widgets::{RootChildren, Widget};
+use crate::widgets::{RootChildren, System, Widget};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
