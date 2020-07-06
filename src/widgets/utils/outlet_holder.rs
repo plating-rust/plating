@@ -172,6 +172,8 @@ where
     CHILD: Named,
 {
     type Item = Rc<CHILD>;
+
+    #[inline]
     fn next(&mut self) -> Option<Rc<CHILD>> {
         let n = self.internal_iter.next();
         let n = self.internal_iter.next_back();

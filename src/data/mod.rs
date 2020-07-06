@@ -128,6 +128,7 @@ pub struct RGBA {
 }
 impl RGBA {
     /// constructor taking all 4 components of a RGBA Color
+    #[inline]
     pub fn new(r: u8, g: u8, b: u8, a: u8) -> RGBA {
         RGBA { r, g, b, a }
     }
@@ -141,6 +142,7 @@ impl RGBA {
     ///
     /// assert_eq!(value, RGBA::new(0, 0, 0, 0));
     /// ```
+    #[inline]
     pub fn black() -> RGBA {
         RGBA::new(0, 0, 0, 0)
     }
@@ -153,6 +155,7 @@ impl RGBA {
     ///
     /// assert_eq!(value, RGBA::new(255, 255, 255, 0));
     /// ```
+    #[inline]
     pub fn white() -> RGBA {
         RGBA::new(255, 255, 255, 0)
     }
@@ -169,6 +172,7 @@ impl RGBA {
     ///
     /// assert_eq!(value, RGBA::new(0, 0, 0, 255));
     /// ```
+    #[inline]
     pub fn transparent() -> RGBA {
         RGBA::new(0, 0, 0, 255)
     }
@@ -200,6 +204,7 @@ pub struct RGB {
 }
 impl RGB {
     /// constructor taking all 3 components of a RGBA Color
+    #[inline]
     pub fn new(r: u8, g: u8, b: u8) -> RGB {
         RGB { r, g, b }
     }
@@ -213,6 +218,7 @@ impl RGB {
     ///
     /// assert_eq!(value, RGB::new(0, 0, 0));
     /// ```
+    #[inline]
     pub fn black() -> RGB {
         RGB::new(0, 0, 0)
     }
@@ -225,6 +231,7 @@ impl RGB {
     ///
     /// assert_eq!(value, RGB::new(255, 255, 255));
     /// ```
+    #[inline]
     pub fn white() -> RGB {
         RGB::new(255, 255, 255)
     }
@@ -245,6 +252,7 @@ pub enum Color {
 ///
 /// Defaults to a *black* [`RGB`] color.
 impl Default for Color {
+    #[inline]
     fn default() -> Color {
         Self::RGB(RGB::black())
     }

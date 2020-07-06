@@ -41,6 +41,7 @@ pub struct PlatingError<S: System> {
 }
 
 impl<S: System> Error for PlatingError<S> {
+    #[cold]
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match &self.kind {
             PlatingErrorKind::BackendError(backend_error) => backend_error.source(),
@@ -52,6 +53,7 @@ impl<S: System> PlatingError<S> {
     /// Returns internal error kind.
     ///
     /// Useful to match against for more fine grained handling of errors
+    #[inline]
     pub fn kind(&self) -> &PlatingErrorKind<S> {
         &self.kind
     }
