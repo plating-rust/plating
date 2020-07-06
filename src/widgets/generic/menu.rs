@@ -18,7 +18,7 @@ pub struct MenuParameters {
 #[derive(Debug)]
 pub struct Menu<S: System> {
     /// stores the underlying native widget.
-    /// Most functions like `apply` are just forwarded to this.
+    /// Most functions like `apply` are forwarded to this internal, native type.
     native: S::MenuType,
 }
 impl<S: System> Widget for Menu<S> {

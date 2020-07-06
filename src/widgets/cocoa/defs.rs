@@ -7,7 +7,7 @@
 /// and other types used in the [`widgets::cocoa`](crate::widgets::cocoas) module
 use cocoa::base::id;
 
-/// The `CocoaDefaultHandleType` is set to [`cocoa::base::id`].
+/// The `CocoaDefaultHandleType` is a [`cocoa::base::id`].
 pub type CocoaDefaultHandleType = id;
 
 /// The CocoaEventType used for callbacks in Cocoa Widgets.

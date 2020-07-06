@@ -8,34 +8,47 @@
 use crate::features::serde::{Deserialize, Serialize};
 
 /// Basic 2d Vector.
-/// Implemented as a Tuple. No specific additional features.
+/// Implemented as a Tuple. No specific functions.
 pub type Vec2<T> = (T, T);
 /// Basic 2d Vector.
-/// Implemented as a Tuple. No specific additional features.
+/// Implemented as a Tuple. No specific functions.
 pub type Vec3<T> = (T, T, T);
 
+/// The state of checkable objects like e.g. check boxes.
+///
+/// See also [`OptionalCheckedState`]
 #[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum CheckedState {
+    /// This items state is 'not checked'
     Off,
+    /// This items state is 'checked'
     On,
+    /// For items that have several sub items,
+    /// this state means some children are checked, some are not.
     Mixed,
 }
+/// Defaults to the Off state
 impl Default for CheckedState {
     fn default() -> Self {
         Self::Off
     }
 }
 
+/// Generic Enum for representing a horizontal direction.
+///
+/// Can be used to represent text direction as well as layout direction
 #[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum Direction {
+    ///
     LeftToRight,
+    ///
     RightToLeft,
 }
 
-///Specifies a rectangular area.
+/// Specifies a rectangular area.
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Rect {
-    ///the position of the top left of this rectangular area.
+    /// the position of the top left of this rectangular area.
     ///
     /// notation: (x, y)
     top_left: Vec2<i32>,
@@ -171,7 +184,7 @@ impl RGB {
 
 /// Abstract enum representing a Color.
 ///
-/// Can be represented either via [`RGB`] or [`RGBA`].
+/// Chose between an [`RGB`] or [`RGBA`] presentation.
 //todo: allow changing between different types
 #[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub enum Color {

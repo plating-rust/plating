@@ -20,7 +20,7 @@ use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 use objc::*;
 
-///Data passed to child when they are added
+/// Data passed to child in the `adding_to` function.
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct CocoaMenuParentData {
     pub item: CocoaDefaultHandleType,

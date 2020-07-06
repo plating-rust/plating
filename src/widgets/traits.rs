@@ -24,7 +24,9 @@ use std::rc::{Rc, Weak};
 /// todo: example callback return handled and unhandled on some condition
 #[derive(Debug, Eq, PartialEq, Clone, Hash)]
 pub enum EventState {
+    /// represent that the event was handled and no further event handlers should be called
     HANDLED,
+    /// this event has not yet been handled.
     UNHANDLED,
 }
 /// Callback type definition.
@@ -106,6 +108,10 @@ where
         Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
     }
 
+    /// Creates a new named instance
+    ///
+    /// # Requirements
+    /// Names are not supposed to change during runtime.
     fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S>;
     /// Returns reference to the underlying native type.
     fn native(&self) -> &Self::NativeType;
@@ -131,12 +137,45 @@ where
             .map_err(|native_error| native_error.into())
     }
 }
-
+/// A System represents a GUI System (or you could also call it backend).
+///
+/// # Examples of Systems
+/// - cocoa
+/// - win32
+/// - gtk
+/// - qt
+///
+/// # Implementation
+/// A System consists of mainly typedefs to the native widget implementations.
+///
+/// If you're just starting implement a new System, you should copy [`MockSystem`] and start replacing
+/// one-by-one widget with actual implementations.
+///
+/// # Motivation
+/// Contains
+///     - typedefs for all native widget types
+///     - typedefs for all parameters those native types take
+/// # Usage
+/// You probably never create or interact with a system except as a Template parameter.
+/// ```ignore
+/// Button<SomeImaginarySystem>::new(...)
+/// ```
+///
+/// ## Typedefs
+/// If you want to stay cross-platform it is a good idea to use [`default_system`](crate::widgets::default_system) as much as possible.
+/// ```ignore
+/// use plating::widgets::default_system;
+///
+/// Button<default_system>::new(...)
+/// ````
 pub trait System
 where
     Self: std::fmt::Debug + Sized,
 {
+    /// The error type returned by the native widgets in this system.
     type ErrorType: Error + Into<PlatingError<Self>> + Clone + PartialEq + std::hash::Hash;
+    /// The internal handle used by this system.
+    /// Could be a `pointer`, `id`or whatever. Using it directly usually means you loose cross-platform compatibility.
     type InternalHandle;
 
     type RootParameterTye: From<RootParameters>;
