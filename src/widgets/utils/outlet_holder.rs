@@ -153,7 +153,7 @@ where
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OutletIterator<'a, CHILD>
 where
     CHILD: Named,
