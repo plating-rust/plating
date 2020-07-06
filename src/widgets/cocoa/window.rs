@@ -5,8 +5,9 @@
 
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
-use crate::widgets::generic::WindowParameters;
+use crate::widgets::generic::{WindowHandlerTrait, WindowParameters};
 use crate::widgets::{
     cocoa::error::{CocoaError, CocoaResult},
     WidgetType,
@@ -15,7 +16,10 @@ use crate::widgets::{
     Child, ChildrenHolder, MainMenuChildren, NativeWidget, Outlet, OutletAdapter, Widget,
     WidgetHolder,
 };
-use crate::widgets::{RootChildren, System, WindowChildren};
+use crate::{
+    prelude::NativeWindow,
+    widgets::{RootChildren, System, WindowChildren},
+};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSBackingStoreBuffered, NSMenu, NSWindow, NSWindowDepth,
@@ -177,6 +181,8 @@ pub struct CocoaWindow {
 
     handle: CocoaDefaultHandleType,
 
+    event_delegate: CocoaWindowDelegate,
+
     ///auto generate and add via derive(widgetParent(Window))
     main_outlet: Outlet<WindowChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
 
@@ -213,6 +219,7 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
             menu_outlet: Outlet::default(),
             menubar: None,
             menu_item: None,
+            event_delegate: CocoaWindowDelegate::new(),
         };
         new_window.apply(settings)?;
         unsafe {
@@ -315,3 +322,18 @@ impl OutletAdapter<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
 }
 
 impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {}
+
+impl WindowHandlerTrait for CocoaWindow {
+    fn setResizeHandler(&mut self, handler: Box<impl FnMut()>) {
+        todo!()
+    }
+    fn addResizeListener(
+        &mut self,
+        when: crate::widgets::generic::ListenerType,
+        handler: Box<impl FnMut()>,
+    ) {
+        todo!()
+    }
+}
+
+impl NativeWindow<CocoaSystem> for CocoaWindow {}

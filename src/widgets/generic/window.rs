@@ -118,3 +118,27 @@ impl<S: System> OutletAdapter<WindowChildren<S>, S> for Window<S> {
             .map_err(|native_error| native_error.into())
     }
 }
+
+#[derive(Debug, Eq, PartialEq, Hash)]
+pub enum ListenerType {
+    Before,
+    After,
+}
+
+pub trait WindowHandlerTrait {
+    fn setResizeHandler(&mut self, handler: Box<impl FnMut()>);
+    fn addResizeListener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+}
+
+impl<S> WindowHandlerTrait for Window<S>
+where
+    S: System,
+{
+    fn setResizeHandler(&mut self, mut handler: Box<impl FnMut()>) {
+        self.native.setResizeHandler(Box::new(|| handler()));
+    }
+
+    fn addResizeListener(&mut self, when: ListenerType, mut handler: Box<impl FnMut()>) {
+        self.native.addResizeListener(when, Box::new(|| handler()));
+    }
+}

@@ -10,10 +10,11 @@
 
 use crate::error::PlatingError;
 use crate::features::serde::Deserialize;
-use crate::widgets::generic::{ButtonParameters, RootParameters, RootWidgetTrait};
+use crate::widgets::generic::{ButtonParameters, RootParameters};
 use crate::widgets::{MainMenuChildren, MenuChildren, RootChildren};
 use crate::PlatingResult;
 //use crate::widgets::native::NativeDefaultHandleType;
+use crate::widgets::native::traits::{NativeButton, NativeMenu, NativeWindow};
 use crate::widgets::OutletAdapter;
 use std::error::Error;
 use std::rc::{Rc, Weak};
@@ -170,8 +171,11 @@ where
 /// ````
 pub trait System
 where
-    Self: std::fmt::Debug + Sized,
+    Self: std::fmt::Debug + Sized + std::fmt::Display,
 {
+    /// Returns the name of this system.
+    fn name() -> &'static str;
+
     /// The error type returned by the native widgets in this system.
     type ErrorType: Error + Into<PlatingError<Self>> + Clone + PartialEq + std::hash::Hash;
     /// The internal handle used by this system.
@@ -179,25 +183,17 @@ where
     type InternalHandle;
 
     type RootParameterTye: From<RootParameters>;
-    type RootType: RootWidgetTrait<Self>
-        + NativeWidget<Self, PARAMS = Self::RootParameterTye>
-        + OutletAdapter<RootChildren<Self>, Self>;
+    type RootType: NativeRoot<Self>;
 
     type ButtonParameterType: From<ButtonParameters>;
-    type ButtonType: NativeWidget<Self, PARAMS = Self::ButtonParameterType>
-        + Child<Self::WindowType, WindowChildren<Self>, Self>;
+    type ButtonType: NativeButton<Self>;
 
     type WindowParameterType: From<WindowParameters>;
-    type WindowType: NativeWidget<Self, PARAMS = Self::WindowParameterType>
-        + OutletAdapter<WindowChildren<Self>, Self>
-        + OutletAdapter<MainMenuChildren<Self>, Self>
-        + Child<Self::RootType, RootChildren<Self>, Self>;
+    type WindowHandlerTrait: WindowHandlerTrait + Sized;
+    type WindowType: NativeWindow<Self>;
 
     type MenuParameterType: From<MenuParameters>;
-    type MenuType: NativeWidget<Self, PARAMS = Self::MenuParameterType>
-        + OutletAdapter<MenuChildren<Self>, Self>
-        + Child<Self::MenuType, MenuChildren<Self>, Self>
-        + Child<Self::WindowType, MainMenuChildren<Self>, Self>;
+    type MenuType: NativeMenu<Self>;
 
     type MenuItemParameterType: From<MenuItemParameters>;
     type MenuItemType: NativeWidget<Self, PARAMS = Self::MenuItemParameterType>
@@ -283,7 +279,6 @@ where
 /// Functions in this trait, that can fail, return a `NativeResult<Self>`.
 /// If the called need a `PlatingResult<Self>`, you can use `from`/`into`
 ///
-// TODO: deal with callbacks
 pub trait NativeWidget<S>
 where
     Self: Widget + Sized,
@@ -304,6 +299,10 @@ where
         T: Into<Self::PARAMS>;
 
     fn native(&self) -> &S::InternalHandle;
+    unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
+
+    //todo: remove fn get_handler(&self) -> &Self::EventHandlerType;
+    //todo: remove fn get_handler_mut(&mut self) -> &mut Self::EventHandlerType;
 }
 
 pub trait Child<ParentType, ChildType, S>
@@ -324,7 +323,8 @@ pub enum ChildrenHolder<T: ?Sized + WidgetHolder> {
 }
 
 use super::{
-    generic::{MenuItemParameters, MenuParameters, WindowParameters},
+    generic::{MenuItemParameters, MenuParameters, WindowHandlerTrait, WindowParameters},
+    native::traits::NativeRoot,
     WindowChildren,
 };
 #[cfg(feature = "serde")]
@@ -395,4 +395,17 @@ impl<T: WidgetHolder> std::fmt::Pointer for ChildrenHolder<T> {
             Self::Ours(o) => std::fmt::Pointer::fmt(&o, f),
         }
     }
+}
+
+trait LifecycleDelegate
+where
+    Self: Sized + std::fmt::Debug,
+{
+    fn created();
+
+    fn beforeDisplay();
+    fn displayed();
+
+    fn beforeDestroy();
+    fn destroyed();
 }

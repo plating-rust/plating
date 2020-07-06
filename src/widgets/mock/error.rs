@@ -12,7 +12,21 @@ use std::fmt;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum MockErrorKind {
-    MockError,
+    ///
+    MockError1,
+    ///
+    MockError2,
+    ///
+    MockError3,
+}
+impl fmt::Display for MockErrorKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            MockErrorKind::MockError1 => write!(f, "MockError1"),
+            MockErrorKind::MockError2 => write!(f, "MockError2"),
+            MockErrorKind::MockError3 => write!(f, "MockError3"),
+        }
+    }
 }
 
 /// Mock Error using [`MockErrorKind`] as the kind data.
@@ -34,7 +48,6 @@ impl MockError {
 /// `source()` always return `None` for MockError.
 impl Error for MockError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        //todo: map to actual backend issue?!?!
         None
     }
 }

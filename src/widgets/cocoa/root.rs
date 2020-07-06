@@ -5,12 +5,14 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
+use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
-use crate::widgets::generic::{RootParameters, RootWidgetTrait};
+use crate::widgets::generic::RootParameters;
 use crate::widgets::System;
 use crate::widgets::{
-    ChildrenHolder, NativeWidget, Outlet, OutletAdapter, RootChildren, Widget, WidgetHolder,
+    native::traits::NativeRoot, ChildrenHolder, NativeWidget, Outlet, OutletAdapter, RootChildren,
+    Widget, WidgetHolder,
 };
 
 use cocoa::appkit::{
@@ -46,7 +48,7 @@ impl Widget for CocoaRoot {
     type PARAMS = CocoaRootParameters;
 }
 
-impl RootWidgetTrait<CocoaSystem> for CocoaRoot {
+impl NativeRoot<CocoaSystem> for CocoaRoot {
     fn run(&self) -> CocoaResult<()> {
         unsafe {
             self.handle.run();

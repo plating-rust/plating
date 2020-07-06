@@ -5,6 +5,7 @@
 
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::generic::MenuParameters;
@@ -13,7 +14,7 @@ use crate::widgets::{
     Child, ChildrenHolder, MainMenuChildren, MenuChildren, NativeWidget, Outlet, OutletAdapter,
     System, Widget, WidgetHolder,
 };
-use crate::Direction;
+use crate::{prelude::NativeMenu, Direction};
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
@@ -179,7 +180,7 @@ impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMen
 
 impl From<CocoaMenu> for MenuChildren<CocoaSystem> {
     fn from(menu: CocoaMenu) -> Self {
-        MenuChildren::MENU(WidgetType::NATIVE(menu))
+        Self::MENU(WidgetType::NATIVE(menu))
     }
 }
 
@@ -188,3 +189,5 @@ impl From<CocoaMenu> for MainMenuChildren<CocoaSystem> {
         Self::MENU(WidgetType::NATIVE(menu))
     }
 }
+
+impl NativeMenu<CocoaSystem> for CocoaMenu {}

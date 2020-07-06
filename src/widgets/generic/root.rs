@@ -4,17 +4,13 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
+use crate::widgets::native::traits::NativeRoot;
 use crate::widgets::RootChildren;
 use crate::widgets::{
     default_system, ChildrenHolder, GenericWidget, NativeWidget, OutletAdapter, System, Widget,
     WidgetHolder,
 };
 use crate::PlatingResult;
-
-//todo: move
-pub trait RootWidgetTrait<S: System> {
-    fn run(&self) -> std::result::Result<(), S::ErrorType>;
-}
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq)] //required in cached version

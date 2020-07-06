@@ -9,6 +9,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::generic::ButtonParameters;
 use crate::widgets::{cocoa::error::CocoaResult, ButtonChildren, WidgetType};
 use crate::widgets::{Child, NativeWidget, System, Widget, WidgetHolder, WindowChildren};
+use crate::{prelude::NativeButton, widgets::cocoa::delegates::CocoaWindowDelegate};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CocoaButtonParameters {
@@ -85,6 +86,8 @@ impl WidgetHolder for CocoaButton {
         &self.name.as_str()
     }
 }
+
+impl NativeButton<CocoaSystem> for CocoaButton {}
 
 // auto generate impl via derive(widgetParent(A, B    ))
 /*

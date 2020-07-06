@@ -78,14 +78,7 @@ pub use traits::*;
 /// - [widgets::win::native](crate::widgets::win::native) on win
 ///
 /// If you enable the feature `mock_os` it will use [widgets::mock::native](crate::widgets::mock::native) regardless ofs platform.
-pub mod native {
-    #[cfg(target_os = "macos")]
-    #[doc(cfg(target_os = "macos"))]
-    pub use crate::widgets::cocoa::CocoaSystem as System;
-    #[cfg(target_os = "windows")]
-    #[doc(cfg(target_os = "windows"))]
-    pub use crate::widgets::win::WinSystem as System;
-}
+pub mod native;
 
 //todo: #[cfg(any(feature="mock_os", test))]
 //#[doc(cfg(feature="mock_os"))]

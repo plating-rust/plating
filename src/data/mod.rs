@@ -6,6 +6,7 @@
 //! Module containing basic data types used throughout plating
 
 use crate::features::serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
 
 /// Basic 2d Vector.
 /// Implemented as a Tuple. No specific functions.
@@ -31,6 +32,52 @@ pub enum CheckedState {
 impl Default for CheckedState {
     fn default() -> Self {
         Self::Off
+    }
+}
+/// Tries to convert from OptionalCheckedState.
+///
+/// Succeeds for [`OptionalCheckedState::Off`], [`OptionalCheckedState::On`] and [`OptionalCheckedState::Mixed`]
+///
+/// Fails for [`OptionalCheckedState::None`]
+impl TryFrom<OptionalCheckedState> for CheckedState {
+    type Error = &'static str;
+
+    fn try_from(state: OptionalCheckedState) -> Result<Self, Self::Error> {
+        match state {
+            OptionalCheckedState::None => Err("Invalid OptionalCheckedState: None"),
+            OptionalCheckedState::Off => Ok(Self::Off),
+            OptionalCheckedState::On => Ok(Self::On),
+            OptionalCheckedState::Mixed => Ok(Self::Mixed),
+        }
+    }
+}
+
+/// The state of optionally checkable objects like menu items.
+/// The difference to [`CheckedState`] is that this supports are 'None' option.
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
+pub enum OptionalCheckedState {
+    /// This item has its checked state turned off
+    None,
+    /// Same as [`CheckedState::Off`]
+    Off,
+    /// Same as [`CheckedState::On`]
+    On,
+    /// Same as [`CheckedState::Mixed`]
+    Mixed,
+}
+/// Defaults to None State
+impl Default for OptionalCheckedState {
+    fn default() -> Self {
+        Self::None
+    }
+}
+impl From<CheckedState> for OptionalCheckedState {
+    fn from(state: CheckedState) -> Self {
+        match state {
+            CheckedState::Off => Self::Off,
+            CheckedState::On => Self::On,
+            CheckedState::Mixed => Self::Mixed,
+        }
     }
 }
 

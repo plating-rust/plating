@@ -12,6 +12,7 @@ mod menu_item;
 mod root;
 mod window;
 
+pub mod delegates;
 pub mod error;
 
 pub use button::*;
@@ -24,23 +25,28 @@ pub use window::*;
 pub(self) mod utils;
 
 use crate::widgets::System;
+use delegates::CocoaWindowDelegate;
 
 #[derive(Debug)]
 pub struct CocoaSystem {}
 
 impl System for CocoaSystem {
+    fn name() -> &'static str {
+        "cocoa"
+    }
+
     type InternalHandle = CocoaDefaultHandleType;
     type ErrorType = error::CocoaError;
 
     type RootParameterTye = CocoaRootParameters;
-    /// Define NativeRoot to [CocoaRoot](crate::widgets::cocoa::CocoaRoot)
     type RootType = CocoaRoot;
 
     type ButtonParameterType = CocoaButtonParameters;
-    /// Define NativeButton to [CocoaButton](crate::widgets::cocoa::CocoaButton)
     type ButtonType = CocoaButton;
 
     type WindowType = CocoaWindow;
+
+    type WindowHandlerTrait = CocoaWindowDelegate;
     type WindowParameterType = CocoaWindowParameters;
 
     type MenuParameterType = CocoaMenuParameters;
