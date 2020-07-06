@@ -21,3 +21,14 @@ where
         &self.native_event
     }
 }
+
+impl<T> From<T> for CocoaEvent<T>
+where
+    T: NSEvent + Sized,
+{
+    fn from(event: T) -> Self {
+        Self {
+            native_event: event,
+        }
+    }
+}
