@@ -361,7 +361,7 @@ impl<T: WidgetHolder> ChildrenHolder<T> {
         }
     }
 
-    #[must_use = "The parent object has downgraded the pointer to a weak one. If you do not use the result, the child is immediately removed."]
+    #[must_use = "The parent object has downgraded the pointer to a weak one. If you do not use the result, the child is automatically removed."]
     pub fn require(&mut self) -> Option<Rc<T>> {
         match self {
             Self::Weak(w) => w.upgrade(),
