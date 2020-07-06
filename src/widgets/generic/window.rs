@@ -8,8 +8,8 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::events::ListenerType;
-use crate::widgets::generic::RootChildren;
 use crate::widgets::outlet::Outlet;
+use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Named};
 use crate::widgets::{default_system, System, Widget};
 
@@ -22,7 +22,7 @@ use crate::widgets::{default_system, System, Widget};
 /// The above native window parameter struct implement the `From` trait to
 /// get os specific parameters from this.
 /// ```rust
-/// use plating::widgets::generic::WindowParameters;
+/// use plating::widgets::window::WindowParameters;
 ///
 /// let params = WindowParameters::default();
 ///

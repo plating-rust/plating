@@ -4,7 +4,7 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::generic::MenuChildren;
+use crate::widgets::menu::MenuChildren;
 use crate::widgets::utils::Child;
 use crate::widgets::{System, Widget};
 

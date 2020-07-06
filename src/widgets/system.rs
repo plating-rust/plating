@@ -4,9 +4,12 @@
  */
 
 use crate::error::PlatingError;
-use crate::widgets::generic::{
-    ButtonParameters, MenuItemParameters, MenuParameters, NativeButton, NativeMenu, NativeMenuItem,
-    NativeRoot, NativeWindow, RootParameters, WindowParameters,
+use crate::widgets::{
+    button::{ButtonParameters, NativeButton},
+    menu::{MenuParameters, NativeMenu},
+    menu_item::{MenuItemParameters, NativeMenuItem},
+    root::{NativeRoot, RootParameters},
+    window::{NativeWindow, WindowParameters},
 };
 use std::error::Error;
 

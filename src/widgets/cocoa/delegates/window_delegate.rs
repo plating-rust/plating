@@ -4,7 +4,7 @@
  */
 
 use crate::widgets::events::ListenerType;
-use crate::widgets::generic::WindowHandlerTrait;
+use crate::widgets::window::WindowHandlerTrait;
 
 #[derive(Debug)]
 pub struct CocoaWindowDelegate {}

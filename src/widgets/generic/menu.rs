@@ -4,9 +4,9 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::generic::MainMenuChildren;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Named};
+use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq)]

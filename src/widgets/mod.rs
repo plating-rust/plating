@@ -20,7 +20,7 @@
 //! ```rust
 //! use plating::prelude::*;
 //! use plating::widgets::{default_system, System};
-//! use plating::widgets::generic::{RootParameters, WindowParameters};
+//! use plating::widgets::{root::RootParameters, window::WindowParameters};
 //! #[cfg(target_os = "macos")]
 //! use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
 //! #[cfg(target_os = "win")]
@@ -61,7 +61,18 @@ mod widget;
 pub use widget::Widget;
 
 ////////////////////
-//Systems:
+/// Generic
+////////////////////
+mod generic;
+
+pub use generic::button;
+pub use generic::menu;
+pub use generic::menu_item;
+pub use generic::root;
+pub use generic::window;
+
+////////////////////
+// Systems
 ////////////////////
 pub mod mock; //Always included, even without `mock_os` feature flag
 
@@ -117,8 +128,3 @@ pub mod native {
 //#[cfg(all(not(feature="mock_os"), not(test)))]
 //#[doc(cfg(all(not(feature="mock_os"), not(test))))]
 pub use crate::widgets::native::System as default_system;
-
-////////////////////////////////////////////////////////
-///
-//////////////////////////////////////
-pub mod generic;
