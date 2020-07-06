@@ -25,38 +25,3 @@ pub trait NativeMenuItem<S: System>:
     + Child<S::MenuType, MenuChildren<S>, S>
 {
 }
-
-/*
-#[derive(Debug)]
-pub struct MenuItem<S: System> {
-    /// stores the underlying native widget.
-    /// Most functions like `apply` are just forwarded to this.
-    native: S::MenuItemType,
-}
-
-impl<S: System> Widget for MenuItem<S> {
-    /// Means that `new_...` and `apply` functions require [`WindowParameters`]
-    type PARAMS = MenuItemParameters;
-}
-impl<S: System> WidgetHolder for MenuItem<S> {
-    fn name(&self) -> &str {
-        &self.native.name()
-    }
-}
-impl<S: System> GenericWidget<S> for MenuItem<S> {
-    /// does this show up?
-    fn native(&self) -> &Self::NativeType {
-        &self.native
-    }
-    fn native_mut(&mut self) -> &mut Self::NativeType {
-        &mut self.native
-    }
-    fn new_with_name(name: String, settings: Self::PARAMS) -> PlatingResult<Self, S> {
-        S::MenuItemType::new_with_name(name, settings)
-            .map(|native| Self { native })
-            .map_err(|native_error| native_error.into())
-    }
-
-    type NativeParameterType = <S::MenuItemType as Widget>::PARAMS;
-    type NativeType = S::MenuItemType;
-}*/

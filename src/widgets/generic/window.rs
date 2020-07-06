@@ -131,18 +131,3 @@ pub trait NativeWindow<S: System>:
     + Child<S::RootType, RootChildren<S>, S>
 {
 }
-
-/*
-impl<S> WindowHandlerTrait for Window<S>
-where
-    S: System,
-{
-    fn setResizeHandler(&mut self, mut handler: Box<impl FnMut()>) {
-        self.native.setResizeHandler(Box::new(|| handler()));
-    }
-
-    fn addResizeListener(&mut self, when: ListenerType, mut handler: Box<impl FnMut()>) {
-        self.native.addResizeListener(when, Box::new(|| handler()));
-    }
-}
-*/
