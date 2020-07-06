@@ -13,6 +13,13 @@ use std::fmt;
 pub enum CocoaErrorKind {
     TODO,
 }
+impl fmt::Display for CocoaErrorKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            CocoaErrorKind::TODO => write!(f, "todo"),
+        }
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct CocoaError {
@@ -35,8 +42,8 @@ impl Error for CocoaError {
 }
 
 impl fmt::Display for CocoaError {
-    fn fmt(&self, _f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!()
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "CocoaError: {}", self.kind)
     }
 }
 
