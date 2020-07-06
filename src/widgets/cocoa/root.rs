@@ -10,10 +10,9 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeRoot, RootHandlerTrait, RootParameters};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::Named;
-use crate::widgets::utils::OutletHolder;
+use crate::widgets::utils::{Named, OutletHolder, WidgetPointer};
 use crate::widgets::System;
-use crate::widgets::{ChildrenHolder, RootChildren, Widget};
+use crate::widgets::{RootChildren, Widget};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -137,7 +136,7 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn children(&self) -> &[ChildrenHolder<RootChildren<CocoaSystem>>] {
+    fn children(&self) -> &[WidgetPointer<RootChildren<CocoaSystem>>] {
         self.main_outlet.children()
     }
 

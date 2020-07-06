@@ -3,17 +3,16 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::widgets::utils::Named;
-use crate::widgets::ChildrenHolder;
+use crate::widgets::utils::{Named, WidgetPointer};
 use crate::widgets::{default_system, System};
 use std::rc::Rc;
 
 type ChildIter<'a, CHILD> = std::iter::FilterMap<
-    std::slice::Iter<'a, ChildrenHolder<CHILD>>,
-    fn(&ChildrenHolder<CHILD>) -> Option<Rc<CHILD>>,
+    std::slice::Iter<'a, WidgetPointer<CHILD>>,
+    fn(&WidgetPointer<CHILD>) -> Option<Rc<CHILD>>,
 >;
 
-fn get_obj<CHILD: Named>(obj: &ChildrenHolder<CHILD>) -> Option<Rc<CHILD>> {
+fn get_obj<CHILD: Named>(obj: &WidgetPointer<CHILD>) -> Option<Rc<CHILD>> {
     obj.get()
 }
 
@@ -25,7 +24,7 @@ where
     type ErrorType: Into<crate::error::PlatingError<S>>;
     type ParentData;
 
-    fn children(&self) -> &[ChildrenHolder<CHILD>];
+    fn children(&self) -> &[WidgetPointer<CHILD>];
 
     fn get_by_name<STR: std::borrow::Borrow<str>>(&self, name: STR) -> Option<std::rc::Rc<CHILD>> {
         self.child_iter()
@@ -38,7 +37,7 @@ where
     fn child_iter(&self) -> ChildIter<CHILD> {
         self.children()
             .iter()
-            .filter_map(get_obj as fn(&ChildrenHolder<CHILD>) -> Option<Rc<CHILD>>)
+            .filter_map(get_obj as fn(&WidgetPointer<CHILD>) -> Option<Rc<CHILD>>)
     }
 
     //todo fn remove_remnants(&mut self);

@@ -11,8 +11,8 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::generic::{NativeWindow, WindowHandlerTrait, WindowParameters};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Named, OutletHolder};
-use crate::widgets::{Child, ChildrenHolder, MainMenuChildren, Widget};
+use crate::widgets::utils::{Named, OutletHolder, WidgetPointer};
+use crate::widgets::{Child, MainMenuChildren, Widget};
 use crate::widgets::{RootChildren, System, WindowChildren};
 
 use cocoa::appkit::{
@@ -138,7 +138,7 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ErrorType = CocoaError;
     type ParentData = CocoaMainMenuParentData;
 
-    fn children(&self) -> &[ChildrenHolder<MainMenuChildren<CocoaSystem>>] {
+    fn children(&self) -> &[WidgetPointer<MainMenuChildren<CocoaSystem>>] {
         &self.menu_outlet.children()
     }
 
@@ -324,7 +324,7 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn children(&self) -> &[ChildrenHolder<WindowChildren<CocoaSystem>>] {
+    fn children(&self) -> &[WidgetPointer<WindowChildren<CocoaSystem>>] {
         self.main_outlet.children()
     }
 

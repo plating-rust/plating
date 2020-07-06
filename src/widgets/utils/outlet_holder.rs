@@ -9,8 +9,8 @@ use std::rc::Rc;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::Named;
-use crate::widgets::{Child, ChildrenHolder, System, Widget};
+use crate::widgets::utils::{Named, WidgetPointer};
+use crate::widgets::{Child, System, Widget};
 
 /// Outlets are a concepts for widgets to have children.
 ///
@@ -44,7 +44,7 @@ where
     ///Vector responsible for storing all the Children.
     ///
     /// Uses a [`ChildrenHolder`] instead of the children directly
-    pub(crate) children: Vec<ChildrenHolder<CHILD>>,
+    pub(crate) children: Vec<WidgetPointer<CHILD>>,
 
     _marker: std::marker::PhantomData<Parent>,
     _marker2: std::marker::PhantomData<S>,
@@ -94,7 +94,7 @@ where
         self.children.shrink_to_fit();
     }
 
-    pub(crate) fn children(&self) -> &[ChildrenHolder<CHILD>] {
+    pub(crate) fn children(&self) -> &[WidgetPointer<CHILD>] {
         &self.children[0..self.children.len()]
     }
 
@@ -108,8 +108,7 @@ where
     {
         let into_child = child.into();
         into_child.adding_to(parent);
-        self.children
-            .push(ChildrenHolder::Ours(Rc::new(into_child)));
+        self.children.push(WidgetPointer::Ours(Rc::new(into_child)));
 
         Ok(())
     }
