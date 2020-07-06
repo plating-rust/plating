@@ -39,6 +39,13 @@ pub struct PlatingError<S: System> {
     pub(crate) kind: PlatingErrorKind<S>,
 }
 
+impl<S: System> From<PlatingErrorKind<S>> for PlatingError<S> {
+    #[inline]
+    fn from(kind: PlatingErrorKind<S>) -> Self {
+        PlatingError { kind }
+    }
+}
+
 impl<S: System> Error for PlatingError<S> {
     #[cold]
     fn source(&self) -> Option<&(dyn Error + 'static)> {
