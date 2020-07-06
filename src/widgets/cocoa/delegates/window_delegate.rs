@@ -7,7 +7,7 @@ use crate::widgets::events::ListenerType;
 use crate::widgets::window::WindowHandlerTrait;
 
 #[derive(Debug, Default, Clone)]
-pub struct CocoaWindowDelegate {}
+pub(crate) struct CocoaWindowDelegate {}
 
 impl CocoaWindowDelegate {
     pub fn new() -> CocoaWindowDelegate {
