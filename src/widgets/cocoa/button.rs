@@ -92,10 +92,10 @@ impl WidgetHolder for CocoaButton {
 impl NativeButton<CocoaSystem> for CocoaButton {}
 
 impl ButtonHandlerTrait for CocoaButton {
-    fn set_exit_handler(&mut self, handler: Box<impl FnMut()>) {
+    fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_exit_listener(&mut self, when: crate::data::ListenerType, handler: Box<impl FnMut()>) {
+    fn add_exit_listener(&mut self, _when: crate::data::ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
     }
 }

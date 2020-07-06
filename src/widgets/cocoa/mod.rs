@@ -46,7 +46,6 @@ impl System for CocoaSystem {
 
     type WindowType = CocoaWindow;
 
-    type WindowHandlerTrait = CocoaWindowDelegate;
     type WindowParameterType = CocoaWindowParameters;
 
     type MenuParameterType = CocoaMenuParameters;

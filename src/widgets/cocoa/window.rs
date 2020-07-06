@@ -229,7 +229,7 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
         let settings = settings.into();
         log::info!("applying settings: {:?}", settings);
         unsafe {
-            if let Some(rect) = settings.rect {
+            if let Some(_rect) = settings.rect {
                 todo!()
             }
             if let Some(title) = settings.title {
@@ -239,7 +239,9 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
             if let Some(alpha_value) = settings.alpha_value {
                 self.handle.setAlphaValue_(alpha_value as CGFloat);
             }
-            if let Some(works_when_modal) = settings.works_when_modal {}
+            if let Some(_works_when_modal) = settings.works_when_modal {
+                todo!()
+            }
             if let Some(can_hide) = settings.can_hide {
                 self.handle.setCanHide_(can_hide as i8);
             }
@@ -249,28 +251,28 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
             if let Some(is_opaque) = settings.is_opaque {
                 self.handle.setOpaque_(is_opaque as i8);
             }
-            if let Some(has_shadow) = settings.has_shadow {
+            if let Some(_has_shadow) = settings.has_shadow {
                 todo!()
             }
-            if let Some(autorecalculate_content_border_thickness) =
+            if let Some(_autorecalculate_content_border_thickness) =
                 settings.autorecalculate_content_border_thickness
             {
                 todo!()
             }
-            if let Some(prevents_application_termination_when_modal) =
+            if let Some(_prevents_application_termination_when_modal) =
                 settings.prevents_application_termination_when_modal
             {
                 todo!()
             }
-            if let Some(can_become_visible_without_login) =
+            if let Some(_can_become_visible_without_login) =
                 settings.can_become_visible_without_login
             {
                 todo!()
             }
-            if let Some(depth_limit) = settings.depth_limit {
+            if let Some(_depth_limit) = settings.depth_limit {
                 todo!()
             }
-            if let Some(resize_increments) = settings.resize_increments {
+            if let Some(_resize_increments) = settings.resize_increments {
                 todo!()
             }
             if let Some(window_style) = settings.window_style {
@@ -321,10 +323,10 @@ impl OutletAdapter<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
 impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {}
 
 impl WindowHandlerTrait for CocoaWindow {
-    fn set_resize_handler(&mut self, handler: Box<impl FnMut()>) {
+    fn set_resize_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }
-    fn add_resize_listener(&mut self, when: crate::data::ListenerType, handler: Box<impl FnMut()>) {
+    fn add_resize_listener(&mut self, _when: crate::data::ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
     }
 }
