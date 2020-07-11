@@ -173,10 +173,6 @@ where
         self.children.shrink_to_fit();
     }
 
-    #[inline]
-    pub fn as_slice(&self) -> &[CHILD] {
-        self.children.as_slice()
-    }
 
     #[inline]
     pub fn clear(&mut self) {

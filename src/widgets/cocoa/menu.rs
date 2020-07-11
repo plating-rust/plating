@@ -127,9 +127,6 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     fn shrink_to_fit(&mut self) {
         self.main_outlet.shrink_to_fit()
     }
-    fn as_slice(&self) -> &[MenuChildren<CocoaSystem>] {
-        self.main_outlet.as_slice()
-    }
     fn clear(&mut self) {
         self.main_outlet.clear()
     }

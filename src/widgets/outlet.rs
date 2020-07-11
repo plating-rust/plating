@@ -25,7 +25,6 @@ where
     fn reserve(&mut self, additional: usize);
     fn reserve_exact(&mut self, additional: usize);
     fn shrink_to_fit(&mut self);
-    fn as_slice(&self) -> &[CHILD];
     fn clear(&mut self);
     fn len(&self) -> usize;
     fn is_empty(&self) -> bool;

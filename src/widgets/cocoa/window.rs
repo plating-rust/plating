@@ -381,9 +381,6 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn shrink_to_fit(&mut self) {
         self.menu_outlet.shrink_to_fit()
     }
-    fn as_slice(&self) -> &[MainMenuChildren<CocoaSystem>] {
-        self.menu_outlet.as_slice()
-    }
     fn clear(&mut self) {
         self.menu_outlet.clear()
     }
@@ -462,9 +459,6 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     }
     fn shrink_to_fit(&mut self) {
         self.main_outlet.shrink_to_fit()
-    }
-    fn as_slice(&self) -> &[WindowChildren<CocoaSystem>] {
-        self.main_outlet.as_slice()
     }
     fn clear(&mut self) {
         self.main_outlet.clear()
