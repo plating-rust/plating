@@ -240,7 +240,6 @@ impl RGB {
 /// Abstract enum representing a Color.
 ///
 /// Chose between an [`RGB`] or [`RGBA`] presentation.
-//todo: allow changing between different types
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Eq, PartialEq)]
 pub enum Color {
     /// Stores an RGBA value
