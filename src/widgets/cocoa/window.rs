@@ -202,8 +202,8 @@ impl Eq for CocoaWindow {}
 extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
     log::warn!("mouse down!");
     unsafe {
-        let windowAlpha: CGFloat = 0.5;
-        let _: () = msg_send![super(obj, class!(NSWindow)), setAlphaValue: windowAlpha];
+        let window_alpha: CGFloat = 0.5;
+        let _: () = msg_send![super(obj, class!(NSWindow)), setAlphaValue: window_alpha];
         //let _: () = msg_send![obj, setOpaque:true];
         let _: () = msg_send![super(obj, class!(NSWindow)), mouseDown: ev];
 
