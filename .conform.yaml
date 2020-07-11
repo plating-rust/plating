@@ -23,6 +23,7 @@ policies:
           - "native"
           - "cocoa"
           - "mock"
+          - "win"
         descriptionLength: 72
   - type: license
     spec:
