@@ -172,7 +172,7 @@ pub(crate) mod features {
     }
 }
 
-/// Convenience definition for ```Result<T, crate::error::PlatingError>```
+/// Convenience definition for ```Result<T, anyhow::Error>```
 pub type PlatingResult<T> = std::result::Result<T, anyhow::Error>;
 
 pub use plating_macros::uuid;
