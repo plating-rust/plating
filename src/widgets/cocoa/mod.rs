@@ -35,7 +35,6 @@ impl System for CocoaSystem {
     }
 
     type InternalHandle = CocoaDefaultHandleType;
-    type ErrorType = error::CocoaError;
 
     type RootParameterTye = CocoaRootParameters;
     type RootType = CocoaRoot;

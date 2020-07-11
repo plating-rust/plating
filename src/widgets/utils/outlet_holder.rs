@@ -224,7 +224,7 @@ where
         index: usize,
         child: T,
         parent: &Parent::ParentData,
-    ) -> std::result::Result<(), S::ErrorType>
+    ) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<CHILD>,
     {
@@ -245,7 +245,7 @@ where
         &mut self,
         child: T,
         parent: &Parent::ParentData,
-    ) -> std::result::Result<(), S::ErrorType>
+    ) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<CHILD>,
     {

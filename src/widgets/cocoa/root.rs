@@ -6,12 +6,12 @@
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
-use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
 use crate::widgets::utils::{Named, OutletHolder};
 use crate::widgets::{System, Widget};
+use crate::PlatingResult;
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -50,7 +50,7 @@ impl PartialEq for CocoaRoot {
 impl Eq for CocoaRoot {}
 
 impl NativeRoot<CocoaSystem> for CocoaRoot {
-    fn run(&self) -> CocoaResult<()> {
+    fn run(&self) -> PlatingResult<()> {
         unsafe {
             self.handle.run();
         };
@@ -70,7 +70,7 @@ impl RootHandlerTrait for CocoaRoot {
 impl Widget<CocoaSystem> for CocoaRoot {
     type PARAMS = CocoaRootParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
@@ -104,7 +104,7 @@ impl Widget<CocoaSystem> for CocoaRoot {
         &mut self.handle
     }
 
-    fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
     {
@@ -121,7 +121,6 @@ impl Named for CocoaRoot {
 }
 // auto generate impl via derive(widgetParent(A, B    ))
 impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
-    type ErrorType = CocoaError;
     type ParentData = ();
 
     fn iter<'a>(&'a self) -> std::slice::Iter<'a, RootChildren<CocoaSystem>> {
@@ -131,14 +130,14 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
         self.main_outlet.iter_mut()
     }
 
-    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<RootChildren<CocoaSystem>>,
     {
         self.main_outlet.push_child(child, &())
     }
 
-    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), anyhow::Error>
     where
         T: Into<RootChildren<CocoaSystem>>,
     {

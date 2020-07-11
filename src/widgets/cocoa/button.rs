@@ -8,11 +8,11 @@ use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
-use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
+use crate::PlatingResult;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CocoaButtonParameters {
@@ -84,7 +84,7 @@ impl From<CocoaButton> for WindowChildren<CocoaSystem> {
 impl Widget<CocoaSystem> for CocoaButton {
     type PARAMS = CocoaButtonParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
@@ -98,7 +98,7 @@ impl Widget<CocoaSystem> for CocoaButton {
         Ok(button)
     }
 
-    fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
     {

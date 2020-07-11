@@ -6,7 +6,6 @@
 use crate::events::ListenerType;
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
@@ -14,7 +13,7 @@ use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
-use crate::Direction;
+use crate::{Direction, PlatingResult};
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
@@ -89,7 +88,6 @@ impl Named for CocoaMenu {
 
 // auto generate impl via derive(widgetParent(A, B    ))
 impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
-    type ErrorType = CocoaError;
     type ParentData = CocoaMenuParentData;
 
     fn iter<'a>(&'a self) -> std::slice::Iter<'a, MenuChildren<CocoaSystem>> {
@@ -99,7 +97,7 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
         self.main_outlet.iter_mut()
     }
 
-    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<MenuChildren<CocoaSystem>>,
     {
@@ -107,7 +105,7 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
             .push_child(child.into(), &self.create_cocoa_menu_parent_data())
     }
 
-    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), anyhow::Error>
     where
         T: Into<MenuChildren<CocoaSystem>>,
     {
@@ -156,7 +154,7 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
 impl Widget<CocoaSystem> for CocoaMenu {
     type PARAMS = CocoaMenuParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
@@ -182,7 +180,7 @@ impl Widget<CocoaSystem> for CocoaMenu {
         Ok(new_menu)
     }
 
-    fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
     {

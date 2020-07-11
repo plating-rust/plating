@@ -68,7 +68,6 @@ extern crate cocoa;
 compile_error!("Unsupported platform.");
 
 pub mod actions;
-pub mod error;
 pub mod events;
 pub mod widgets;
 
@@ -174,6 +173,6 @@ pub(crate) mod features {
 }
 
 /// Convenience definition for ```Result<T, crate::error::PlatingError>```
-pub type PlatingResult<T, S> = std::result::Result<T, crate::error::PlatingError<S>>;
+pub type PlatingResult<T> = std::result::Result<T, anyhow::Error>;
 
 pub use plating_macros::uuid;

@@ -3,10 +3,8 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use super::CocoaSystem;
-use crate::error::{PlatingError, PlatingErrorKind};
-use std::error::Error;
 use std::fmt;
+use thiserror::Error;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 #[non_exhaustive]
@@ -21,7 +19,8 @@ impl fmt::Display for CocoaErrorKind {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Error)]
+#[error("CocoaError: {kind}")]
 pub struct CocoaError {
     kind: CocoaErrorKind,
 }
@@ -33,26 +32,3 @@ impl CocoaError {
         &self.kind
     }
 }
-
-impl Error for CocoaError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        //todo: map to actual backend issue?!?!
-        None
-    }
-}
-
-impl fmt::Display for CocoaError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "CocoaError: {}", self.kind)
-    }
-}
-
-impl From<CocoaError> for PlatingError<CocoaSystem> {
-    fn from(native_error: CocoaError) -> Self {
-        PlatingError {
-            kind: PlatingErrorKind::BackendError(native_error),
-        }
-    }
-}
-
-pub type CocoaResult<T> = std::result::Result<T, CocoaError>;

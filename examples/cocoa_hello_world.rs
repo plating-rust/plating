@@ -88,7 +88,7 @@ pub unsafe fn add_method<F>(class: *mut Class, sel: Sel, func: F)
 /// end
 /// ///////////////
 
-fn main() -> PlatingResult<(), default_system> {
+fn main() -> PlatingResult<()> {
     simple_logger::init().unwrap(); //setting up logging
 
     warn!("Starting up");

@@ -7,17 +7,17 @@ use crate::actions::lifecycle::{AttachEvent, AttachTopic};
 use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::outlet::Outlet;
+use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
-use crate::widgets::{
-    root::RootChildren,
-    window::{
-        MainMenuChildren, NativeWindow, WindowChildren, WindowHandlerTrait, WindowParameters,
-    },
+use crate::widgets::window::{
+    MainMenuChildren, NativeWindow, WindowChildren, WindowHandlerTrait, WindowParameters,
 };
-use crate::widgets::{System, Widget};
+use crate::{
+    widgets::{System, Widget},
+    PlatingResult,
+};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSBackingStoreBuffered, NSEvent, NSMenu, NSWindow, NSWindowDepth,
@@ -219,7 +219,7 @@ extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
 impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
@@ -271,7 +271,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
         Ok(new_window)
     }
 
-    fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
     {
@@ -341,7 +341,6 @@ impl Widget<CocoaSystem> for CocoaWindow {
 }
 
 impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
-    type ErrorType = CocoaError;
     type ParentData = CocoaMainMenuParentData;
 
     fn iter<'a>(&'a self) -> std::slice::Iter<'a, MainMenuChildren<CocoaSystem>> {
@@ -351,7 +350,7 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
         self.menu_outlet.iter_mut()
     }
 
-    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<MainMenuChildren<CocoaSystem>>,
     {
@@ -359,7 +358,7 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
         self.menu_outlet
             .push_child(child, &self.create_main_menu_parent_data())
     }
-    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), Self::ErrorType>
+    fn insert_child<T>(&mut self, index: usize, child: T) -> Result<(), anyhow::Error>
     where
         T: Into<MainMenuChildren<CocoaSystem>>,
     {
@@ -421,7 +420,6 @@ impl From<CocoaWindow> for RootChildren<CocoaSystem> {
 
 // auto generate impl via derive(widgetParent(A, B    ))
 impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
-    type ErrorType = CocoaError;
     type ParentData = ();
 
     fn iter<'a>(&'a self) -> std::slice::Iter<'a, WindowChildren<CocoaSystem>> {
@@ -431,18 +429,14 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
         self.main_outlet.iter_mut()
     }
 
-    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<WindowChildren<CocoaSystem>>,
     {
         self.main_outlet.push_child(child, &())
     }
 
-    fn insert_child<T>(
-        &mut self,
-        index: usize,
-        child: T,
-    ) -> std::result::Result<(), Self::ErrorType>
+    fn insert_child<T>(&mut self, index: usize, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<WindowChildren<CocoaSystem>>,
     {

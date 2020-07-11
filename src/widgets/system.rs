@@ -3,7 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::error::PlatingError;
 use crate::widgets::{
     button::{ButtonParameters, NativeButton},
     menu::{MenuParameters, NativeMenu},
@@ -11,7 +10,6 @@ use crate::widgets::{
     root::{NativeRoot, RootParameters},
     window::{NativeWindow, WindowParameters},
 };
-use std::error::Error;
 
 /// A System represents a GUI System (or you could also call it backend).
 ///
@@ -51,8 +49,6 @@ where
     /// Returns the name of this system.
     fn name() -> &'static str;
 
-    /// The error type returned by the native widgets in this system.
-    type ErrorType: Error + Into<PlatingError<Self>> + Clone + PartialEq + std::hash::Hash;
     /// The internal handle used by this system.
     /// Could be a `pointer`, `id`or whatever. Using it directly usually means you loose cross-platform compatibility.
     type InternalHandle;

@@ -26,11 +26,12 @@ use crate::widgets::System;
 /// ## Implementation
 /// A basic native widget implementation.
 /// ```rust
+/// use plating::{PlatingResult};
 /// use plating::widgets::{System, Widget};
 /// use plating::widgets::utils::{Named};
 /// use plating::events::{ListenerType};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
-/// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
+/// use plating::widgets::cocoa::error::{CocoaError};
 ///
 /// // Some imaginary config for our widget
 /// struct CocoaExampleParameters {
@@ -60,14 +61,14 @@ use crate::widgets::System;
 ///    // Empty struct in our case, but could be anything
 ///    type PARAMS = CocoaExampleParameters;
 ///
-///    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+///    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
 ///    where
 ///        T: Into<Self::PARAMS> {
 ///        let mut result = Self {name, handle: todo!() };
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
-///     fn apply<T>(&mut self, settings: T) -> Result<(), CocoaError>
+///     fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
 ///    where
 ///        T: Into<Self::PARAMS> {
 ///        todo!() //apply settings on the backend
@@ -100,17 +101,17 @@ where
     /// The Parameter type this struct requires when creating or applying changes to it.
     type PARAMS;
 
-    fn new<T>(settings: T) -> Result<Self, S::ErrorType>
+    fn new<T>(settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>,
     {
         Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
     }
-    fn new_with_name<T>(name: String, settings: T) -> Result<Self, S::ErrorType>
+    fn new_with_name<T>(name: String, settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>;
 
-    fn apply<T>(&mut self, settings: T) -> Result<(), S::ErrorType>
+    fn apply<T>(&mut self, settings: T) -> Result<(), anyhow::Error>
     where
         T: Into<Self::PARAMS>;
 

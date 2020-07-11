@@ -11,7 +11,6 @@ where
     CHILD: Named,
     S: System,
 {
-    type ErrorType: Into<crate::error::PlatingError<S>>;
     type ParentData;
 
     fn iter(&self) -> std::slice::Iter<'_, CHILD>;
@@ -31,15 +30,11 @@ where
 
     //todo fn remove_remnants(&mut self);
 
-    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
+    fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<CHILD>;
 
-    fn insert_child<T>(
-        &mut self,
-        index: usize,
-        child: T,
-    ) -> std::result::Result<(), Self::ErrorType>
+    fn insert_child<T>(&mut self, index: usize, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<CHILD>;
 

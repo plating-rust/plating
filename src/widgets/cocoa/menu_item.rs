@@ -5,13 +5,12 @@
 
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::menu::MenuChildren;
 use crate::widgets::menu_item::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
 use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{System, Widget};
-use crate::CheckedState;
+use crate::{CheckedState, PlatingResult};
 
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
@@ -72,7 +71,7 @@ impl Named for CocoaMenuItem {
 impl Widget<CocoaSystem> for CocoaMenuItem {
     type PARAMS = CocoaMenuItemParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> CocoaResult<Self>
+    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
     where
         T: Into<Self::PARAMS>,
     {
@@ -86,7 +85,7 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
         Ok(new_menu_item)
     }
 
-    fn apply<T>(&mut self, settings: T) -> CocoaResult<()>
+    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
     {

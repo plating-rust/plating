@@ -28,7 +28,7 @@ pub trait NativeRoot<S: System>:
 {
     /// Calling this function starts the main loop.
     /// Only returns once the app is closed.
-    fn run(&self) -> std::result::Result<(), S::ErrorType>;
+    fn run(&self) -> std::result::Result<(), anyhow::Error>;
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
