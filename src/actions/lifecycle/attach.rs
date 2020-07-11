@@ -13,22 +13,22 @@ use std::marker::PhantomData;
 //todo: #[derive(Eq, PartialEq)]
 pub struct AttachEvent<W: Widget<S>, S: System = default_system> {
     //todo: parent: &'a W,
-    _S: PhantomData<S>,
-    _W: PhantomData<W>,
+    _s: PhantomData<S>,
+    _w: PhantomData<W>,
 }
 impl<W: Widget<S>, S: System> AttachEvent<W, S> {
     pub fn new() -> Self {
         Self {
-            _S: PhantomData,
-            _W: PhantomData,
+            _s: PhantomData,
+            _w: PhantomData,
         }
     }
 }
 impl<W: Widget<S>, S: System> Clone for AttachEvent<W, S> {
     fn clone(&self) -> Self {
         AttachEvent {
-            _S: self._S,
-            _W: self._W,
+            _s: self._s,
+            _w: self._w,
         }
     }
 }
