@@ -3,18 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-#[macro_use]
-extern crate objc;
-
-#[macro_use]
-extern crate anyhow;
-
-#[macro_use]
-extern crate plating_uuid_macro;
-
-#[macro_use]
-extern crate plating_macros;
-
 
 // TODO: Types:
 //NSView
