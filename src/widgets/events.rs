@@ -23,7 +23,7 @@ pub enum PressedEventType {
 }
 
 pub trait KeyboardEventData {
-    fn keyCode(&self) -> u16;
+    fn key_code(&self) -> u16;
     fn characters(&self) -> Option<String>;
     fn modifiers(&self) -> KeyModifiers;
 }
