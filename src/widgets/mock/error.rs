@@ -6,11 +6,11 @@
 //! Contains [`MockError`] which is the error type for [`MockSystem`].
 
 use crate::features::serde::{Deserialize, Serialize};
-use std::error::Error;
 use std::fmt;
+use thiserror::Error;
 
 /// A Mock error kind containing 3 different Error types.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Copy)]
 #[non_exhaustive]
 pub enum MockErrorKind {
     ///
@@ -30,10 +30,8 @@ impl fmt::Display for MockErrorKind {
     }
 }
 
-/// Mock Error using [`MockErrorKind`] as the kind data.
-///
-/// Implements everything required by `System::ErrorType` to be used as a Systems error type.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Error)]
+#[error("MockError: {kind}")]
 pub struct MockError {
     kind: MockErrorKind,
 }
@@ -45,19 +43,3 @@ impl MockError {
         &self.kind
     }
 }
-
-/// `source()` always return `None` for MockError.
-impl Error for MockError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        None
-    }
-}
-
-impl fmt::Display for MockError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "MockError: {}", self.kind)
-    }
-}
-
-/// Convenient typedef for the Result type used throughout the `mock` module
-pub type MockResult<T> = std::result::Result<T, MockError>;
