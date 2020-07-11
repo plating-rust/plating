@@ -11,7 +11,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, OutletHolder, OutletIterator, WidgetPointer};
+use crate::widgets::utils::{Child, Named, OutletHolder};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::Direction;
@@ -90,8 +90,11 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     type ErrorType = CocoaError;
     type ParentData = CocoaMenuParentData;
 
-    fn iter<'a>(&'a self) -> OutletIterator<'a, MenuChildren<CocoaSystem>> {
+    fn iter<'a>(&'a self) -> std::slice::Iter<'a, MenuChildren<CocoaSystem>> {
         self.main_outlet.iter()
+    }
+    fn iter_mut(&mut self) -> std::slice::IterMut<'_, MenuChildren<CocoaSystem>> {
+        self.main_outlet.iter_mut()
     }
 
     fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
@@ -122,7 +125,7 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     fn shrink_to_fit(&mut self) {
         self.main_outlet.shrink_to_fit()
     }
-    fn as_slice(&self) -> &[WidgetPointer<MenuChildren<CocoaSystem>>] {
+    fn as_slice(&self) -> &[MenuChildren<CocoaSystem>] {
         self.main_outlet.as_slice()
     }
     fn clear(&mut self) {
@@ -133,6 +136,21 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     }
     fn is_empty(&self) -> bool {
         self.main_outlet.is_empty()
+    }
+    fn remove_by_index(&mut self, index: usize) -> MenuChildren<CocoaSystem> {
+        self.main_outlet.remove_by_index(index)
+    }
+    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+        &mut self,
+        name: STR,
+    ) -> Result<MenuChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_name(name)
+    }
+    fn remove_by_predicate<F: FnMut(&MenuChildren<CocoaSystem>) -> bool>(
+        &mut self,
+        f: F,
+    ) -> Result<MenuChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_predicate(f)
     }
 }
 

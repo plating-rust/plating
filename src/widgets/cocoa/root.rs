@@ -10,7 +10,7 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
-use crate::widgets::utils::{Named, OutletHolder, OutletIterator, WidgetPointer};
+use crate::widgets::utils::{Named, OutletHolder};
 use crate::widgets::{System, Widget};
 
 use cocoa::appkit::{
@@ -142,8 +142,11 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     type ErrorType = CocoaError;
     type ParentData = ();
 
-    fn iter<'a>(&'a self) -> OutletIterator<'a, RootChildren<CocoaSystem>> {
+    fn iter<'a>(&'a self) -> std::slice::Iter<'a, RootChildren<CocoaSystem>> {
         self.main_outlet.iter()
+    }
+    fn iter_mut(&mut self) -> std::slice::IterMut<'_, RootChildren<CocoaSystem>> {
+        self.main_outlet.iter_mut()
     }
 
     fn push_child<T>(&mut self, child: T) -> std::result::Result<(), Self::ErrorType>
@@ -172,7 +175,7 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     fn shrink_to_fit(&mut self) {
         self.main_outlet.shrink_to_fit()
     }
-    fn as_slice(&self) -> &[WidgetPointer<RootChildren<CocoaSystem>>] {
+    fn as_slice(&self) -> &[RootChildren<CocoaSystem>] {
         self.main_outlet.as_slice()
     }
     fn clear(&mut self) {
@@ -183,5 +186,20 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     }
     fn is_empty(&self) -> bool {
         self.main_outlet.is_empty()
+    }
+    fn remove_by_index(&mut self, index: usize) -> RootChildren<CocoaSystem> {
+        self.main_outlet.remove_by_index(index)
+    }
+    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+        &mut self,
+        name: STR,
+    ) -> Result<RootChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_name(name)
+    }
+    fn remove_by_predicate<F: FnMut(&RootChildren<CocoaSystem>) -> bool>(
+        &mut self,
+        f: F,
+    ) -> Result<RootChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_predicate(f)
     }
 }

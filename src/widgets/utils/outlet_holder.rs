@@ -5,13 +5,20 @@
 
 //! Module containing struct of the same Name [`Outlet`].
 
-use std::rc::Rc;
+use thiserror::Error;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, WidgetPointer};
+use crate::widgets::utils::{Child, Named};
 use crate::widgets::{System, Widget};
 
+#[derive(Error, Debug)]
+#[error("WidgetNotFound: {msg}")]
+pub struct WidgetNotFound {
+    msg: String,
+    #[source] // optional if field name is `source`
+    source: Option<anyhow::Error>,
+}
 /// Outlets are a concepts for widgets to have children.
 ///
 /// Widgets can have zero, one or more outlets. For example the [Window](crate::widgets::generic::window) Widget
@@ -44,7 +51,7 @@ where
     ///Vector responsible for storing all the Children.
     ///
     /// Uses a [`ChildrenHolder`] instead of the children directly
-    pub(crate) children: Vec<WidgetPointer<CHILD>>,
+    pub(crate) children: Vec<CHILD>,
 
     _marker: std::marker::PhantomData<Parent>,
     _marker2: std::marker::PhantomData<S>,
@@ -73,48 +80,66 @@ where
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
+    #[inline]
+    pub fn iter(&self) -> std::slice::Iter<'_, CHILD> {
+        self.children.iter()
+    }
+
+    #[inline]
+    pub fn iter_mut(&mut self) -> std::slice::IterMut<'_, CHILD> {
+        self.children.iter_mut()
+    }
+
     /// Returns the capacity of the internal vector.
     ///
     /// See [Vec::capacity]
+    #[inline]
     pub fn capacity(&self) -> usize {
         self.children.capacity()
     }
     /// Reserves space for the specified amount of *additional* children.
     ///
     /// See [Vec::reserve]
+    #[inline]
     pub fn reserve(&mut self, additional: usize) {
         self.children.reserve(additional)
     }
     /// Reserves space for the specified amount of children *in total*.
     ///
     /// See [Vec::reserve_exact]
+    #[inline]
     pub fn reserve_exact(&mut self, additional: usize) {
         self.children.reserve_exact(additional)
     }
     /// Resizes the vector to fit the current amount of children.
     ///
     /// See [Vec::shrink_to_fit]
+    #[inline]
     pub fn shrink_to_fit(&mut self) {
         self.children.shrink_to_fit();
     }
 
-    pub fn as_slice(&self) -> &[WidgetPointer<CHILD>] {
+    #[inline]
+    pub fn as_slice(&self) -> &[CHILD] {
         self.children.as_slice()
     }
 
+    #[inline]
     pub fn clear(&mut self) {
         self.children.clear()
     }
 
+    #[inline]
     pub fn len(&self) -> usize {
         self.children.len()
     }
 
+    #[inline]
     pub fn is_empty(&self) -> bool {
         self.children.is_empty()
     }
 
-    pub(crate) fn insert_child<T>(
+    pub fn insert_child<T>(
         &mut self,
         index: usize,
         child: T,
@@ -125,13 +150,12 @@ where
     {
         let into_child = child.into();
         into_child.adding_to(parent);
-        self.children
-            .insert(index, WidgetPointer::Ours(Rc::new(into_child)));
+        self.children.insert(index, into_child);
 
         Ok(())
     }
 
-    pub(crate) fn push_child<T>(
+    pub fn push_child<T>(
         &mut self,
         child: T,
         parent: &Parent::ParentData,
@@ -141,15 +165,39 @@ where
     {
         let into_child = child.into();
         into_child.adding_to(parent);
-        self.children.push(WidgetPointer::Ours(Rc::new(into_child)));
+        self.children.push(into_child);
 
         Ok(())
     }
 
-    //
-
-    pub(crate) fn iter<'a>(&'a self) -> OutletIterator<'a, CHILD> {
-        OutletIterator::new(self.children.iter())
+    pub fn remove_by_index(&mut self, index: usize) -> CHILD {
+        self.children.remove(index)
+    }
+    pub fn remove_by_name<STR: std::borrow::Borrow<str>>(
+        &mut self,
+        name: STR,
+    ) -> Result<CHILD, anyhow::Error> {
+        self.remove_by_predicate(|obj: &CHILD| obj.name() == name.borrow())
+            .map_err(|orig_error| {
+                WidgetNotFound {
+                    msg: format!("by name: {}", name.borrow()),
+                    source: Some(orig_error),
+                }
+                .into()
+            })
+    }
+    pub fn remove_by_predicate<F: FnMut(&CHILD) -> bool>(
+        &mut self,
+        f: F,
+    ) -> Result<CHILD, anyhow::Error> {
+        match self.children.iter().position(f) {
+            Some(pos) => Ok(self.remove_by_index(pos)),
+            None => Err(WidgetNotFound {
+                msg: String::from("by predicate"),
+                source: None,
+            }
+            .into()),
+        }
     }
 }
 
@@ -159,13 +207,13 @@ where
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
-    type Output = WidgetPointer<CHILD>;
+    type Output = CHILD;
 
-    fn index(&self, index: usize) -> &WidgetPointer<CHILD> {
+    fn index(&self, index: usize) -> &CHILD {
         &self.children[index]
     }
 }
-
+/*
 impl<'a, CHILD, Parent, S> IntoIterator for &'a OutletHolder<CHILD, Parent, S>
 where
     CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
@@ -179,69 +227,4 @@ where
         let iter = self.children.iter();
         OutletIterator::new(iter)
     }
-}
-
-#[derive(Debug, Clone)]
-pub struct OutletIterator<'a, CHILD>
-where
-    CHILD: Named,
-{
-    internal_iter: std::slice::Iter<'a, WidgetPointer<CHILD>>,
-}
-impl<'a, CHILD> OutletIterator<'a, CHILD>
-where
-    CHILD: Named,
-{
-    fn new(iter: std::slice::Iter<'a, WidgetPointer<CHILD>>) -> Self {
-        Self {
-            internal_iter: iter,
-        }
-    }
-}
-
-impl<'a, CHILD> Iterator for OutletIterator<'a, CHILD>
-where
-    CHILD: Named,
-{
-    type Item = Rc<CHILD>;
-
-    #[inline]
-    fn next(&mut self) -> Option<Rc<CHILD>> {
-        let n = self.internal_iter.next();
-        if let Some(pointer) = n {
-            match pointer.get() {
-                Some(p) => Some(p),
-                None => self.next(),
-            }
-        } else {
-            None
-        }
-    }
-
-    #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.internal_iter.size_hint()
-    }
-}
-
-impl<'a, CHILD> DoubleEndedIterator for OutletIterator<'a, CHILD>
-where
-    CHILD: Named,
-{
-    #[inline]
-    fn next_back(&mut self) -> Option<Rc<CHILD>> {
-        let n = self.internal_iter.next_back();
-        if let Some(pointer) = n {
-            match pointer.get() {
-                Some(p) => Some(p),
-                None => self.next(),
-            }
-        } else {
-            None
-        }
-    }
-}
-
-impl<'a, CHILD> ExactSizeIterator for OutletIterator<'_, CHILD> where CHILD: Named {}
-
-impl<'a, CHILD> core::iter::FusedIterator for OutletIterator<'_, CHILD> where CHILD: Named {}
+}*/
