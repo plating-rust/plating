@@ -36,12 +36,18 @@ pub struct WidgetNotFound {
 /// Outlets store the children in vectors of [`ChildrenHolders`](crate::widgets::traits::ChildrenHolder).
 /// Make sure to read up on them to understand ownership and memory management of plating
 ///
+/// # Assumptions
+/// Plating assumes
+/// - widget names are constant.
+/// - widget names are unique. Not enforced by plating, users responsibility.
 /// # Template Parameters
 /// - `CHILD`: the kind of elements this Outlet can store.<br>
 ///     Usually realized by enums. See [`WindowChildren`](crate::widgets::WindowChildren) for an example.
 ///     <br><br>**Requirements**: Needs to implement [`WidgetHolder`] + `std::fmt::Debug`
 ///
-#[derive(Debug, Serialize, Deserialize)]
+/// # Drop
+/// makes sure all elements receive the `disconnected` and `remove_from_parent` signals.
+#[derive(Debug, Serialize, Deserialize, Hash)]
 pub struct OutletHolder<CHILD, Parent, S>
 where
     CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
@@ -98,6 +104,10 @@ where
         self.connected = true;
     }
 
+    /// Marks itself as disconnected and calls `fn disconnecting()` on all child elements
+    ///
+    /// # Preconditions
+    /// Panics if already disconnected.
     fn disconnecting(&mut self) {
         if !self.connected {
             panic!("Outlet Holder not yet connected")
@@ -119,6 +129,7 @@ where
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
+    /// Returns an empty, unconnected OutletHolder
     fn default() -> OutletHolder<CHILD, Parent, S> {
         Self {
             children: vec![],
@@ -134,11 +145,13 @@ where
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
+    /// Returns an Iterator to the internal vec holding the children.
     #[inline]
     pub fn iter(&self) -> std::slice::Iter<'_, CHILD> {
         self.children.iter()
     }
 
+    /// Returns a mut Iterator to the internal vec holding the children.
     #[inline]
     pub fn iter_mut(&mut self) -> std::slice::IterMut<'_, CHILD> {
         self.children.iter_mut()
@@ -173,7 +186,7 @@ where
         self.children.shrink_to_fit();
     }
 
-
+    /// Empties the internal vector and makes sure children are `disconnected` and `removed from parent`.
     #[inline]
     pub fn clear(&mut self) {
         if self.connected {
@@ -187,16 +200,25 @@ where
         self.children.clear()
     }
 
+    /// Returns the number of children
     #[inline]
     pub fn len(&self) -> usize {
         self.children.len()
     }
 
+    /// Returns true if there are no children, false otherwise
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.children.is_empty()
     }
 
+    /// Inserts a child into this holder at the specified index.
+    ///
+    /// # Responsibilities
+    /// Makes sure [`adding_to_parent`](crate::widgets::utils::Child::adding_to_parent) is called.<br>
+    /// If this holder is [`connected`](OutletHolder::connected) will also call [`connecting`](crate::widgets::utils::connectable::Connectable::connecting) on the added child.
+    ///
+    /// See also [`push_child`](OutletHolder::push_child)
     pub fn insert_child<T>(
         &mut self,
         index: usize,
@@ -212,6 +234,13 @@ where
         Ok(())
     }
 
+    /// Pushes a child at the and of this holder.
+    ///
+    /// # Responsibilities
+    /// Makes sure [`adding_to_parent`](crate::widgets::utils::Child::adding_to_parent) is called.<br>
+    /// If this holder is [`connected`](OutletHolder::connected) will also call [`connecting`](crate::widgets::utils::connectable::Connectable::connecting) on the added child.
+    ///
+    /// See also [`insert_child`](OutletHolder::insert_child)
     pub fn push_child<T>(
         &mut self,
         child: T,
@@ -225,6 +254,13 @@ where
         Ok(())
     }
 
+    /// Removes the child at the given index.
+    ///
+    /// # Responsibilities
+    /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
+    /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
+    ///
+    /// See also [`remove_by_name`](OutletHolder::remove_by_name) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
     pub fn remove_by_index(&mut self, index: usize) -> CHILD {
         let child = &mut self.children[index];
         if child.connected() {
@@ -233,6 +269,15 @@ where
         child.removing_from_parent();
         self.children.remove(index)
     }
+    /// Removes the child with given name.
+    ///
+    /// # Responsibilities
+    /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
+    /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
+    ///
+    /// NOTE: only removes the first child with the given name.
+    ///
+    /// See also [`remove_by_index`](OutletHolder::remove_by_index) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
     pub fn remove_by_name<STR: std::borrow::Borrow<str>>(
         &mut self,
         name: STR,
@@ -246,6 +291,14 @@ where
                 .into()
             })
     }
+
+    /// Removes the first child the given predicate evaluates to true.
+    ///
+    /// # Responsibilities
+    /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
+    /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
+    ///
+    /// See also [`remove_by_index`](OutletHolder::remove_by_index) and [`remove_by_name`](OutletHolder::remove_by_name).
     pub fn remove_by_predicate<F: FnMut(&CHILD) -> bool>(
         &mut self,
         f: F,
