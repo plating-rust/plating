@@ -4,16 +4,24 @@
  */
 use crate::features::serde::{Deserialize, Serialize};
 
-use std::error::Error;
 use std::fmt;
+use thiserror::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum WinErrorKind {
     TODO,
 }
+impl fmt::Display for WinErrorKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            WinErrorKind::TODO => write!(f, "todo"),
+        }
+    }
+}
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Error)]
+#[error("WinError: {kind}")]
 pub struct WinError {
     kind: WinErrorKind,
 }
@@ -25,18 +33,3 @@ impl WinError {
         &self.kind
     }
 }
-
-impl Error for WinError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        //todo: map to actual backend issue?!?!
-        None
-    }
-}
-
-impl fmt::Display for WinError {
-    fn fmt(&self, _f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!()
-    }
-}
-
-pub type WinResult<T> = std::result::Result<T, WinError>;
