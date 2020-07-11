@@ -28,7 +28,7 @@ pub enum CheckedState {
     /// this state means some children are checked, some are not.
     Mixed,
 }
-/// Defaults to the Off state
+/// Defaults to the [`Off`](CheckedState::Off) state
 impl Default for CheckedState {
     fn default() -> Self {
         Self::Off
@@ -65,7 +65,7 @@ pub enum OptionalCheckedState {
     /// Same as [`CheckedState::Mixed`]
     Mixed,
 }
-/// Defaults to None State
+/// Defaults to [`None`](OptionalCheckedState::None) State
 impl Default for OptionalCheckedState {
     fn default() -> Self {
         Self::None
