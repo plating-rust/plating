@@ -5,7 +5,6 @@
 
 use crate::widgets::utils::Named;
 use crate::widgets::{default_system, System};
-use std::rc::Rc;
 
 pub trait Outlet<CHILD, S = default_system>
 where

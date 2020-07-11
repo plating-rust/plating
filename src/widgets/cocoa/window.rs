@@ -27,7 +27,7 @@ use cocoa::base::{id, nil, NO};
 use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
 use core_graphics::base::CGFloat;
 use objc::declare::ClassDecl;
-use objc::runtime::{Class, Imp, Object, Protocol, Sel, BOOL};
+use objc::runtime::{Object, Sel};
 use std::fmt;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful

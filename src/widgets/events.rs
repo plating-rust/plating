@@ -4,11 +4,8 @@
  */
 
 use crate::data::Vec2;
-use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::prelude::Named;
-
-use std::rc::Rc;
 
 pub trait Event<'a> {
     fn timestamp(&self) -> u64; //TODO: better
