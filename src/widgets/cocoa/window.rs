@@ -230,7 +230,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
                 mouse_down as extern "C" fn(&Object, Sel, id),
             );
 
-            let mut view_class = decl.register();
+            let view_class = decl.register();
             let id: id = msg_send![view_class, alloc];
             id.initWithContentRect_styleMask_backing_defer_(
                 NSRect::new(NSPoint::new(0., 0.), NSSize::new(200., 200.)),
