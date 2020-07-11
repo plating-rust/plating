@@ -7,7 +7,6 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::CocoaSystem;
-use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
 use crate::widgets::utils::{Named, OutletHolder};
@@ -111,24 +110,6 @@ impl Widget<CocoaSystem> for CocoaRoot {
         let _settings = settings.into();
 
         Ok(())
-    }
-}
-
-impl LifecycleHandler for CocoaRoot {
-    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
     }
 }
 

@@ -92,7 +92,6 @@ pub mod win;
 ///
 /// Automatically included in ```plating::prelude::*```
 pub mod prelude {
-    pub use super::events::LifecycleHandler;
     /// used by all widgets that can have children
     pub use super::outlet::Outlet; //TODO: do we really need this?
     pub use super::utils::*;

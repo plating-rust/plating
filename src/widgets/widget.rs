@@ -2,8 +2,6 @@
  * Copyright (2020) by Marcel Lambert.
  * This project is dual licensed under either MIT or Apache-2.0.
  */
-
-use crate::widgets::events::LifecycleHandler;
 use crate::widgets::utils::Named;
 use crate::widgets::System;
 
@@ -30,7 +28,7 @@ use crate::widgets::System;
 /// ```rust
 /// use plating::widgets::{System, Widget};
 /// use plating::widgets::utils::{Named};
-/// use plating::widgets::events::{ListenerType, LifecycleHandler};
+/// use plating::widgets::events::{ListenerType};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
 ///
@@ -83,23 +81,6 @@ use crate::widgets::System;
 ///     }
 /// }
 ///
-/// impl LifecycleHandler for CocoaExampleWidget {
-///     fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-///         todo!()
-///     }
-///
-///     fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-///         todo!()
-///     }
-///
-///     fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-///         todo!()
-///     }
-///
-///     fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-///         todo!()
-///     }
-/// }
 /// ```
 ///
 /// Now that's a lot of boilerplate for a simple widget.
@@ -113,7 +94,7 @@ use crate::widgets::System;
 ///
 pub trait Widget<S>
 where
-    Self: Named + std::fmt::Debug + Sized + LifecycleHandler,
+    Self: Named + std::fmt::Debug + Sized,
     S: System,
 {
     /// The Parameter type this struct requires when creating or applying changes to it.

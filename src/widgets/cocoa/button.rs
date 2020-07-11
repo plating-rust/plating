@@ -8,7 +8,6 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
 use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
-use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::utils::{Child, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
@@ -99,24 +98,6 @@ impl Named for CocoaButton {
 }
 
 impl NativeButton<CocoaSystem> for CocoaButton {}
-
-impl LifecycleHandler for CocoaButton {
-    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-}
 
 impl ButtonHandlerTrait for CocoaButton {
     fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {

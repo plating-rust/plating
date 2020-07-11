@@ -4,7 +4,6 @@
  */
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Named};
 use crate::widgets::{default_system, System, Widget};

@@ -7,7 +7,6 @@
 //! for generic parameters that work across all OS's.
 
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Named};

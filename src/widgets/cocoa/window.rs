@@ -8,7 +8,6 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
-use crate::widgets::events::{LifecycleHandler, ListenerType};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Named, OutletHolder};
 use crate::widgets::{
@@ -343,24 +342,6 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
         f: F,
     ) -> Result<MainMenuChildren<CocoaSystem>, anyhow::Error> {
         self.menu_outlet.remove_by_predicate(f)
-    }
-}
-
-impl LifecycleHandler for CocoaWindow {
-    fn add_create_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_display_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_destroy_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
-    }
-
-    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
     }
 }
 
