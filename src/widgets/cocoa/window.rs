@@ -198,6 +198,7 @@ impl PartialEq for CocoaWindow {
 }
 impl Eq for CocoaWindow {}
 
+//todo: remove
 extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
     log::warn!("mouse down!");
     unsafe {
