@@ -11,7 +11,7 @@ use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, OutletHolder};
+use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::Direction;
@@ -61,6 +61,8 @@ pub struct CocoaMenu {
     item: CocoaDefaultHandleType,
     ///auto generate and add via derive(widgetParent(Window))
     main_outlet: OutletHolder<MenuChildren<CocoaSystem>, CocoaMenu, CocoaSystem>,
+
+    connected: bool,
 }
 
 impl CocoaMenu {
@@ -177,6 +179,7 @@ impl Widget<CocoaSystem> for CocoaMenu {
             handle: menu,
             item: menu_item,
             main_outlet: OutletHolder::default(),
+            connected: false,
         };
         new_menu.apply(settings)?;
         Ok(new_menu)
@@ -207,10 +210,32 @@ impl Widget<CocoaSystem> for CocoaMenu {
     }
 }
 
-impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {}
+impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
+    fn adding_to_parent(
+        &mut self,
+        _parent: &<CocoaMenu as Outlet<MenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
+    ) {
+        //todo: invoke message handlers
+    }
+    fn removing_from_parent(&mut self) {
+        //todo: invoke message handlers
+    }
+    fn added(&self) -> bool {
+        //todo: get 'parent' value and check if not empty!
+        return false;
+    }
+}
 impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
-    fn adding_to(
-        &self,
+    fn removing_from_parent(&mut self) {
+        //todo: invoke message handlers
+    }
+    fn added(&self) -> bool {
+        //todo: get 'parent' value and check if not empty!
+        return false;
+    }
+
+    fn adding_to_parent(
+        &mut self,
         parent: &<CocoaWindow as Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
     ) {
         log::info!("Adding menu to window!");
@@ -258,3 +283,29 @@ impl From<CocoaMenu> for MainMenuChildren<CocoaSystem> {
 impl NativeMenu<CocoaSystem> for CocoaMenu {}
 
 impl MenuHandlerTrait for CocoaMenu {}
+
+impl Connectable for CocoaMenu {
+    fn connecting(&mut self) {
+        if self.connected {
+            panic!("CocoaMenu already connected")
+        }
+
+        self.main_outlet.connecting();
+
+        self.connected = true;
+    }
+
+    fn disconnecting(&mut self) {
+        if !self.connected {
+            panic!("CocoaMenu not yet connected")
+        }
+
+        self.main_outlet.disconnecting();
+
+        self.connected = false;
+    }
+
+    fn connected(&self) -> bool {
+        self.connected
+    }
+}

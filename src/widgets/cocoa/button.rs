@@ -10,7 +10,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
 use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 
@@ -35,6 +35,9 @@ pub struct CocoaButton {
 
     ///auto generate and add via derive(Widget)
     name: String,
+
+    //todo: move to backend
+    connected: bool,
 }
 /*
 impl AttachTopic<CocoaButton> for CocoaButton {
@@ -53,7 +56,18 @@ impl PartialEq for CocoaButton {
 }
 impl Eq for CocoaButton {}
 
-impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {}
+impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {
+    fn adding_to_parent(&mut self, _parent: &()) {
+        //todo: invoke message handlers
+    }
+    fn removing_from_parent(&mut self) {
+        //todo: invoke message handlers
+    }
+    fn added(&self) -> bool {
+        //todo: get 'parent' value and check if not empty!
+        return false;
+    }
+}
 
 impl From<CocoaButton> for ButtonChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
@@ -77,6 +91,7 @@ impl Widget<CocoaSystem> for CocoaButton {
         let mut button = CocoaButton {
             name,
             handle: 0 as CocoaDefaultHandleType,
+            connected: false,
             //main_outlet: Outlet::<ButtonChildren>::default(),
         };
         button.apply(settings)?;
@@ -116,6 +131,28 @@ impl ButtonHandlerTrait<CocoaSystem> for CocoaButton {
     }
     fn add_exit_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
         todo!()
+    }
+}
+
+impl Connectable for CocoaButton {
+    fn connecting(&mut self) {
+        if self.connected {
+            panic!("CocoaButton already connected")
+        }
+
+        self.connected = true;
+    }
+
+    fn disconnecting(&mut self) {
+        if !self.connected {
+            panic!("CocoaButton not yet connected")
+        }
+
+        self.connected = false;
+    }
+
+    fn connected(&self) -> bool {
+        self.connected
     }
 }
 

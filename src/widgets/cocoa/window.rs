@@ -10,7 +10,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named, OutletHolder};
+use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::{
     root::RootChildren,
     window::{
@@ -133,6 +133,9 @@ pub struct CocoaWindow {
     name: String,
 
     handle: CocoaDefaultHandleType,
+
+    //todo: move to custom cocoa type
+    connected: bool,
 
     ///auto generate and add via derive(widgetParent(Window))
     //todo: move to custom cocoa type
@@ -258,6 +261,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
             main_outlet: OutletHolder::default(),
             menu_outlet: OutletHolder::default(),
             menubar: None,
+            connected: false,
         };
         new_window.apply(settings)?;
         unsafe {
@@ -488,7 +492,18 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     }
 }
 
-impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {}
+impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
+    fn adding_to_parent(&mut self, _parent: &()) {
+        //todo: invoke message handlers
+    }
+    fn removing_from_parent(&mut self) {
+        //todo: invoke message handlers
+    }
+    fn added(&self) -> bool {
+        //todo: get 'parent' value and check if not empty!
+        return false;
+    }
+}
 
 /*
 impl AttachTopic<CocoaRoot, CocoaSystem> for CocoaWindow {
@@ -505,3 +520,31 @@ impl AttachTopic<CocoaRoot, CocoaSystem> for CocoaWindow {
 impl WindowHandlerTrait<CocoaSystem> for CocoaWindow {}
 
 impl NativeWindow<CocoaSystem> for CocoaWindow {}
+
+impl Connectable for CocoaWindow {
+    fn connecting(&mut self) {
+        if self.connected {
+            panic!("CocoaWindow already connected")
+        }
+
+        self.main_outlet.connecting();
+        self.menu_outlet.connecting();
+
+        self.connected = true;
+    }
+
+    fn disconnecting(&mut self) {
+        if !self.connected {
+            panic!("CocoaWindow not yet connected")
+        }
+
+        self.main_outlet.disconnecting();
+        self.menu_outlet.disconnecting();
+
+        self.connected = false;
+    }
+
+    fn connected(&self) -> bool {
+        self.connected
+    }
+}

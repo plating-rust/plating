@@ -6,7 +6,7 @@
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
@@ -45,10 +45,45 @@ impl<S: System> Named for RootChildren<S> {
         }
     }
 }
-impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
-    fn adding_to(&self, parent: &<S::RootType as Outlet<RootChildren<S>, S>>::ParentData) {
+
+impl<S: System> Connectable for RootChildren<S> {
+    fn connecting(&mut self) {
         match self {
-            Self::WINDOW(button) => button.adding_to(parent),
+            Self::WINDOW(window) => window.connecting(),
+        }
+    }
+
+    fn disconnecting(&mut self) {
+        match self {
+            Self::WINDOW(window) => window.disconnecting(),
+        }
+    }
+
+    fn connected(&self) -> bool {
+        match self {
+            Self::WINDOW(window) => window.connected(),
+        }
+    }
+}
+
+impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
+    fn adding_to_parent(
+        &mut self,
+        parent: &<S::RootType as Outlet<RootChildren<S>, S>>::ParentData,
+    ) {
+        match self {
+            Self::WINDOW(window) => window.adding_to_parent(parent),
+        }
+    }
+    fn removing_from_parent(&mut self) {
+        match self {
+            Self::WINDOW(window) => window.removing_from_parent(),
+        }
+    }
+
+    fn added(&self) -> bool {
+        match self {
+            Self::WINDOW(window) => window.added(),
         }
     }
 }

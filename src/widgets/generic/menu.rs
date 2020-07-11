@@ -5,7 +5,7 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{default_system, System, Widget};
 
@@ -46,13 +46,52 @@ impl<S: System> Named for MenuChildren<S> {
         }
     }
 }
+
+impl<S: System> Connectable for MenuChildren<S> {
+    fn connecting(&mut self) {
+        match self {
+            Self::MENU(menu) => menu.connecting(),
+            Self::ITEM(item) => item.connecting(),
+        }
+    }
+
+    fn disconnecting(&mut self) {
+        match self {
+            Self::MENU(menu) => menu.disconnecting(),
+            Self::ITEM(item) => item.disconnecting(),
+        }
+    }
+
+    fn connected(&self) -> bool {
+        match self {
+            Self::MENU(menu) => menu.connected(),
+            Self::ITEM(item) => item.connected(),
+        }
+    }
+}
+
 impl<S: System> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
-    fn adding_to(&self, parent: &<S::MenuType as Outlet<Self, S>>::ParentData) {
+    fn adding_to_parent(&mut self, parent: &<S::MenuType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::MENU(menu) => {
-                <dyn Child<S::MenuType, MenuChildren<S>, S>>::adding_to(menu, parent)
+                <dyn Child<S::MenuType, MenuChildren<S>, S>>::adding_to_parent(menu, parent)
             }
-            Self::ITEM(item) => item.adding_to(parent),
+            Self::ITEM(item) => item.adding_to_parent(parent),
+        }
+    }
+
+    fn removing_from_parent(&mut self) {
+        match self {
+            Self::MENU(menu) => {
+                <dyn Child<S::MenuType, MenuChildren<S>, S>>::removing_from_parent(menu)
+            }
+            Self::ITEM(item) => item.removing_from_parent(),
+        }
+    }
+    fn added(&self) -> bool {
+        match self {
+            Self::MENU(menu) => <dyn Child<S::MenuType, MenuChildren<S>, S>>::added(menu),
+            Self::ITEM(item) => item.added(),
         }
     }
 }

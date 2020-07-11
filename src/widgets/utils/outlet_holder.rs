@@ -9,7 +9,7 @@ use thiserror::Error;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{System, Widget};
 
 #[derive(Error, Debug)]
@@ -51,14 +51,67 @@ where
     ///Vector responsible for storing all the Children.
     ///
     /// Uses a [`ChildrenHolder`] instead of the children directly
-    pub(crate) children: Vec<CHILD>,
+    children: Vec<CHILD>,
+
+    ///Indicates that children in this outlet are connected to root
+    connected: bool,
 
     _marker: std::marker::PhantomData<Parent>,
     _marker2: std::marker::PhantomData<S>,
 }
+impl<CHILD, Parent, S> OutletHolder<CHILD, Parent, S>
+where
+    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
+    S: System,
+{
+    fn prepare_child<T>(&self, child: T, parent: &Parent::ParentData) -> CHILD
+    where
+        T: Into<CHILD>,
+    {
+        let mut into_child = child.into();
+        into_child.adding_to_parent(parent);
+        if self.connected {
+            into_child.connecting();
+        }
+        into_child
+    }
+}
 
-//todo: implement fromIterator
-//todo: implement Extend
+impl<CHILD, Parent, S> Connectable for OutletHolder<CHILD, Parent, S>
+where
+    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
+    S: System,
+{
+    /// Marks itself as connected and calls `fn connecting()` on all child elements
+    ///
+    /// # Preconditions
+    /// Panics if already connected.
+    fn connecting(&mut self) {
+        if self.connected {
+            panic!("Outlet Holder already connected")
+        }
+        for child in &mut self.children {
+            child.connecting();
+        }
+        self.connected = true;
+    }
+
+    fn disconnecting(&mut self) {
+        if !self.connected {
+            panic!("Outlet Holder not yet connected")
+        }
+        for child in &mut self.children {
+            child.disconnecting();
+        }
+        self.connected = false;
+    }
+
+    fn connected(&self) -> bool {
+        self.connected
+    }
+}
 
 impl<CHILD, Parent, S> Default for OutletHolder<CHILD, Parent, S>
 where
@@ -69,6 +122,7 @@ where
     fn default() -> OutletHolder<CHILD, Parent, S> {
         Self {
             children: vec![],
+            connected: false,
             _marker: std::marker::PhantomData,
             _marker2: std::marker::PhantomData,
         }
@@ -126,6 +180,14 @@ where
 
     #[inline]
     pub fn clear(&mut self) {
+        if self.connected {
+            for child in &mut self.children {
+                child.disconnecting();
+            }
+        }
+        for child in &mut self.children {
+            child.removing_from_parent();
+        }
         self.children.clear()
     }
 
@@ -148,9 +210,8 @@ where
     where
         T: Into<CHILD>,
     {
-        let into_child = child.into();
-        into_child.adding_to(parent);
-        self.children.insert(index, into_child);
+        self.children
+            .insert(index, self.prepare_child(child, parent));
 
         Ok(())
     }
@@ -163,14 +224,17 @@ where
     where
         T: Into<CHILD>,
     {
-        let into_child = child.into();
-        into_child.adding_to(parent);
-        self.children.push(into_child);
+        self.children.push(self.prepare_child(child, parent));
 
         Ok(())
     }
 
     pub fn remove_by_index(&mut self, index: usize) -> CHILD {
+        let child = &mut self.children[index];
+        if child.connected() {
+            child.disconnecting();
+        }
+        child.removing_from_parent();
         self.children.remove(index)
     }
     pub fn remove_by_name<STR: std::borrow::Borrow<str>>(
@@ -201,6 +265,17 @@ where
     }
 }
 
+impl<CHILD, Parent, S> Drop for OutletHolder<CHILD, Parent, S>
+where
+    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    Parent: Widget<S> + Outlet<CHILD, S>,
+    S: System,
+{
+    fn drop(&mut self) {
+        self.clear()
+    }
+}
+
 impl<CHILD, Parent, S> std::ops::Index<usize> for OutletHolder<CHILD, Parent, S>
 where
     CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
@@ -213,18 +288,3 @@ where
         &self.children[index]
     }
 }
-/*
-impl<'a, CHILD, Parent, S> IntoIterator for &'a OutletHolder<CHILD, Parent, S>
-where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
-    Parent: Widget<S> + Outlet<CHILD, S>,
-    S: System,
-{
-    type Item = Rc<CHILD>;
-    type IntoIter = OutletIterator<'a, CHILD>;
-
-    fn into_iter(self) -> OutletIterator<'a, CHILD> {
-        let iter = self.children.iter();
-        OutletIterator::new(iter)
-    }
-}*/

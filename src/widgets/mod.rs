@@ -94,7 +94,7 @@ pub mod win;
 pub mod prelude {
     /// used by all widgets that can have children
     pub use super::outlet::Outlet; //TODO: do we really need this?
-    pub use super::utils::*;
+    pub use super::utils::prelude::*;
     pub use super::widget::Widget;
 }
 

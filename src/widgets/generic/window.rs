@@ -10,7 +10,7 @@ use crate::actions::lifecycle::AttachTopic;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{default_system, System, Widget};
 
 /// Generic parameters for creating and customizing Windows
@@ -75,10 +75,44 @@ pub enum WindowChildren<S: System = default_system> {
     BUTTON(S::ButtonType),
 }
 
-impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
-    fn adding_to(&self, parent: &<S::WindowType as Outlet<WindowChildren<S>, S>>::ParentData) {
+impl<S: System> Connectable for WindowChildren<S> {
+    fn connecting(&mut self) {
         match self {
-            Self::BUTTON(button) => button.adding_to(parent),
+            Self::BUTTON(button) => button.connecting(),
+        }
+    }
+
+    fn disconnecting(&mut self) {
+        match self {
+            Self::BUTTON(button) => button.disconnecting(),
+        }
+    }
+
+    fn connected(&self) -> bool {
+        match self {
+            Self::BUTTON(button) => button.connected(),
+        }
+    }
+}
+
+impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
+    fn adding_to_parent(
+        &mut self,
+        parent: &<S::WindowType as Outlet<WindowChildren<S>, S>>::ParentData,
+    ) {
+        match self {
+            Self::BUTTON(button) => button.adding_to_parent(parent),
+        }
+    }
+    fn removing_from_parent(&mut self) {
+        match self {
+            Self::BUTTON(button) => button.removing_from_parent(),
+        }
+    }
+
+    fn added(&self) -> bool {
+        match self {
+            Self::BUTTON(button) => button.added(),
         }
     }
 }
@@ -105,12 +139,46 @@ impl<S: System> Named for MainMenuChildren<S> {
         }
     }
 }
+
+impl<S: System> Connectable for MainMenuChildren<S> {
+    fn connecting(&mut self) {
+        match self {
+            Self::MENU(menu) => menu.connecting(),
+        }
+    }
+
+    fn disconnecting(&mut self) {
+        match self {
+            Self::MENU(menu) => menu.disconnecting(),
+        }
+    }
+
+    fn connected(&self) -> bool {
+        match self {
+            Self::MENU(menu) => menu.connected(),
+        }
+    }
+}
 impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
-    fn adding_to(&self, parent: &<S::WindowType as Outlet<MainMenuChildren<S>, S>>::ParentData) {
+    fn adding_to_parent(
+        &mut self,
+        parent: &<S::WindowType as Outlet<MainMenuChildren<S>, S>>::ParentData,
+    ) {
         match self {
             Self::MENU(menu) => {
-                <dyn Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to(menu, parent)
+                <dyn Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to_parent(menu, parent)
             }
+        }
+    }
+    fn removing_from_parent(&mut self) {
+        match self {
+            Self::MENU(menu) => menu.removing_from_parent(),
+        }
+    }
+
+    fn added(&self) -> bool {
+        match self {
+            Self::MENU(menu) => menu.added(),
         }
     }
 }

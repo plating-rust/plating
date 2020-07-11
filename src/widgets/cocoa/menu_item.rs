@@ -9,7 +9,7 @@ use crate::widgets::cocoa::error::CocoaResult;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::menu::MenuChildren;
 use crate::widgets::menu_item::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{System, Widget};
 use crate::CheckedState;
 
@@ -48,6 +48,8 @@ pub struct CocoaMenuItem {
     name: String,
 
     handle: CocoaDefaultHandleType,
+
+    connected: bool,
 }
 
 impl PartialEq for CocoaMenuItem {
@@ -78,6 +80,7 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
         let mut new_menu_item = CocoaMenuItem {
             name,
             handle: menu_item,
+            connected: false,
         };
         new_menu_item.apply(settings)?;
         Ok(new_menu_item)
@@ -109,15 +112,48 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
 }
 
 impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenuItem {
-    fn adding_to(&self, parent: &CocoaMenuParentData) {
+    fn adding_to_parent(&mut self, parent: &CocoaMenuParentData) {
         unsafe {
             parent.menu.addItem_(self.handle);
         }
+
+        //todo: invoke message handlers
+    }
+
+    fn removing_from_parent(&mut self) {
+        //todo: invoke message handlers
+    }
+    fn added(&self) -> bool {
+        //todo: get 'parent' value and check if not empty!
+        return false;
     }
 }
 
 impl From<CocoaMenuItem> for MenuChildren<CocoaSystem> {
     fn from(menu_item: CocoaMenuItem) -> Self {
         MenuChildren::ITEM(menu_item)
+    }
+}
+
+impl Connectable for CocoaMenuItem {
+    //todo: move
+    fn connecting(&mut self) {
+        if self.connected {
+            panic!("CocoaMenuItem already connected")
+        }
+
+        self.connected = true;
+    }
+
+    fn disconnecting(&mut self) {
+        if !self.connected {
+            panic!("CocoaMenuItem not yet connected")
+        }
+
+        self.connected = false;
+    }
+
+    fn connected(&self) -> bool {
+        self.connected
     }
 }
