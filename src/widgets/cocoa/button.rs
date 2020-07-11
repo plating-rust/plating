@@ -3,6 +3,8 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::actions::lifecycle::{AttachEvent, AttachTopic};
+use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
@@ -34,6 +36,15 @@ pub struct CocoaButton {
     ///auto generate and add via derive(Widget)
     name: String,
 }
+/*
+impl AttachTopic<CocoaButton> for CocoaButton {
+    fn add_listener(when: ListenerType, handler: Box<impl FnMut(&AttachEvent, &dyn Named, &PermissionState)>) {
+        todo!{}
+    }
+    fn set_handler(handler: Box<impl FnMut(&AttachEvent, &dyn Named) -> PermissionResult>) {
+        todo!{}
+    }
+}*/
 
 impl PartialEq for CocoaButton {
     fn eq(&self, other: &Self) -> bool {
@@ -99,7 +110,7 @@ impl Named for CocoaButton {
 
 impl NativeButton<CocoaSystem> for CocoaButton {}
 
-impl ButtonHandlerTrait for CocoaButton {
+impl ButtonHandlerTrait<CocoaSystem> for CocoaButton {
     fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {
         todo!()
     }

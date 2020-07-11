@@ -36,6 +36,9 @@ mock_os = []
 [dependencies]
 uuid = { version = "^0.8.1", features = ["v4"] }
 
+bitflags = "^1.2"
+anyhow = "^1.0"
+thiserror = "^1.0"
 
 plating-macros = { path = "./uuid-macro", version="0.0.1" }
 

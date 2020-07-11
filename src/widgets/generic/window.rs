@@ -6,6 +6,7 @@
 //! Module contains a generic [`Window`] adapter and a structure
 //! for generic parameters that work across all OS's.
 
+use crate::actions::lifecycle::AttachTopic;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
@@ -53,16 +54,16 @@ pub struct WindowParameters {
     pub fullscreenable: Option<bool>,
 }
 
-pub trait WindowHandlerTrait {
-    fn set_resize_handler(&mut self, handler: Box<impl FnMut()>);
-    fn add_resize_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+pub trait WindowHandlerTrait<S: System> //:
+//AttachTopic<S::RootType, S>
+{
 }
 
 pub trait NativeWindow<S: System>:
     Widget<S, PARAMS = S::WindowParameterType>
     + Outlet<WindowChildren<S>, S>
     + Outlet<MainMenuChildren<S>, S>
-    + WindowHandlerTrait
+    + WindowHandlerTrait<S>
     + Child<S::RootType, RootChildren<S>, S>
 {
 }

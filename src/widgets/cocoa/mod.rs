@@ -6,7 +6,7 @@
 mod defs;
 
 mod button;
-mod event;
+pub(crate) mod event;
 mod menu;
 mod menu_item;
 mod root;
@@ -25,7 +25,6 @@ pub use window::*;
 pub(self) mod utils;
 
 use crate::widgets::System;
-use delegates::CocoaWindowDelegate;
 
 #[derive(Debug)]
 pub struct CocoaSystem {}

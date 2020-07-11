@@ -3,45 +3,69 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::data::Vec2;
+use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
+use crate::prelude::Named;
 
-/// Enum representing the EventState after a Event Callback was called.
-///
-/// # Example
-/// todo: example callback return handled and unhandled on some condition
-#[derive(Debug, Eq, PartialEq, Clone, Copy, Hash, Serialize, Deserialize)]
-pub enum EventState {
-    /// represent that the event was handled and no further event handlers should be called
-    HANDLED,
-    /// this event has not yet been handled.
-    UNHANDLED,
-}
-impl Default for EventState {
-    fn default() -> EventState {
-        EventState::UNHANDLED
-    }
+use std::rc::Rc;
+
+pub trait Event<'a> {
+    fn timestamp(&self) -> u64; //TODO: better
+
+    fn target(&self) -> &'a dyn Named; //todo: better
 }
 
-#[derive(Debug, Eq, PartialEq, Clone, Copy, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum ListenerType {
-    Before,
-    After,
+pub use crate::widgets::cocoa::event::CocoaKeyModifiers as KeyModifiers;
+
+#[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
+pub enum PressedEventType {
+    Down,
+    Pressed,
+    Up,
 }
 
-/// Callback type definition.
-///
-/// Callback handlers must adhere to this type definition.
-pub type Callback<T, W, E = ()> = dyn FnMut(&T, &mut W) -> Result<EventState, E>;
+pub trait KeyboardEventData {
+    fn keyCode(&self) -> u16;
+    fn characters(&self) -> Option<String>;
+    fn modifiers(&self) -> KeyModifiers;
+}
 
-pub trait LifecycleHandler
-where
-    Self: Sized + std::fmt::Debug,
-{
-    fn add_create_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+pub trait MouseEventData {
+    fn location(&self) -> Vec2<u32>;
+}
 
-    fn add_display_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+pub trait MouseMoveEventData {
+    fn distance(&self) -> Vec2<u32>;
+}
 
-    fn add_destroy_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
+#[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
+pub enum DragEventType {
+    DragStart,
+    Dragging,
+    DragStop,
+}
 
-    fn add_apply_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>);
+#[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
+pub enum HoverEventType {
+    Enter,
+    Hover,
+    Leave,
+}
+
+/////events
+
+pub trait MouseScrollEventData<'a>: MouseMoveEventData + MouseEventData + Event<'a> {}
+
+pub trait MousePressEventData<'a>: MouseEventData + Event<'a> {
+    fn state(&'a self) -> PressedEventType;
+    fn button(&'a self) -> u8;
+}
+
+pub trait MouseDragEventData<'a>: MouseMoveEventData + MouseEventData + Event<'a> {
+    fn drag_type(&self) -> DragEventType;
+}
+
+pub trait MouseHoverEventData<'a>: MouseMoveEventData + MouseEventData + Event<'a> {
+    fn hover_type(&self) -> HoverEventType;
 }

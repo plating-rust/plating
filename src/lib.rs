@@ -55,12 +55,21 @@
 /////////////////////////
 // extern crates
 /////////////////////////
+#[macro_use]
+extern crate bitflags;
+
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
+
 #[cfg(target_os = "macos")]
 extern crate cocoa;
 #[cfg(all(not(target_os = "macos")))]
 compile_error!("Unsupported platform.");
 
+pub mod actions;
 pub mod error;
+pub mod events;
 pub mod widgets;
 
 mod data;

@@ -3,8 +3,9 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::actions::lifecycle::AttachTopic;
+use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::events::ListenerType;
 use crate::widgets::utils::{Child, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{default_system, System, Widget};
@@ -14,7 +15,9 @@ pub struct ButtonParameters {
     pub label: Option<String>,
 }
 
-pub trait ButtonHandlerTrait {
+pub trait ButtonHandlerTrait<S: System> //:
+//    AttachTopic<S::Window, S>
+{
     fn set_exit_handler(&mut self, handler: Box<impl FnMut()>);
     fn add_exit_listener(&mut self, when: ListenerType, handler: Box<impl FnMut()>);
 }
@@ -27,7 +30,7 @@ pub trait ButtonHandlerTrait {
 /// - Child
 pub trait NativeButton<S: System>:
     Widget<S, PARAMS = S::ButtonParameterType>
-    + ButtonHandlerTrait
+    + ButtonHandlerTrait<S>
     + Child<S::WindowType, WindowChildren<S>, S>
 {
 }

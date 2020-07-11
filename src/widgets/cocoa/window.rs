@@ -3,9 +3,10 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::actions::lifecycle::{AttachEvent, AttachTopic};
+use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::cocoa::delegates::CocoaWindowDelegate;
 use crate::widgets::cocoa::error::{CocoaError, CocoaResult};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::outlet::Outlet;
@@ -19,12 +20,15 @@ use crate::widgets::{
 use crate::widgets::{System, Widget};
 
 use cocoa::appkit::{
-    NSApp, NSApplication, NSBackingStoreBuffered, NSMenu, NSWindow, NSWindowDepth,
+    NSApp, NSApplication, NSBackingStoreBuffered, NSEvent, NSMenu, NSWindow, NSWindowDepth,
     NSWindowStyleMask,
 };
-use cocoa::base::{nil, NO};
+use cocoa::base::{id, nil, NO};
 use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
 use core_graphics::base::CGFloat;
+use objc::declare::ClassDecl;
+use objc::runtime::{Class, Imp, Object, Protocol, Sel, BOOL};
+use std::fmt;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(PartialEq)] //required in cached version
@@ -124,22 +128,44 @@ pub struct CocoaMainMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
-#[derive(Debug)]
 pub struct CocoaWindow {
     ///auto generate and add via derive(Widget)
     name: String,
 
     handle: CocoaDefaultHandleType,
 
-    event_delegate: CocoaWindowDelegate,
-
     ///auto generate and add via derive(widgetParent(Window))
+    //todo: move to custom cocoa type
     main_outlet: OutletHolder<WindowChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
-
+    //todo: move to custom cocoa type
     menu_outlet: OutletHolder<MainMenuChildren<CocoaSystem>, CocoaWindow, CocoaSystem>,
 
+    //todo: move to custom cocoa type
     menubar: Option<CocoaDefaultHandleType>,
-    menu_item: Option<CocoaDefaultHandleType>,
+    /*attach_handler: Option<
+        Box<
+            dyn FnMut(&AttachEvent<CocoaRoot, CocoaSystem>, &dyn Named) -> PermissionResult
+            >>  ,
+
+    observable: Subject<AttachEvent<CocoaRoot, CocoaSystem>, anyhow::Error>,*/
+}
+
+impl fmt::Debug for CocoaWindow {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("CocoaWindow")
+            .field("name", &self.name())
+            .field("handle", &self.handle)
+            .field("main_outlet", &self.main_outlet)
+            .field("menu_outlet", &self.menu_outlet)
+            //.field("attach_handler", &format!("{:p}", &self.attach_handler))
+            .finish()
+    }
+}
+
+impl fmt::Display for CocoaWindow {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}<Window>", self.name)
+    }
 }
 
 impl CocoaWindow {
@@ -172,6 +198,20 @@ impl PartialEq for CocoaWindow {
 }
 impl Eq for CocoaWindow {}
 
+extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
+    log::warn!("mouse down!");
+    unsafe {
+        let windowAlpha: CGFloat = 0.5;
+        let _: () = msg_send![super(obj, class!(NSWindow)), setAlphaValue: windowAlpha];
+        //let _: () = msg_send![obj, setOpaque:true];
+        let _: () = msg_send![super(obj, class!(NSWindow)), mouseDown: ev];
+
+        log::error!("{}", ev.timestamp());
+    };
+
+    log::warn!("parent done!");
+}
+
 impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
 
@@ -179,6 +219,27 @@ impl Widget<CocoaSystem> for CocoaWindow {
     where
         T: Into<Self::PARAMS>,
     {
+        //set view controller
+        let window = unsafe {
+            let superclass = class!(NSWindow);
+            let mut decl = ClassDecl::new("MW", superclass).unwrap();
+
+            decl.add_method(
+                sel!(mouseDown:),
+                mouse_down as extern "C" fn(&Object, Sel, id),
+            );
+
+            let mut view_class = decl.register();
+            let id: id = msg_send![view_class, alloc];
+            id.initWithContentRect_styleMask_backing_defer_(
+                NSRect::new(NSPoint::new(0., 0.), NSSize::new(200., 200.)),
+                NSWindowStyleMask::NSTitledWindowMask,
+                NSBackingStoreBuffered,
+                NO,
+            )
+            .autorelease()
+        };
+        /*
         let window = unsafe {
             NSWindow::alloc(nil)
                 .initWithContentRect_styleMask_backing_defer_(
@@ -188,7 +249,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
                     NO,
                 )
                 .autorelease()
-        };
+        };*/
 
         let mut new_window = CocoaWindow {
             name,
@@ -196,13 +257,12 @@ impl Widget<CocoaSystem> for CocoaWindow {
             main_outlet: OutletHolder::default(),
             menu_outlet: OutletHolder::default(),
             menubar: None,
-            menu_item: None,
-            event_delegate: CocoaWindowDelegate::new(),
         };
         new_window.apply(settings)?;
         unsafe {
             window.makeKeyAndOrderFront_(nil);
         }
+
         Ok(new_window)
     }
 
@@ -410,17 +470,37 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn is_empty(&self) -> bool {
         self.main_outlet.is_empty()
     }
+    fn remove_by_index(&mut self, index: usize) -> WindowChildren<CocoaSystem> {
+        self.main_outlet.remove_by_index(index)
+    }
+    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+        &mut self,
+        name: STR,
+    ) -> Result<WindowChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_name(name)
+    }
+    fn remove_by_predicate<F: FnMut(&WindowChildren<CocoaSystem>) -> bool>(
+        &mut self,
+        f: F,
+    ) -> Result<WindowChildren<CocoaSystem>, anyhow::Error> {
+        self.main_outlet.remove_by_predicate(f)
+    }
 }
 
 impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {}
 
-impl WindowHandlerTrait for CocoaWindow {
-    fn set_resize_handler(&mut self, _handler: Box<impl FnMut()>) {
-        todo!()
+/*
+impl AttachTopic<CocoaRoot, CocoaSystem> for CocoaWindow {
+
+    fn observe(&self, when: ListenerType) -> dyn Observable<Item = AttachEvent<CocoaRoot, CocoaSystem>, Err = anyhow::Error> {
+        self.observable.clone()
     }
-    fn add_resize_listener(&mut self, _when: ListenerType, _handler: Box<impl FnMut()>) {
-        todo!()
+
+    fn set_handler(&self, handler: Box<impl FnMut(&crate::actions::lifecycle::AttachEvent<CocoaRoot, CocoaSystem>, &dyn Named) -> crate::events::PermissionResult>) {
+        self.observe(ListenerType::Before).subscribe(|x| print("yay"));
     }
-}
+}*/
+
+impl WindowHandlerTrait<CocoaSystem> for CocoaWindow {}
 
 impl NativeWindow<CocoaSystem> for CocoaWindow {}

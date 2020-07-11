@@ -28,7 +28,7 @@ use crate::widgets::System;
 /// ```rust
 /// use plating::widgets::{System, Widget};
 /// use plating::widgets::utils::{Named};
-/// use plating::widgets::events::{ListenerType};
+/// use plating::events::{ListenerType};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError, CocoaResult};
 ///
