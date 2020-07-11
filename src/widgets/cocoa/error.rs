@@ -3,10 +3,11 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+use crate::features::serde::{Deserialize, Serialize};
 use std::fmt;
 use thiserror::Error;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum CocoaErrorKind {
     TODO,
@@ -19,7 +20,7 @@ impl fmt::Display for CocoaErrorKind {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Error)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Error, Serialize, Deserialize)]
 #[error("CocoaError: {kind}")]
 pub struct CocoaError {
     kind: CocoaErrorKind,
