@@ -3,6 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+#![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 
 //! internal crate for the macros used by plating.
