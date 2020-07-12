@@ -26,6 +26,6 @@ pub fn uuid(_item: TokenStream) -> TokenStream {
 #[proc_macro_hack]
 pub fn noop(_item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
-        while(false){}; //todo: find better way for noop?
+        while(false){};
     })
 }
