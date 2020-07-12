@@ -65,6 +65,7 @@ pub trait NativeWindow<S: System>:
     + Outlet<MainMenuChildren<S>, S>
     + WindowHandlerTrait<S>
     + Child<S::RootType, RootChildren<S>, S>
+    + Default
 {
 }
 

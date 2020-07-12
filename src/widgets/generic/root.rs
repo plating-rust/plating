@@ -24,7 +24,7 @@ pub trait RootHandlerTrait {
 /// Widgets implementing this trait, also need to implement NativeWidget as well
 /// as OutletAdapter<RootChildren<S>>
 pub trait NativeRoot<S: System>:
-    Widget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait
+    Widget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait + Default
 {
     /// Calling this function starts the main loop.
     /// Only returns once the app is closed.

@@ -42,6 +42,12 @@ pub struct CocoaRoot {
     main_outlet: OutletHolder<RootChildren<CocoaSystem>, CocoaRoot, CocoaSystem>,
 }
 
+impl Default for CocoaRoot {
+    fn default() -> Self {
+        Self::new(CocoaRootParameters::default()).unwrap()
+    }
+}
+
 impl PartialEq for CocoaRoot {
     fn eq(&self, other: &Self) -> bool {
         self.handle == other.handle

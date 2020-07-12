@@ -103,6 +103,9 @@ where
     /// Constructor that takes settings and returns Self.
     ///
     /// The constructor can fail if the settings have problems.
+    ///
+    /// # Additional
+    /// Widgets are encouraged to implement the [`Default`] trait when appropriate.
     fn new<T>(settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>,

@@ -153,6 +153,12 @@ pub struct CocoaWindow {
     observable: Subject<AttachEvent<CocoaRoot, CocoaSystem>, anyhow::Error>,*/
 }
 
+impl Default for CocoaWindow {
+    fn default() -> Self {
+        Self::new(CocoaWindowParameters::default()).unwrap()
+    }
+}
+
 impl fmt::Debug for CocoaWindow {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("CocoaWindow")
