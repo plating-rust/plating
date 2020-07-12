@@ -23,6 +23,8 @@ use crate::widgets::System;
 /// `Widget`s need to implement the [`Named`] trait.
 /// `Widget`s need to implement the `std::fmt::Debug` trait.
 ///
+/// NOTE: the name is expected to stay the same, so can only be set in the constructor.
+/// Constructor Versions that don't take a name generate a [`Uuid`](uuid::Uuid::new_v4).
 /// # Example
 /// ## Implementation
 /// A basic native widget implementation.
@@ -104,21 +106,31 @@ where
     type PARAMS;
 
     /// Constructor that takes settings and returns Self.
+    /// Generates a [`Uuid`](uuid::Uuid::new_v4) as a name.
     ///
     /// The constructor can fail if the settings have problems.
     ///
     /// # Additional
     /// Widgets are encouraged to implement the [`Default`] trait when appropriate.
+    ///
+    /// See also: [`new_with_name`](Widget::new_with_name).
     fn new<T>(settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>,
     {
         Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
     }
+
+    /// Constructor that takes a name and settings and returns Self.
+    ///
+    /// See also: [`new`](Widget::new).
     fn new_with_name<T>(name: String, settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>;
 
+    /// Applies settings to this widget
+    ///
+    /// See also: [`new`](Widget::new).
     fn apply<T>(&mut self, settings: T) -> Result<(), anyhow::Error>
     where
         T: Into<Self::PARAMS>;
