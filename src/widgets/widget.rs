@@ -72,7 +72,7 @@ use crate::widgets::System;
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
-///     fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
+///    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
 ///    where
 ///        T: Into<Self::PARAMS> {
 ///        todo!() //apply settings on the backend
