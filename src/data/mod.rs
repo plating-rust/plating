@@ -3,6 +3,8 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
+#![deny(missing_docs)]
+
 //! Module containing basic data types used throughout plating
 
 use crate::features::serde::{Deserialize, Serialize};
