@@ -28,8 +28,6 @@ where
     fn len(&self) -> usize;
     fn is_empty(&self) -> bool;
 
-    //todo fn remove_remnants(&mut self);
-
     fn push_child<T>(&mut self, child: T) -> std::result::Result<(), anyhow::Error>
     where
         T: Into<CHILD>;
@@ -38,7 +36,6 @@ where
     where
         T: Into<CHILD>;
 
-    //todo: removing children
     fn remove_by_index(&mut self, index: usize) -> CHILD;
     fn remove_by_name<STR: std::borrow::Borrow<str>>(
         &mut self,
