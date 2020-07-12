@@ -5,9 +5,9 @@
 use crate::widgets::utils::Named;
 use crate::widgets::System;
 
-/// Trait for all Native Widget Objects.
+/// Trait for all Widget Objects.
 ///
-/// `NativeWidgets` have the following responsibilities:
+/// `Widgets` have the following responsibilities:
 /// - Create the widget on the backend in their constructors
 /// - Provide a way to apply and change settings.
 ///
@@ -17,10 +17,10 @@ use crate::widgets::System;
 /// - [`plating::widgets::mock`](crate::widgets::mock)
 ///
 /// # Requirements
-/// `NativeWidget`s needs to implement the [`Widget`] trait.<br>
-/// `NativeWidget`s need the `Sized` trait.<br>
-/// `NativeWidget`s need to implement the [`WidgetHolder`] trait.
-/// `NativeWidget`s need to implement the `std::fmt::Debug` trait.
+/// `Widget`s needs to implement the [`Widget`] trait.<br>
+/// `Widget`s need the `Sized` trait.<br>
+/// `Widget`s need to implement the [`Named`] trait.
+/// `Widget`s need to implement the `std::fmt::Debug` trait.
 ///
 /// # Example
 /// ## Implementation
@@ -90,8 +90,7 @@ use crate::widgets::System;
 /// ## Usage
 ///
 /// # Error Handling
-/// Functions in this trait, that can fail, return a `NativeResult<Self>`.
-/// If the called need a `PlatingResult<Self>`, you can use `from`/`into`
+/// Functions in this trait, that can fail, return a `Result<Self, anyhow::Error>`.
 ///
 pub trait Widget<S>
 where
@@ -101,6 +100,9 @@ where
     /// The Parameter type this struct requires when creating or applying changes to it.
     type PARAMS;
 
+    /// Constructor that takes settings and returns Self.
+    ///
+    /// The constructor can fail if the settings have problems.
     fn new<T>(settings: T) -> Result<Self, anyhow::Error>
     where
         T: Into<Self::PARAMS>,
