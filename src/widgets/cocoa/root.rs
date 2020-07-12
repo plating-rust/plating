@@ -9,7 +9,7 @@ use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
+use crate::widgets::root::{Root, RootChildren, RootHandlerTrait, RootParameters};
 use crate::widgets::utils::{Named, OutletHolder};
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
@@ -56,7 +56,7 @@ impl PartialEq for CocoaRoot {
 }
 impl Eq for CocoaRoot {}
 
-impl NativeRoot<CocoaSystem> for CocoaRoot {
+impl Root<CocoaSystem> for CocoaRoot {
     fn run(&self) -> PlatingResult<()> {
         unsafe {
             self.handle.run();

@@ -4,11 +4,11 @@
  */
 
 use crate::widgets::{
-    button::{ButtonParameters, NativeButton},
-    menu::{MenuParameters, NativeMenu},
-    menu_item::{MenuItemParameters, NativeMenuItem},
-    root::{NativeRoot, RootParameters},
-    window::{NativeWindow, WindowParameters},
+    button::{Button, ButtonParameters},
+    menu::{Menu, MenuParameters},
+    menu_item::{MenuItem, MenuItemParameters},
+    root::{Root, RootParameters},
+    window::{Window, WindowParameters},
 };
 
 /// A System represents a GUI System (or you could also call it backend).
@@ -54,17 +54,17 @@ where
     type InternalHandle;
 
     type RootParameterTye: From<RootParameters>;
-    type RootType: NativeRoot<Self>;
+    type RootType: Root<Self>;
 
     type ButtonParameterType: From<ButtonParameters>;
-    type ButtonType: NativeButton<Self>;
+    type ButtonType: Button<Self>;
 
     type WindowParameterType: From<WindowParameters>;
-    type WindowType: NativeWindow<Self>;
+    type WindowType: Window<Self>;
 
     type MenuParameterType: From<MenuParameters>;
-    type MenuType: NativeMenu<Self>;
+    type MenuType: Menu<Self>;
 
     type MenuItemParameterType: From<MenuItemParameters>;
-    type MenuItemType: NativeMenuItem<Self>;
+    type MenuItemType: MenuItem<Self>;
 }

@@ -28,7 +28,7 @@ pub trait ButtonHandlerTrait<S: System> //:
 /// Widgets implementing this trait, also need to implement
 /// - NativeWidget
 /// - Child
-pub trait NativeButton<S: System>:
+pub trait Button<S: System>:
     Widget<S, PARAMS = S::ButtonParameterType>
     + ButtonHandlerTrait<S>
     + Child<S::WindowType, WindowChildren<S>, S>

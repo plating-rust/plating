@@ -59,7 +59,7 @@ pub trait WindowHandlerTrait<S: System> //:
 {
 }
 
-pub trait NativeWindow<S: System>:
+pub trait Window<S: System>:
     Widget<S, PARAMS = S::WindowParameterType>
     + Outlet<WindowChildren<S>, S>
     + Outlet<MainMenuChildren<S>, S>

@@ -13,7 +13,7 @@ use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::{
-    MainMenuChildren, NativeWindow, WindowChildren, WindowHandlerTrait, WindowParameters,
+    MainMenuChildren, Window, WindowChildren, WindowHandlerTrait, WindowParameters,
 };
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
@@ -514,7 +514,7 @@ impl AttachTopic<CocoaRoot, CocoaSystem> for CocoaWindow {
 
 impl WindowHandlerTrait<CocoaSystem> for CocoaWindow {}
 
-impl NativeWindow<CocoaSystem> for CocoaWindow {}
+impl Window<CocoaSystem> for CocoaWindow {}
 
 impl Connectable for CocoaWindow {
     fn connecting(&mut self) {

@@ -8,7 +8,7 @@ use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
-use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
+use crate::widgets::menu::{Menu, MenuChildren, MenuHandlerTrait, MenuParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
@@ -278,7 +278,7 @@ impl From<CocoaMenu> for MainMenuChildren<CocoaSystem> {
     }
 }
 
-impl NativeMenu<CocoaSystem> for CocoaMenu {}
+impl Menu<CocoaSystem> for CocoaMenu {}
 
 impl MenuHandlerTrait for CocoaMenu {}
 

@@ -20,7 +20,7 @@ pub trait MenuHandlerTrait {
     //closing menu
 }
 
-pub trait NativeMenu<S: System>:
+pub trait Menu<S: System>:
     Widget<S, PARAMS = S::MenuParameterType>
     + MenuHandlerTrait
     + Outlet<MenuChildren<S>, S>

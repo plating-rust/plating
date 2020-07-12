@@ -7,7 +7,7 @@ use crate::actions::lifecycle::{AttachEvent, AttachTopic};
 use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
+use crate::widgets::button::{Button, ButtonChildren, ButtonHandlerTrait, ButtonParameters};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named};
@@ -126,7 +126,7 @@ impl Named for CocoaButton {
     }
 }
 
-impl NativeButton<CocoaSystem> for CocoaButton {}
+impl Button<CocoaSystem> for CocoaButton {}
 
 impl ButtonHandlerTrait<CocoaSystem> for CocoaButton {
     fn set_exit_handler(&mut self, _handler: Box<impl FnMut()>) {

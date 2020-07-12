@@ -7,7 +7,7 @@ use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::menu::MenuChildren;
-use crate::widgets::menu_item::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
+use crate::widgets::menu_item::{MenuItem, MenuItemHandlerTrait, MenuItemParameters};
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{System, Widget};
@@ -59,7 +59,7 @@ impl PartialEq for CocoaMenuItem {
 }
 impl Eq for CocoaMenuItem {}
 
-impl NativeMenuItem<CocoaSystem> for CocoaMenuItem {}
+impl MenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}
 

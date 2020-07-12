@@ -23,7 +23,7 @@ pub trait RootHandlerTrait {
 /// #Requirements
 /// Widgets implementing this trait, also need to implement NativeWidget as well
 /// as OutletAdapter<RootChildren<S>>
-pub trait NativeRoot<S: System>:
+pub trait Root<S: System>:
     Widget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait + Default
 {
     /// Calling this function starts the main loop.
