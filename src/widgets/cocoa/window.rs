@@ -14,10 +14,8 @@ use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::{
     MainMenuChildren, NativeWindow, WindowChildren, WindowHandlerTrait, WindowParameters,
 };
-use crate::{
-    widgets::{System, Widget},
-    PlatingResult,
-};
+use crate::widgets::{System, Widget};
+use crate::PlatingResult;
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSBackingStoreBuffered, NSEvent, NSMenu, NSWindow, NSWindowDepth,
