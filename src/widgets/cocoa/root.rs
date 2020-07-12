@@ -8,6 +8,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::defs::CocoaDefaultHandleType;
 use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::outlet::Outlet;
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::{NativeRoot, RootChildren, RootHandlerTrait, RootParameters};
 use crate::widgets::utils::{Named, OutletHolder};
 use crate::widgets::{System, Widget};
@@ -103,13 +104,6 @@ impl Widget<CocoaSystem> for CocoaRoot {
         Ok(new_root)
     }
 
-    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
-        &self.handle
-    }
-    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
-        &mut self.handle
-    }
-
     fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
     where
         T: Into<Self::PARAMS>,
@@ -117,6 +111,14 @@ impl Widget<CocoaSystem> for CocoaRoot {
         let _settings = settings.into();
 
         Ok(())
+    }
+}
+impl NativeWidget<CocoaSystem> for CocoaRoot {
+    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
+        &self.handle
+    }
+    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
+        &mut self.handle
     }
 }
 

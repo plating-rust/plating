@@ -8,6 +8,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentData, CocoaSystem};
 use crate::widgets::menu::MenuChildren;
 use crate::widgets::menu_item::{MenuItemHandlerTrait, MenuItemParameters, NativeMenuItem};
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::{System, Widget};
 use crate::{CheckedState, PlatingResult};
@@ -101,7 +102,8 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
 
         Ok(())
     }
-
+}
+impl NativeWidget<CocoaSystem> for CocoaMenuItem {
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }

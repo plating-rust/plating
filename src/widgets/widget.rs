@@ -2,6 +2,7 @@
  * Copyright (2020) by Marcel Lambert.
  * This project is dual licensed under either MIT or Apache-2.0.
  */
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::Named;
 use crate::widgets::System;
 
@@ -29,6 +30,7 @@ use crate::widgets::System;
 /// use plating::{PlatingResult};
 /// use plating::widgets::{System, Widget};
 /// use plating::widgets::utils::{Named};
+/// use plating::widgets::platform_dependant::NativeWidget;
 /// use plating::events::{ListenerType};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError};
@@ -73,7 +75,8 @@ use crate::widgets::System;
 ///        T: Into<Self::PARAMS> {
 ///        todo!() //apply settings on the backend
 ///    }
-///
+/// }
+/// impl NativeWidget<CocoaSystem> for CocoaExampleWidget {
 ///     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
 ///        &self.handle
 ///     }
@@ -94,7 +97,7 @@ use crate::widgets::System;
 ///
 pub trait Widget<S>
 where
-    Self: Named + std::fmt::Debug + Sized,
+    Self: Named + std::fmt::Debug + Sized + NativeWidget<S>,
     S: System,
 {
     /// The Parameter type this struct requires when creating or applying changes to it.
@@ -119,8 +122,4 @@ where
     fn apply<T>(&mut self, settings: T) -> Result<(), anyhow::Error>
     where
         T: Into<Self::PARAMS>;
-
-    //todo: move out of obvious api so we prevent accidental non cross-plattformness
-    fn native(&self) -> &S::InternalHandle;
-    unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
 }

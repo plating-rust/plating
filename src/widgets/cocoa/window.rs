@@ -9,6 +9,7 @@ use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::outlet::Outlet;
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::{
@@ -335,7 +336,9 @@ impl Widget<CocoaSystem> for CocoaWindow {
 
         Ok(())
     }
+}
 
+impl NativeWidget<CocoaSystem> for CocoaWindow {
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }

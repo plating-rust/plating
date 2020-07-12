@@ -9,6 +9,7 @@ use crate::features::log::info;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{ButtonChildren, ButtonHandlerTrait, ButtonParameters, NativeButton};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
@@ -108,7 +109,9 @@ impl Widget<CocoaSystem> for CocoaButton {
         }
         Ok(())
     }
+}
 
+impl NativeWidget<CocoaSystem> for CocoaButton {
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }

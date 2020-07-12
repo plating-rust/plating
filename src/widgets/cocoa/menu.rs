@@ -10,6 +10,7 @@ use crate::widgets::cocoa::utils::make_ns_string;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::menu::{MenuChildren, MenuHandlerTrait, MenuParameters, NativeMenu};
 use crate::widgets::outlet::Outlet;
+use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
@@ -196,7 +197,9 @@ impl Widget<CocoaSystem> for CocoaMenu {
 
         Ok(())
     }
+}
 
+impl NativeWidget<CocoaSystem> for CocoaMenu {
     fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
         &self.handle
     }

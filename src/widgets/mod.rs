@@ -127,3 +127,19 @@ pub mod native {
 //#[cfg(all(not(feature="mock_os"), not(test)))]
 //#[doc(cfg(all(not(feature="mock_os"), not(test))))]
 pub use crate::widgets::native::System as default_system;
+
+/// Platform dependant utils. If you use the traits or functionalities of this
+/// your code is unlikely to work cross-platform.
+pub mod platform_dependant {
+    use crate::widgets::System;
+
+    ///Gives access to the underlying handle of the operating system.
+    /// You are leaving the comfort of plating.
+    ///
+    ///Anything you do with the native handle is your responsibility and can at any point fail in the future.
+    /// This is not officially part of the API. You have been warned.
+    pub trait NativeWidget<S: System> {
+        fn native(&self) -> &S::InternalHandle;
+        unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
+    }
+}
