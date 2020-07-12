@@ -52,7 +52,7 @@ extern "C" fn window_entering_fullscreen(_: &Object, _: Sel, _: id) {
 }
 
 extern "C" fn window_entering_fullscreen2(obj: &Object, _: Sel, _: id) {
-    log::warn!("fullscreen2 called!");
+    log::warn!("fullscreen2 called! {}", plating::uuid! {});
 }
 
 /*
