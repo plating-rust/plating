@@ -89,8 +89,6 @@ pub mod prelude {
 /// Define feature specific objects with the goal to remove `#cfg[]` as much as possible from actual implementation code.
 ///
 /// Used for the `log` and `serde` features.
-///
-// todo: decide: do we want this public?
 pub(crate) mod features {
     /// Exposes logging macros that might evaluate to noop when feature `log` is not enabled.
     ///
