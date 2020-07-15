@@ -8,7 +8,7 @@
 
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::{default_system, System, Widget};
 
 /// Generic parameters for creating and customizing Windows
@@ -116,10 +116,10 @@ impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S>
     }
 }
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Named for WindowChildren<S> {
-    fn name(&self) -> &str {
+impl<S: System> Identity for WindowChildren<S> {
+    fn id(&self) -> &str {
         match self {
-            Self::BUTTON(button) => button.name(),
+            Self::BUTTON(button) => button.id(),
         }
     }
 }
@@ -131,10 +131,10 @@ pub enum MainMenuChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Named for MainMenuChildren<S> {
-    fn name(&self) -> &str {
+impl<S: System> Identity for MainMenuChildren<S> {
+    fn id(&self) -> &str {
         match self {
-            Self::MENU(menu) => menu.name(),
+            Self::MENU(menu) => menu.id(),
         }
     }
 }

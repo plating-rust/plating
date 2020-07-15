@@ -8,7 +8,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentDa
 use crate::widgets::menu::MenuChildren;
 use crate::widgets::menu_item::{MenuItem, MenuItemHandlerTrait, MenuItemParameters};
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::{System, Widget};
 use crate::{CheckedState, PlatingResult};
 
@@ -44,7 +44,7 @@ impl From<MenuItemParameters> for CocoaMenuItemParameters {
 #[derive(Debug)]
 pub struct CocoaMenuItem {
     ///auto generate and add via derive(Widget)
-    name: String,
+    id: String,
 
     handle: CocoaDefaultHandleType,
 
@@ -62,22 +62,19 @@ impl MenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}
 
-impl Named for CocoaMenuItem {
-    fn name(&self) -> &str {
-        &self.name.as_str()
+impl Identity for CocoaMenuItem {
+    fn id(&self) -> &str {
+        &self.id.as_str()
     }
 }
 
 impl Widget<CocoaSystem> for CocoaMenuItem {
     type PARAMS = CocoaMenuItemParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
-    where
-        T: Into<Self::PARAMS>,
-    {
+    fn new_with_id(id: String, settings: &CocoaMenuItemParameters) -> PlatingResult<Self> {
         let menu_item = unsafe { NSMenuItem::new(nil).autorelease() };
         let mut new_menu_item = CocoaMenuItem {
-            name,
+            id,
             handle: menu_item,
             connected: false,
         };

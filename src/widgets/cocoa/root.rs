@@ -10,7 +10,7 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::{Root, RootChildren, RootHandlerTrait, RootParameters};
-use crate::widgets::utils::{Named, OutletHolder};
+use crate::widgets::utils::{Identity, OutletHolder};
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
 
@@ -35,7 +35,7 @@ impl From<RootParameters> for CocoaRootParameters {
 #[derive(Debug)]
 pub struct CocoaRoot {
     ///auto generate and add via derive(Widget)
-    name: String,
+    id: String,
 
     handle: CocoaDefaultHandleType,
 
@@ -77,10 +77,7 @@ impl RootHandlerTrait for CocoaRoot {
 impl Widget<CocoaSystem> for CocoaRoot {
     type PARAMS = CocoaRootParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
-    where
-        T: Into<Self::PARAMS>,
-    {
+    fn new_with_id(id: String, settings: &CocoaRootParameters) -> PlatingResult<Self> {
         let app = unsafe {
             let _pool = NSAutoreleasePool::new(nil);
 
@@ -94,7 +91,7 @@ impl Widget<CocoaSystem> for CocoaRoot {
             app
         };
         let mut new_root = CocoaRoot {
-            name,
+            id,
             handle: app,
             main_outlet: OutletHolder::default(),
         };
@@ -122,9 +119,9 @@ impl NativeWidget<CocoaSystem> for CocoaRoot {
     }
 }
 
-impl Named for CocoaRoot {
-    fn name(&self) -> &str {
-        &self.name.as_str()
+impl Identity for CocoaRoot {
+    fn id(&self) -> &str {
+        &self.id.as_str()
     }
 }
 // auto generate impl via derive(widgetParent(A, B    ))
@@ -176,11 +173,11 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     fn remove_by_index(&mut self, index: usize) -> RootChildren<CocoaSystem> {
         self.main_outlet.remove_by_index(index)
     }
-    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+    fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
-        name: STR,
+        id: STR,
     ) -> Result<RootChildren<CocoaSystem>, anyhow::Error> {
-        self.main_outlet.remove_by_name(name)
+        self.main_outlet.remove_by_id(id)
     }
     fn remove_by_predicate<F: FnMut(&RootChildren<CocoaSystem>) -> bool>(
         &mut self,

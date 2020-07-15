@@ -3,7 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::actions::Named;
+use crate::actions::Identity;
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 
@@ -13,5 +13,9 @@ pub struct ConnectEvent {
 }
 
 pub trait ConnectTopic {
-    fn add_listener(&self, when: ListenerType, handler: Box<impl FnMut(&ConnectEvent, &dyn Named)>);
+    fn add_listener(
+        &self,
+        when: ListenerType,
+        handler: Box<impl FnMut(&ConnectEvent, &dyn Identity)>,
+    );
 }

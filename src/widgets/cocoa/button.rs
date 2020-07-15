@@ -9,7 +9,7 @@ use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::button::{Button, ButtonChildren, ButtonHandlerTrait, ButtonParameters};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
@@ -34,7 +34,7 @@ pub struct CocoaButton {
     handle: CocoaDefaultHandleType,
 
     ///auto generate and add via derive(Widget)
-    name: String,
+    id: String,
 
     //todo: move to backend
     connected: bool,
@@ -84,12 +84,9 @@ impl From<CocoaButton> for WindowChildren<CocoaSystem> {
 impl Widget<CocoaSystem> for CocoaButton {
     type PARAMS = CocoaButtonParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
-    where
-        T: Into<Self::PARAMS>,
-    {
+    fn new_with_id(id: String, settings: &CocoaButtonParameters) -> PlatingResult<Self> {
         let mut button = CocoaButton {
-            name,
+            id,
             handle: 0 as CocoaDefaultHandleType,
             connected: false,
             //main_outlet: Outlet::<ButtonChildren>::default(),
@@ -119,9 +116,9 @@ impl NativeWidget<CocoaSystem> for CocoaButton {
     }
 }
 
-impl Named for CocoaButton {
-    fn name(&self) -> &str {
-        &self.name.as_str()
+impl Identity for CocoaButton {
+    fn id(&self) -> &str {
+        &self.id.as_str()
     }
 }
 

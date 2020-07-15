@@ -5,12 +5,12 @@
 
 use crate::data::Vec2;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::prelude::Named;
+use crate::prelude::Identity;
 
 pub trait Event<'a> {
     fn timestamp(&self) -> u64; //TODO: better
 
-    fn target(&self) -> &'a dyn Named; //todo: better
+    fn target(&self) -> &'a dyn Identity; //todo: better
 }
 
 pub use crate::widgets::cocoa::event::CocoaKeyModifiers as KeyModifiers;

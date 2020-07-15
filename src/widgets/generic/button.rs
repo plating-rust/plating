@@ -5,7 +5,7 @@
 
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::utils::{Child, Named};
+use crate::widgets::utils::{Child, Identity};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{default_system, System, Widget};
 
@@ -42,10 +42,10 @@ pub enum ButtonChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Named for ButtonChildren<S> {
-    fn name(&self) -> &str {
+impl<S: System> Identity for ButtonChildren<S> {
+    fn id(&self) -> &str {
         match self {
-            Self::BUTTON(button) => button.name(),
+            Self::BUTTON(button) => button.id(),
         }
     }
 }

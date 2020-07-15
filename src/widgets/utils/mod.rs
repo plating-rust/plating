@@ -24,13 +24,13 @@ pub use connectable::*;
 /// any kind of `Pointer` or other Widget indirection.
 ///
 /// # Requirements
-/// When implementing this trait, make sure that `name()`always returns the same value
+/// When implementing this trait, make sure that `id()`always returns the same value
 /// and does not change during the lifetime of this instance.
 ///
 /// NOTE: This Trait is a requirement for the [`Widget`](crate::widgets::Widget) Trait.
-pub trait Named {
-    /// Get the name of this widget or the widget this object is pointing to.
-    fn name(&self) -> &str;
+pub trait Identity {
+    /// Get the id of this widget or the widget this object is pointing to.
+    fn id(&self) -> &str;
 }
 
 /// Prelude for the widget::utils subsystem
@@ -40,5 +40,5 @@ pub trait Named {
 /// - [`plating::widgets::prelude::*`](crate::widgets::prelude)
 pub mod prelude {
     pub use super::Child;
-    pub use super::Named;
+    pub use super::Identity;
 }

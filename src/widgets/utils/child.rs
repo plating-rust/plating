@@ -4,7 +4,7 @@
  */
 
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Connectable, Named};
+use crate::widgets::utils::{Connectable, Identity};
 use crate::widgets::{System, Widget};
 
 /// Trait to be implemented by [`Widgets`](crate::widgets::Widget) that can be a [`Child`](crate::widgets::utils::Child) of another Widget.
@@ -14,7 +14,7 @@ use crate::widgets::{System, Widget};
 /// Learn more about adding and connection lifecycles in the [`actions::lifecycle`](crate::actions::lifecycle) module
 pub trait Child<ParentType, ChildType, S>: Connectable
 where
-    ChildType: Named,
+    ChildType: Identity,
     ParentType: Widget<S> + Outlet<ChildType, S>,
     S: System,
 {

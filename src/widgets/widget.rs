@@ -3,7 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::Named;
+use crate::widgets::utils::Identity;
 use crate::widgets::System;
 
 /// Trait for all Widget Objects.
@@ -31,7 +31,7 @@ use crate::widgets::System;
 /// ```rust
 /// use plating::{PlatingResult};
 /// use plating::widgets::{System, Widget};
-/// use plating::widgets::utils::{Named};
+/// use plating::widgets::utils::{Identity};
 /// use plating::widgets::platform_dependant::NativeWidget;
 /// use plating::events::{ListenerType};
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
@@ -48,16 +48,16 @@ use crate::widgets::System;
 ///     // Native Widgets themselves should not hold state
 ///     // unless necessary for their work. That's why a lot of
 ///     // widgets don't hold much more state than the name
-///     name: String,
+///     id: String,
 ///
 ///     handle: CocoaDefaultHandleType,
 /// }
 ///
-/// impl Named for CocoaExampleWidget { //trait impl required by widget
+/// impl Identity for CocoaExampleWidget { //trait impl required by widget
 ///     // Returns the plating name (not a backend internal one)
 ///     // *NOTE*: no setter because the name should not change.
-///     fn name(&self) -> &str {
-///        &self.name.as_str()
+///     fn id(&self) -> &str {
+///        &self.id.as_str()
 ///    }
 /// }
 /// impl Widget<CocoaSystem> for CocoaExampleWidget {
@@ -65,10 +65,10 @@ use crate::widgets::System;
 ///    // Empty struct in our case, but could be anything
 ///    type PARAMS = CocoaExampleParameters;
 ///
-///    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
+///    fn new_with_id<T>(id: String, settings: T) -> PlatingResult<Self>
 ///    where
 ///        T: Into<Self::PARAMS> {
-///        let mut result = Self {name, handle: todo!() };
+///        let mut result = Self {id, handle: todo!() };
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
@@ -99,34 +99,29 @@ use crate::widgets::System;
 ///
 pub trait Widget<S>
 where
-    Self: Named + std::fmt::Debug + Sized + NativeWidget<S>,
+    Self: Identity + std::fmt::Debug + Sized + NativeWidget<S>,
     S: System,
 {
     /// The Parameter type this struct requires when creating or applying changes to it.
     type PARAMS;
 
     /// Constructor that takes settings and returns Self.
-    /// Generates a [`Uuid`](uuid::Uuid::new_v4) as a name.
+    /// Generates a [`Uuid`](uuid::Uuid::new_v4) as the ID.
     ///
     /// The constructor can fail if the settings have problems.
     ///
     /// # Additional
     /// Widgets are encouraged to implement the [`Default`] trait when appropriate.
     ///
-    /// See also: [`new_with_name`](Widget::new_with_name).
-    fn new<T>(settings: T) -> Result<Self, anyhow::Error>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        Self::new_with_name(uuid::Uuid::new_v4().to_string(), settings)
+    /// See also: [`new_with_id`](Widget::new_with_id).
+    fn new(settings: &Self::PARAMS) -> Result<Self, anyhow::Error> {
+        Self::new_with_id(uuid::Uuid::new_v4().to_string(), settings)
     }
 
-    /// Constructor that takes a name and settings and returns Self.
+    /// Constructor that takes an ID and settings and returns Self.
     ///
     /// See also: [`new`](Widget::new).
-    fn new_with_name<T>(name: String, settings: T) -> Result<Self, anyhow::Error>
-    where
-        T: Into<Self::PARAMS>;
+    fn new_with_id(id: String, settings: &Self::PARAMS) -> Result<Self, anyhow::Error>;
 
     /// Applies settings to this widget
     ///

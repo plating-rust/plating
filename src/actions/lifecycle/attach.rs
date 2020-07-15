@@ -3,7 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::actions::Named;
+use crate::actions::Identity;
 use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::widgets::{default_system, System, Widget};
 
@@ -44,17 +44,17 @@ pub trait AttachTopic<W: Widget<S>, S: System = default_system> {
     fn observe(&self, when: ListenerType);
     fn set_handler(
         &self,
-        handler: Box<impl FnMut(&AttachEvent<W, S>, &dyn Named) -> PermissionResult>,
+        handler: Box<impl FnMut(&AttachEvent<W, S>, &dyn Identity) -> PermissionResult>,
     );
 }
 
 pub struct AttachChildEvent<'a> {
-    child: &'a dyn Named,
+    child: &'a dyn Identity,
 }
 impl<'a> fmt::Debug for AttachChildEvent<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("AttachChildEvent")
-            .field("child", &self.child.name())
+            .field("child", &self.child.id())
             .finish()
     }
 }
@@ -62,7 +62,7 @@ impl<'a> fmt::Debug for AttachChildEvent<'a> {
 pub trait AttachChildTopic {
     fn add_listener<'b>(
         when: ListenerType,
-        handler: Box<impl FnMut(&'b AttachChildEvent, &'b dyn Named, &'b PermissionState)>,
+        handler: Box<impl FnMut(&'b AttachChildEvent, &'b dyn Identity, &'b PermissionState)>,
     );
-    fn set_handler(handler: Box<impl FnMut(&AttachChildEvent, &dyn Named) -> PermissionResult>);
+    fn set_handler(handler: Box<impl FnMut(&AttachChildEvent, &dyn Identity) -> PermissionResult>);
 }

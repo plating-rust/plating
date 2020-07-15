@@ -9,7 +9,7 @@ use thiserror::Error;
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::{System, Widget};
 
 #[derive(Error, Debug)]
@@ -50,7 +50,7 @@ pub struct WidgetNotFound {
 #[derive(Debug, Serialize, Deserialize, Hash)]
 pub struct OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -67,7 +67,7 @@ where
 }
 impl<CHILD, Parent, S> OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -86,7 +86,7 @@ where
 
 impl<CHILD, Parent, S> Connectable for OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -125,7 +125,7 @@ where
 
 impl<CHILD, Parent, S> Default for OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -141,7 +141,7 @@ where
 }
 impl<CHILD, Parent, S> OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -260,7 +260,7 @@ where
     /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
     /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
     ///
-    /// See also [`remove_by_name`](OutletHolder::remove_by_name) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
+    /// See also [`remove_by_id`](OutletHolder::remove_by_id) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
     pub fn remove_by_index(&mut self, index: usize) -> CHILD {
         let child = &mut self.children[index];
         if child.connected() {
@@ -269,23 +269,23 @@ where
         child.removing_from_parent();
         self.children.remove(index)
     }
-    /// Removes the child with given name.
+    /// Removes the child with given id.
     ///
     /// # Responsibilities
     /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
     /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
     ///
-    /// NOTE: only removes the first child with the given name.
+    /// NOTE: only removes the first child with the given id.
     ///
     /// See also [`remove_by_index`](OutletHolder::remove_by_index) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
-    pub fn remove_by_name<STR: std::borrow::Borrow<str>>(
+    pub fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
-        name: STR,
+        id: STR,
     ) -> Result<CHILD, anyhow::Error> {
-        self.remove_by_predicate(|obj: &CHILD| obj.name() == name.borrow())
+        self.remove_by_predicate(|obj: &CHILD| obj.id() == id.borrow())
             .map_err(|orig_error| {
                 WidgetNotFound {
-                    msg: format!("by name: {}", name.borrow()),
+                    msg: format!("by name: {}", id.borrow()),
                     source: Some(orig_error),
                 }
                 .into()
@@ -298,7 +298,7 @@ where
     /// If this holder is [`connected`](OutletHolder::connected) will also call [`disconnecting`](crate::widgets::utils::connectable::Connectable::disconnecting) on the removed child.<br>
     /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
     ///
-    /// See also [`remove_by_index`](OutletHolder::remove_by_index) and [`remove_by_name`](OutletHolder::remove_by_name).
+    /// See also [`remove_by_index`](OutletHolder::remove_by_index) and [`remove_by_id`](OutletHolder::remove_by_id).
     pub fn remove_by_predicate<F: FnMut(&CHILD) -> bool>(
         &mut self,
         f: F,
@@ -316,7 +316,7 @@ where
 
 impl<CHILD, Parent, S> Drop for OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {
@@ -327,7 +327,7 @@ where
 
 impl<CHILD, Parent, S> std::ops::Index<usize> for OutletHolder<CHILD, Parent, S>
 where
-    CHILD: Named + std::fmt::Debug + Child<Parent, CHILD, S>,
+    CHILD: Identity + std::fmt::Debug + Child<Parent, CHILD, S>,
     Parent: Widget<S> + Outlet<CHILD, S>,
     S: System,
 {

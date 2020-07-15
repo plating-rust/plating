@@ -127,7 +127,7 @@ pub struct CocoaMainMenuParentData {
 
 pub struct CocoaWindow {
     ///auto generate and add via derive(Widget)
-    name: String,
+    id: String,
 
     handle: CocoaDefaultHandleType,
 
@@ -159,7 +159,7 @@ impl Default for CocoaWindow {
 impl fmt::Debug for CocoaWindow {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("CocoaWindow")
-            .field("name", &self.name())
+            .field("name", &self.id())
             .field("handle", &self.handle)
             .field("main_outlet", &self.main_outlet)
             .field("menu_outlet", &self.menu_outlet)
@@ -170,7 +170,7 @@ impl fmt::Debug for CocoaWindow {
 
 impl fmt::Display for CocoaWindow {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}<Window>", self.name)
+        write!(f, "{}<Window>", self.id())
     }
 }
 
@@ -222,10 +222,7 @@ extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
 impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
-    where
-        T: Into<Self::PARAMS>,
-    {
+    fn new_with_id(id: String, settings: &CocoaWindowParameters) -> PlatingResult<Self> {
         //set view controller
         let window = unsafe {
             let superclass = class!(NSWindow);
@@ -259,7 +256,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
         };*/
 
         let mut new_window = CocoaWindow {
-            name,
+            id,
             handle: window,
             main_outlet: OutletHolder::default(),
             menu_outlet: OutletHolder::default(),
@@ -397,11 +394,11 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn remove_by_index(&mut self, index: usize) -> MainMenuChildren<CocoaSystem> {
         self.menu_outlet.remove_by_index(index)
     }
-    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+    fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
-        name: STR,
+        id: STR,
     ) -> Result<MainMenuChildren<CocoaSystem>, anyhow::Error> {
-        self.menu_outlet.remove_by_name(name)
+        self.menu_outlet.remove_by_id(id)
     }
     fn remove_by_predicate<F: FnMut(&MainMenuChildren<CocoaSystem>) -> bool>(
         &mut self,
@@ -411,9 +408,9 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     }
 }
 
-impl Named for CocoaWindow {
-    fn name(&self) -> &str {
-        &self.name.as_str()
+impl Identity for CocoaWindow {
+    fn id(&self) -> &str {
+        &self.id.as_str()
     }
 }
 
@@ -471,11 +468,11 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn remove_by_index(&mut self, index: usize) -> WindowChildren<CocoaSystem> {
         self.main_outlet.remove_by_index(index)
     }
-    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+    fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
-        name: STR,
+        id: STR,
     ) -> Result<WindowChildren<CocoaSystem>, anyhow::Error> {
-        self.main_outlet.remove_by_name(name)
+        self.main_outlet.remove_by_id(id)
     }
     fn remove_by_predicate<F: FnMut(&WindowChildren<CocoaSystem>) -> bool>(
         &mut self,

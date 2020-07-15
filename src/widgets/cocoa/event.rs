@@ -4,6 +4,7 @@
  */
 
 use crate::widgets::events::Event;
+use crate::widgets::utils::Identity;
 use cocoa::appkit::{NSEvent, NSEventModifierFlags};
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone)]
@@ -21,7 +22,7 @@ where
     fn timestamp(&self) -> u64 {
         unsafe { (&self.native_event.timestamp() * 1000.0) as u64 }
     }
-    fn target(&self) -> &'a dyn crate::prelude::Named {
+    fn target(&self) -> &'a dyn Identity {
         //todo: use hash lookup table
         todo!()
     }

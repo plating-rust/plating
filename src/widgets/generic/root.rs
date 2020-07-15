@@ -6,7 +6,7 @@
 use crate::events::ListenerType;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::{default_system, System, Widget};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
@@ -38,10 +38,10 @@ pub enum RootChildren<S: System = default_system> {
     WINDOW(S::WindowType),
 }
 
-impl<S: System> Named for RootChildren<S> {
-    fn name(&self) -> &str {
+impl<S: System> Identity for RootChildren<S> {
+    fn id(&self) -> &str {
         match self {
-            Self::WINDOW(window) => window.name(),
+            Self::WINDOW(window) => window.id(),
         }
     }
 }

@@ -5,7 +5,7 @@
 
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Connectable, Named};
+use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{default_system, System, Widget};
 
@@ -38,11 +38,11 @@ pub enum MenuChildren<S: System = default_system> {
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Named for MenuChildren<S> {
-    fn name(&self) -> &str {
+impl<S: System> Identity for MenuChildren<S> {
+    fn id(&self) -> &str {
         match self {
-            Self::MENU(menu) => menu.name(),
-            Self::ITEM(item) => item.name(),
+            Self::MENU(menu) => menu.id(),
+            Self::ITEM(item) => item.id(),
         }
     }
 }

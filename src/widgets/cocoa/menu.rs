@@ -10,7 +10,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::menu::{Menu, MenuChildren, MenuHandlerTrait, MenuParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
+use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::{Direction, PlatingResult};
@@ -27,33 +27,139 @@ pub struct CocoaMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct CocoaMenuParameters {
     // generic
-    pub title: Option<String>,
+    label: Option<String>,
 
     //cocoa specific
-    pub autoenables_items: Option<bool>,
+    auto_enables_items: Option<bool>,
     //TODO: font
-    pub minimum_width: Option<f32>,
-    pub allows_context_menu_plugins: Option<bool>,
-    pub shows_state_column: Option<bool>,
-    pub user_interface_layout_direction: Option<Direction>,
+    allows_context_menu_plugins: Option<bool>,
+    shows_state_column: Option<bool>,
+    user_interface_layout_direction: Option<Direction>,
 }
-impl From<MenuParameters> for CocoaMenuParameters {
-    fn from(generic: MenuParameters) -> Self {
-        CocoaMenuParameters {
-            title: generic.title,
-            ..Default::default()
+
+impl Parameters for CocoaMenuParameters {
+    fn merge(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        if self.label().is_none() {
+            self.label = rhs.label;
         }
+
+        Ok(())
+    }
+    fn on_top(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        self.set_label_optionally(rhs.label);
+
+        Ok(())
+    }
+}
+
+impl MenuParameters for CocoaMenuParameters {
+    fn label(&self) -> &Option<String> {
+        &self.label
+    }
+
+    fn set_label(&mut self, label: String) -> &mut Self {
+        self.label = Some(label);
+        self
+    }
+    fn set_label_optionally(&mut self, title: Option<String>) -> &mut Self {
+        if let Some(s) = title {
+            self.set_label(s);
+        }
+        self
+    }
+    fn unset_label(&mut self) -> &mut Self {
+        self.label = None;
+        self
+    }
+}
+
+impl CocoaMenuPlatformParameters for CocoaMenuParameters {
+    fn auto_enables_items(&self) -> &Option<bool> {
+        &self.auto_enables_items
+    }
+    fn set_auto_enables_items(&mut self, auto_enables_items: bool) -> &mut Self {
+        self.auto_enables_items = Some(auto_enables_items);
+        self
+    }
+    fn set_auto_enables_items_optionally(&mut self, auto_enables_items: Option<bool>) -> &mut Self {
+        if let Some(b) = auto_enables_items {
+            self.set_auto_enables_items(b);
+        }
+        self
+    }
+    fn unset_auto_enables_items(&mut self) -> &mut Self {
+        self.auto_enables_items = None;
+        self
+    }
+    fn allows_context_menu_plugins(&self) -> &Option<bool> {
+        &self.allows_context_menu_plugins
+    }
+    fn set_allows_context_menu_plugins(&mut self, allows_context_menu_plugins: bool) -> &mut Self {
+        self.allows_context_menu_plugins = Some(allows_context_menu_plugins);
+        self
+    }
+    fn set_allows_context_menu_plugins_optionally(
+        &mut self,
+        allows_context_menu_plugins: Option<bool>,
+    ) -> &mut Self {
+        if let Some(b) = allows_context_menu_plugins {
+            self.set_allows_context_menu_plugins(b);
+        }
+        self
+    }
+    fn unset_allows_context_menu_plugins(&mut self) -> &mut Self {
+        self.allows_context_menu_plugins = None;
+        self
+    }
+    fn shows_state_column(&self) -> &Option<bool> {
+        &self.shows_state_column
+    }
+    fn set_shows_state_column(&mut self, shows_state_column: bool) -> &mut Self {
+        self.shows_state_column = Some(shows_state_column);
+        self
+    }
+    fn set_shows_state_column_optionally(&mut self, shows_state_column: Option<bool>) -> &mut Self {
+        if let Some(b) = shows_state_column {
+            self.set_shows_state_column(b);
+        }
+        self
+    }
+    fn unset_shows_state_column(&mut self) -> &mut Self {
+        self.shows_state_column = None;
+        self
+    }
+    fn user_interface_layout_direction(&self) -> &Option<Direction> {
+        &self.user_interface_layout_direction
+    }
+    fn set_user_interface_layout_direction(
+        &mut self,
+        user_interface_layout_direction: Direction,
+    ) -> &mut Self {
+        self.user_interface_layout_direction = Some(user_interface_layout_direction);
+        self
+    }
+    fn set_user_interface_layout_direction_optionally(
+        &mut self,
+        user_interface_layout_direction: Option<Direction>,
+    ) -> &mut Self {
+        if let Some(dir) = user_interface_layout_direction {
+            self.set_user_interface_layout_direction(dir);
+        }
+        self
+    }
+    fn unset_user_interface_layout_direction(&mut self) -> &mut Self {
+        self.user_interface_layout_direction = None;
+        self
     }
 }
 
 #[derive(Debug)]
 pub struct CocoaMenu {
     ///auto generate and add via derive(Widget)
-    name: String,
+    id: String,
 
     handle: CocoaDefaultHandleType,
     ///Stores the MenuItem.
@@ -80,9 +186,9 @@ impl PartialEq for CocoaMenu {
 }
 impl Eq for CocoaMenu {}
 
-impl Named for CocoaMenu {
-    fn name(&self) -> &str {
-        &self.name.as_str()
+impl Identity for CocoaMenu {
+    fn id(&self) -> &str {
+        &self.id.as_str()
     }
 }
 
@@ -137,11 +243,11 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     fn remove_by_index(&mut self, index: usize) -> MenuChildren<CocoaSystem> {
         self.main_outlet.remove_by_index(index)
     }
-    fn remove_by_name<STR: std::borrow::Borrow<str>>(
+    fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
-        name: STR,
+        id: STR,
     ) -> Result<MenuChildren<CocoaSystem>, anyhow::Error> {
-        self.main_outlet.remove_by_name(name)
+        self.main_outlet.remove_by_id(id)
     }
     fn remove_by_predicate<F: FnMut(&MenuChildren<CocoaSystem>) -> bool>(
         &mut self,
@@ -154,10 +260,7 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
 impl Widget<CocoaSystem> for CocoaMenu {
     type PARAMS = CocoaMenuParameters;
 
-    fn new_with_name<T>(name: String, settings: T) -> PlatingResult<Self>
-    where
-        T: Into<Self::PARAMS>,
-    {
+    fn new_with_id(id: String, settings: &CocoaMenuParameters) -> PlatingResult<Self> {
         log::info!("Creating menu");
         let menu = unsafe {
             let menu = NSMenu::alloc(nil);
@@ -170,7 +273,7 @@ impl Widget<CocoaSystem> for CocoaMenu {
             item
         };
         let mut new_menu = CocoaMenu {
-            name,
+            id,
             handle: menu,
             item: menu_item,
             main_outlet: OutletHolder::default(),
