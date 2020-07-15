@@ -3,8 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::actions::lifecycle::{AttachEvent, AttachTopic};
-use crate::events::{ListenerType, PermissionResult, PermissionState};
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};

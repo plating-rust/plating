@@ -18,8 +18,6 @@ use plating::PlatingResult;
 extern crate log;
 extern crate simple_logger;
 
-use log::info;
-
 ///////////////////
 /// begin
 ///////////////////

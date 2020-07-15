@@ -3,7 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::events::ListenerType;
 use crate::features::log;
 use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::cocoa::utils::make_ns_string;

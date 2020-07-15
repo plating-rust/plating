@@ -6,8 +6,6 @@
 //! Module contains a generic [`Window`] adapter and a structure
 //! for generic parameters that work across all OS's.
 
-use crate::actions::lifecycle::AttachTopic;
-use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Connectable, Named};
