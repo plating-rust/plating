@@ -50,7 +50,7 @@ noop_proc_macro = "0.3.0" #todo: disable when serde is activated
 simple_logger = "1.6.0" #required to build & run examples
 
 [target.'cfg(target_os = "macos")'.dependencies]
-cocoa = "0.22.0"
+cocoa = "0.23.0"
 core-graphics = "0.21.0"
 objc = "^0.2"
 libc = "0.2.71"
