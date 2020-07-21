@@ -20,4 +20,4 @@ maintenance = { status = "actively-developed" }
 uuid = { version = "^0.8.1", features = ["v4"] }
 proc-macro-hack = "0.5.16"
 plating-uuid-macro-hack = { path = "../uuid-macro-hack", version="0.0.1" }
-syn = "1.0.34"
+syn = "^1.0"

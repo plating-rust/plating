@@ -19,7 +19,7 @@ maintenance = { status = "actively-developed" }
 uuid = { version = "^0.8.1", features = ["v4"] }
 proc-macro-hack = "^0.5.16"
 proc-quote = "^0.3.2"
-syn = "1.0.34"
+syn = "^1.0"
 proc-macro2 = "1.0"
 
 [lib]
