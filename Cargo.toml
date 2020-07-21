@@ -42,7 +42,7 @@ thiserror = "^1.0"
 
 plating-macros = { path = "./uuid-macro", version="0.0.1" }
 
-log = { version = "0.4.8", optional = true }
+log = { version = "0.4.11", optional = true }
 serde = { version = "^1.0", features = ["derive", "rc"], optional = true }
 noop_proc_macro = "0.3.0" #todo: disable when serde is activated
 
