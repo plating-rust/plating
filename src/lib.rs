@@ -53,6 +53,8 @@
     clippy::missing_const_for_fn,
     clippy::use_self,
     clippy::indexing_slicing,
+    clippy::integer_arithmetic,
+    clippy::integer_division,
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
