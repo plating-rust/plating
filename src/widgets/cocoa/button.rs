@@ -15,6 +15,7 @@ use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
+use cocoa::base::nil;
 
 #[derive(Debug)]
 pub struct CocoaButton {
@@ -76,7 +77,7 @@ impl Widget<CocoaSystem> for CocoaButton {
     fn new_with_id(id: String, settings: &CocoaButtonParameters) -> PlatingResult<Self> {
         let mut button = Self {
             id,
-            handle: 0 as CocoaDefaultHandleType,
+            handle: nil,
             connected: false,
             //main_outlet: Outlet::<ButtonChildren>::default(),
         };
