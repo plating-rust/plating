@@ -25,25 +25,24 @@
 //! #[cfg(target_os = "win")]
 //! use plating::widgets::win::{WinButton, WinButtonParameters};
 //!
-//! fn main() {
-//!     // create a *generic* root element
-//!     let mut root = <default_system as System>::RootType::new(&<default_system as System>::RootParameterType::default()).unwrap();
-//!     // create a *generic* window element
-//!     let mut window = <default_system as System>::WindowType::new(&<default_system as System>::WindowParameterType::default()).unwrap();
 //!
-//!     // create a *native* element for more control
-//!     #[cfg(target_os = "macos")]
-//!     let mut button: CocoaButton = CocoaButton::new(&CocoaButtonParameters::default()).unwrap();
-//!     #[cfg(target_os = "win")]
-//!     let mut button: WinButton = WinButton::new(&WinButtonParameters::default()).unwrap();
+//! // create a *generic* root element
+//! let mut root = <default_system as System>::RootType::new(&<default_system as System>::RootParameterType::default()).unwrap();
+//! // create a *generic* window element
+//! let mut window = <default_system as System>::WindowType::new(&<default_system as System>::WindowParameterType::default()).unwrap();
 //!
-//!     //mix them together
-//!     //TODO: window.push_child(button);
-//!     root.push_child(window).unwrap();
+//! // create a *native* element for more control
+//! #[cfg(target_os = "macos")]
+//! let mut button: CocoaButton = CocoaButton::new(&CocoaButtonParameters::default()).unwrap();
+//! #[cfg(target_os = "win")]
+//! let mut button: WinButton = WinButton::new(&WinButtonParameters::default()).unwrap();
 //!
-//!     //after you are done initializing: root.run();
-//!     //todo: manually exit after root.run()
-//! }
+//! //mix them together
+//! //TODO: window.push_child(button);
+//! root.push_child(window).unwrap();
+//!
+//! //after you are done initializing: root.run();
+//! //todo: manually exit after root.run()
 //! ```
 //!
 //! This module contains several traits that are common to several different widget types.
