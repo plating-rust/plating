@@ -54,6 +54,6 @@ bitflags! {
         const CONTROL = NSEventModifierFlags::NSControlKeyMask.bits();
         const OPTION = NSEventModifierFlags::NSAlternateKeyMask.bits();
         const COMMAND = NSEventModifierFlags::NSCommandKeyMask.bits();
-        const FUNTION = NSEventModifierFlags::NSFunctionKeyMask.bits();
+        const FUNCTION = NSEventModifierFlags::NSFunctionKeyMask.bits();
     }
 }
