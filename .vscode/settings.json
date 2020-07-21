@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
+        "Bitfield",
         "Submenu",
         "appkit",
         "autorecalculate",
         "autorelease",
+        "bitflag",
         "borderless",
         "fullscreen",
         "fullscreenable",
