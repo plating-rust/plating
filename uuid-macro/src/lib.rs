@@ -34,7 +34,7 @@ pub use plating_uuid_macro_hack::uuid;
 /// ```
 ///
 /// # Why
-/// Used to typedef to macros when specific feature flags are disabled.
+/// Useful to typedef to macros when specific feature flags are disabled.
 /// ```rust
 /// #[cfg(feature = "log")]
 /// pub(crate) use log::{debug, error, info, trace, warn};
