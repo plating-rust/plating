@@ -421,7 +421,8 @@ pub struct CocoaWindow {
 
 impl Default for CocoaWindow {
     fn default() -> Self {
-        Self::new(&CocoaWindowParameters::default()).unwrap()
+        Self::new(&CocoaWindowParameters::default())
+            .expect("CocoaWindowParameters::default should be valid to build CocoaWindow")
     }
 }
 
@@ -461,7 +462,7 @@ impl CocoaWindow {
     pub(self) fn create_main_menu_parent_data(&self) -> CocoaMainMenuParentData {
         CocoaMainMenuParentData {
             //menu_item: self.menu_item.unwrap(),
-            menu: self.menubar.unwrap(),
+            menu: self.menubar.expect("menubar valid at this point."),
         }
     }
 }
@@ -495,7 +496,8 @@ impl Widget<CocoaSystem> for CocoaWindow {
         //set view controller
         let window = unsafe {
             let superclass = class!(NSWindow);
-            let mut decl = ClassDecl::new("MW", superclass).unwrap();
+            let mut decl =
+                ClassDecl::new("MW", superclass).expect("ClassDecl::new to return valid data");
 
             decl.add_method(
                 sel!(mouseDown:),
@@ -562,8 +564,11 @@ impl Widget<CocoaSystem> for CocoaWindow {
             }*/
             if let Some(window_style) = settings.window_style {
                 let old_mask = self.handle.styleMask();
-                self.handle
-                    .setStyleMask_(window_style.apply_into(old_mask).unwrap());
+                self.handle.setStyleMask_(
+                    window_style
+                        .apply_into(old_mask)
+                        .expect("Cleanly applying window style mask."),
+                );
             }
         }
 

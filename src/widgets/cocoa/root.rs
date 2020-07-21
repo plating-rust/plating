@@ -51,7 +51,8 @@ pub struct CocoaRoot {
 
 impl Default for CocoaRoot {
     fn default() -> Self {
-        Self::new(&CocoaRootParameters::default()).unwrap()
+        Self::new(&CocoaRootParameters::default())
+            .expect("CocoaRootParameters::default to successfully build CocoaRoot")
     }
 }
 
