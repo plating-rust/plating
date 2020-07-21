@@ -375,7 +375,7 @@ impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMen
             parent.menu.addItem_(self.item);
 
             let undo = NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
-                make_ns_string("sfsadf"),
+                make_ns_string("undo_do"),
                 sel!(day:),
                 make_ns_string("z"),
             );
