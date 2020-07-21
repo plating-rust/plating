@@ -3,16 +3,22 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::menu::MenuChildren;
-use crate::widgets::utils::Child;
+use crate::widgets::utils::{Child, Parameters};
 use crate::widgets::{System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct MenuItemParameters {
-    pub title: Option<String>,
-    pub is_enabled: Option<bool>,
-    pub is_hidden: Option<bool>,
+pub trait MenuItemParameters: Parameters {
+    fn label(&self) -> &Option<String>;
+
+    fn set_label(&mut self, label: String) -> &mut Self;
+    fn set_label_optionally(&mut self, label: Option<String>) -> &mut Self;
+    fn unset_label(&mut self) -> &mut Self;
+
+    fn enabled(&self) -> &Option<bool>;
+
+    fn set_enabled(&mut self, label: bool) -> &mut Self;
+    fn set_enabled_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_enabled(&mut self) -> &mut Self;
 }
 
 pub trait MenuItemHandlerTrait {

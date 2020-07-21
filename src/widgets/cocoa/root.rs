@@ -10,7 +10,7 @@ use crate::widgets::cocoa::CocoaSystem;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::{Root, RootChildren, RootHandlerTrait, RootParameters};
-use crate::widgets::utils::{Identity, OutletHolder};
+use crate::widgets::utils::{Identity, OutletHolder, Parameters};
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
 
@@ -21,16 +21,22 @@ use cocoa::appkit::{
 use cocoa::base::nil;
 use cocoa::foundation::NSAutoreleasePool;
 
+pub trait CocoaRootPlatformParameters {}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
 #[derive(Eq, PartialEq, Hash)] //required in cached version
-pub struct CocoaRootParameters {
-    //todo
-}
-impl From<RootParameters> for CocoaRootParameters {
-    fn from(_generic: RootParameters) -> Self {
-        CocoaRootParameters {}
+pub struct CocoaRootParameters {}
+
+impl Parameters for CocoaRootParameters {
+    fn merge(&mut self, _rhs: Self) -> Result<(), anyhow::Error> {
+        Ok(())
+    }
+    fn on_top(&mut self, _rhs: Self) -> Result<(), anyhow::Error> {
+        Ok(())
     }
 }
+impl RootParameters for CocoaRootParameters {}
+impl CocoaRootPlatformParameters for CocoaRootParameters {}
 
 #[derive(Debug)]
 pub struct CocoaRoot {
@@ -45,7 +51,7 @@ pub struct CocoaRoot {
 
 impl Default for CocoaRoot {
     fn default() -> Self {
-        Self::new(CocoaRootParameters::default()).unwrap()
+        Self::new(&CocoaRootParameters::default()).unwrap()
     }
 }
 
@@ -101,12 +107,7 @@ impl Widget<CocoaSystem> for CocoaRoot {
         Ok(new_root)
     }
 
-    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        let _settings = settings.into();
-
+    fn apply(&mut self, _settings: &CocoaRootParameters) -> PlatingResult<()> {
         Ok(())
     }
 }

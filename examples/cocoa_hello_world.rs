@@ -9,7 +9,7 @@ use plating::widgets::cocoa::{
     CocoaRootParameters, CocoaWindow, CocoaWindowParameters,
 };
 use plating::widgets::menu::MenuChildren;
-use plating::widgets::root::{Root, RootParameters};
+use plating::widgets::root::Root;
 use plating::widgets::window::{MainMenuChildren, WindowParameters};
 use plating::widgets::{default_system, platform_dependant::NativeWidget, System};
 use plating::PlatingResult;
@@ -91,17 +91,15 @@ fn main() -> PlatingResult<()> {
 
     warn!("Starting up");
 
-    let mut x = CocoaRoot::new(CocoaRootParameters::default()).unwrap();
-    let mut window = CocoaWindow::new(CocoaWindowParameters {
-        ..WindowParameters {
-            title: Some(String::from("yay")),
-            resizable: Some(true),
-            closable: Some(true),
-            miniaturizable: Some(true),
-            ..Default::default()
-        }
-        .into()
-    })
+    let mut x = CocoaRoot::new(&CocoaRootParameters::default()).unwrap();
+
+    let mut window = CocoaWindow::new(
+        CocoaWindowParameters::default()
+            .set_label(String::from("yay"))
+            .set_resizable(true)
+            .set_closable(true)
+            .set_miniaturizable(true),
+    )
     .unwrap();
 
     //////begin
@@ -163,29 +161,20 @@ fn main() -> PlatingResult<()> {
     }
 
     ////// end
+    let mut menu =
+        CocoaMenu::new(CocoaMenuParameters::default().set_label(String::from("Process"))).unwrap();
 
-    let mut menu = CocoaMenu::new(CocoaMenuParameters {
-        title: Some(String::from("Process")),
-        ..Default::default()
-    })
-    .unwrap();
+    let edit =
+        CocoaMenu::new(CocoaMenuParameters::default().set_label(String::from("Edit"))).unwrap();
 
-    let edit = CocoaMenu::new(CocoaMenuParameters {
-        title: Some(String::from("Edit")),
-        ..Default::default()
-    })
-    .unwrap();
+    let mut menu_item_params = CocoaMenuItemParameters::default();
+    menu_item_params.set_label(String::from("Yay"));
 
-    let process_item1 = CocoaMenuItem::new(CocoaMenuItemParameters {
-        title: Some(String::from("Yay")),
-        ..Default::default()
-    })
-    .unwrap();
-    let process_item2 = CocoaMenuItem::new(CocoaMenuItemParameters {
-        title: Some(String::from("it works :)")),
-        ..Default::default()
-    })
-    .unwrap();
+    let mut menu_item_params2 = CocoaMenuItemParameters::default();
+    menu_item_params2.set_label(String::from("it_works"));
+
+    let process_item1 = CocoaMenuItem::new(&menu_item_params).unwrap();
+    let process_item2 = CocoaMenuItem::new(&menu_item_params2).unwrap();
 
     Outlet::<MenuChildren>::push_child(&mut menu, process_item1).unwrap();
     Outlet::<MenuChildren>::push_child(&mut menu, process_item2).unwrap();
@@ -214,7 +203,10 @@ fn main() -> PlatingResult<()> {
 }
 
 fn create_generic() -> <default_system as System>::RootType {
-    let mut x = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
+    let mut x = <default_system as System>::RootType::new(
+        &<default_system as System>::RootParameterType::default(),
+    )
+    .unwrap();
     /*let child = Window::new(WindowParameters::default()).unwrap();
     x.add_child(child).unwrap();*/
 
@@ -222,16 +214,20 @@ fn create_generic() -> <default_system as System>::RootType {
 }
 
 fn gen_nat() -> <default_system as System>::RootType {
-    let mut x = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
-    let child1 = CocoaWindow::new(CocoaWindowParameters::default()).unwrap();
-    let child2 = CocoaWindow::new(WindowParameters::default()).unwrap();
+    let mut x = <default_system as System>::RootType::new(
+        &<default_system as System>::RootParameterType::default(),
+    )
+    .unwrap();
+    let child1 = CocoaWindow::new(&CocoaWindowParameters::default()).unwrap();
+    let child2 =
+        CocoaWindow::new(&<default_system as System>::WindowParameterType::default()).unwrap();
     x.push_child(child1).unwrap();
     x.push_child(child2).unwrap();
     x
 }
 
 fn nat_gen() -> CocoaRoot {
-    let mut x = CocoaRoot::new(CocoaRootParameters::default()).unwrap();
+    let mut x = CocoaRoot::new(&CocoaRootParameters::default()).unwrap();
     /*let child = Window::new(WindowParameters::default()).unwrap();
     x.add_child(child).unwrap();*/
     x

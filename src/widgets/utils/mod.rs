@@ -20,6 +20,9 @@ pub use child::*;
 mod connectable;
 pub use connectable::*;
 
+mod parameters;
+pub use parameters::*;
+
 /// Very basic trait implemented both by widgets themselves and
 /// any kind of `Pointer` or other Widget indirection.
 ///
@@ -41,4 +44,5 @@ pub trait Identity {
 pub mod prelude {
     pub use super::Child;
     pub use super::Identity;
+    pub use super::Parameters;
 }

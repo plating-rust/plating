@@ -3,15 +3,17 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Connectable, Identity};
+use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{default_system, System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct MenuParameters {
-    pub title: Option<String>,
+pub trait MenuParameters: Parameters {
+    fn label(&self) -> &Option<String>;
+
+    fn set_label(&mut self, label: String) -> &mut Self;
+    fn set_label_optionally(&mut self, label: Option<String>) -> &mut Self;
+    fn unset_label(&mut self) -> &mut Self;
 }
 
 pub trait MenuHandlerTrait {

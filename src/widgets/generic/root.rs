@@ -4,14 +4,11 @@
  */
 
 use crate::events::ListenerType;
-use crate::features::serde::{Deserialize, Serialize};
 use crate::widgets::outlet::Outlet;
-use crate::widgets::utils::{Child, Connectable, Identity};
+use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::{default_system, System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq, Hash)] //required in cached version
-pub struct RootParameters {}
+pub trait RootParameters: Parameters {}
 
 pub trait RootHandlerTrait {
     fn set_exit_handler(&mut self, handler: Box<impl FnMut()>);
@@ -24,7 +21,7 @@ pub trait RootHandlerTrait {
 /// Widgets implementing this trait, also need to implement NativeWidget as well
 /// as OutletAdapter<RootChildren<S>>
 pub trait Root<S: System>:
-    Widget<S, PARAMS = S::RootParameterTye> + Outlet<RootChildren<S>, S> + RootHandlerTrait + Default
+    Widget<S, PARAMS = S::RootParameterType> + Outlet<RootChildren<S>, S> + RootHandlerTrait + Default
 {
     /// Calling this function starts the main loop.
     /// Only returns once the app is closed.

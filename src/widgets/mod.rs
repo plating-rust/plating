@@ -20,7 +20,6 @@
 //! ```rust
 //! use plating::prelude::*;
 //! use plating::widgets::{default_system, System};
-//! use plating::widgets::{root::RootParameters, window::WindowParameters};
 //! #[cfg(target_os = "macos")]
 //! use plating::widgets::cocoa::{CocoaButton, CocoaButtonParameters};
 //! #[cfg(target_os = "win")]
@@ -28,15 +27,15 @@
 //!
 //! fn main() {
 //!     // create a *generic* root element
-//!     let mut root = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
+//!     let mut root = <default_system as System>::RootType::new(&<default_system as System>::RootParameterType::default()).unwrap();
 //!     // create a *generic* window element
-//!     let mut window = <default_system as System>::WindowType::new(WindowParameters::default()).unwrap();
+//!     let mut window = <default_system as System>::WindowType::new(&<default_system as System>::WindowParameterType::default()).unwrap();
 //!
 //!     // create a *native* element for more control
 //!     #[cfg(target_os = "macos")]
-//!     let mut button: CocoaButton = CocoaButton::new(CocoaButtonParameters::default()).unwrap();
+//!     let mut button: CocoaButton = CocoaButton::new(&CocoaButtonParameters::default()).unwrap();
 //!     #[cfg(target_os = "win")]
-//!     let mut button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
+//!     let mut button: WinButton = WinButton::new(&WinButtonParameters::default()).unwrap();
 //!
 //!     //mix them together
 //!     //TODO: window.push_child(button);
@@ -93,6 +92,7 @@ pub mod win;
 /// Automatically included in ```plating::prelude::*```
 pub mod prelude {
     // used by all widgets that can have children
+    pub use super::generic::prelude::*;
     pub use super::outlet::Outlet; //TODO: do we really need this?
     pub use super::utils::prelude::*;
     pub use super::widget::Widget;

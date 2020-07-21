@@ -15,14 +15,19 @@ use plating::widgets::win::{WinButton, WinButtonParameters};
 
 fn main() {
     // create a *generic* root element
-    let mut root = <default_system as System>::RootType::new(RootParameters::default()).unwrap();
+    let mut root = <default_system as System>::RootType::new(
+        &<default_system as System>::RootParameterType::default(),
+    )
+    .unwrap();
     // create a *generic* window element
-    let mut window =
-        <default_system as System>::WindowType::new(WindowParameters::default()).unwrap();
+    let mut window = <default_system as System>::WindowType::new(
+        &<default_system as System>::WindowParameterType::default(),
+    )
+    .unwrap();
 
     // create a *native* element for more control
     #[cfg(target_os = "macos")]
-    let button: CocoaButton = CocoaButton::new(CocoaButtonParameters::default()).unwrap();
+    let button: CocoaButton = CocoaButton::new(&CocoaButtonParameters::default()).unwrap();
     #[cfg(target_os = "win")]
     let button: WinButton = WinButton::new(WinButtonParameters::default()).unwrap();
 

@@ -8,36 +8,142 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaMenu, CocoaMenuParentDa
 use crate::widgets::menu::MenuChildren;
 use crate::widgets::menu_item::{MenuItem, MenuItemHandlerTrait, MenuItemParameters};
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::{Child, Connectable, Identity};
+use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::{System, Widget};
-use crate::{CheckedState, PlatingResult};
+use crate::{OptionalCheckedState, PlatingResult};
 
 use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq, Hash)]
+pub trait CocoaMenuPlatformParameters {
+    fn tag(&self) -> &Option<i32>;
+
+    fn set_tag(&mut self, tag: i32) -> &mut Self;
+    fn set_tag_optionally(&mut self, tag: Option<i32>) -> &mut Self;
+    fn unset_tag(&mut self) -> &mut Self;
+
+    fn state(&self) -> &Option<OptionalCheckedState>;
+
+    fn set_state(&mut self, state: OptionalCheckedState) -> &mut Self;
+    fn set_state_optionally(&mut self, state: Option<OptionalCheckedState>) -> &mut Self;
+    fn unset_state(&mut self) -> &mut Self;
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
 pub struct CocoaMenuItemParameters {
     // generic
-    pub title: Option<String>,
-    pub is_enabled: Option<bool>,
-    pub is_hidden: Option<bool>,
+    label: Option<String>,
+    enabled: Option<bool>,
     //todo: pub image: Option<NSImage>,
 
     //cocoa specific
     //todo: pub attributed_title: Option<NSAttributedString>
-    pub tag: Option<i32>,
-    pub state: Option<CheckedState>,
+    tag: Option<i32>,
+    state: Option<OptionalCheckedState>,
 }
-impl From<MenuItemParameters> for CocoaMenuItemParameters {
-    fn from(generic: MenuItemParameters) -> Self {
-        CocoaMenuItemParameters {
-            title: generic.title,
-            is_enabled: generic.is_enabled,
-            is_hidden: generic.is_hidden,
-            ..Default::default()
+
+impl Parameters for CocoaMenuItemParameters {
+    fn merge(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        if self.label().is_none() {
+            self.set_label_optionally(rhs.label);
         }
+
+        if self.enabled().is_none() {
+            self.set_enabled_optionally(rhs.enabled);
+        }
+
+        if self.tag().is_none() {
+            self.set_tag_optionally(rhs.tag);
+        }
+
+        if self.state().is_none() {
+            self.set_state_optionally(rhs.state);
+        }
+
+        Ok(())
+    }
+    fn on_top(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        self.set_label_optionally(rhs.label);
+        self.set_enabled_optionally(rhs.enabled);
+        self.set_tag_optionally(rhs.tag);
+        self.set_state_optionally(rhs.state);
+        Ok(())
+    }
+}
+
+impl MenuItemParameters for CocoaMenuItemParameters {
+    fn label(&self) -> &Option<String> {
+        &self.label
+    }
+    fn set_label(&mut self, label: String) -> &mut Self {
+        self.label = Some(label);
+        self
+    }
+    fn set_label_optionally(&mut self, label: Option<String>) -> &mut Self {
+        if let Some(s) = label {
+            self.set_label(s);
+        }
+        self
+    }
+    fn unset_label(&mut self) -> &mut Self {
+        self.label = None;
+        self
+    }
+
+    fn enabled(&self) -> &Option<bool> {
+        &self.enabled
+    }
+    fn set_enabled(&mut self, enabled: bool) -> &mut Self {
+        self.enabled = Some(enabled);
+        self
+    }
+    fn set_enabled_optionally(&mut self, enabled: Option<bool>) -> &mut Self {
+        if let Some(e) = enabled {
+            self.set_enabled(e);
+        }
+        self
+    }
+    fn unset_enabled(&mut self) -> &mut Self {
+        self.enabled = None;
+        self
+    }
+}
+
+impl CocoaMenuPlatformParameters for CocoaMenuItemParameters {
+    fn tag(&self) -> &Option<i32> {
+        &self.tag
+    }
+    fn set_tag(&mut self, tag: i32) -> &mut Self {
+        self.tag = Some(tag);
+        self
+    }
+    fn set_tag_optionally(&mut self, tag: Option<i32>) -> &mut Self {
+        if let Some(i) = tag {
+            self.set_tag(i);
+        }
+        self
+    }
+    fn unset_tag(&mut self) -> &mut Self {
+        self.tag = None;
+        self
+    }
+    fn state(&self) -> &Option<OptionalCheckedState> {
+        &self.state
+    }
+    fn set_state(&mut self, state: OptionalCheckedState) -> &mut Self {
+        self.state = Some(state);
+        self
+    }
+    fn set_state_optionally(&mut self, state: Option<OptionalCheckedState>) -> &mut Self {
+        if let Some(state) = state {
+            self.set_state(state);
+        }
+        self
+    }
+    fn unset_state(&mut self) -> &mut Self {
+        self.state = None;
+        self
     }
 }
 
@@ -82,16 +188,12 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
         Ok(new_menu_item)
     }
 
-    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        let settings = settings.into();
+    fn apply(&mut self, settings: &CocoaMenuItemParameters) -> PlatingResult<()> {
         log::info!("applying settings: {:?}", settings);
         unsafe {
-            if let Some(title) = settings.title {
-                let title = NSString::alloc(nil).init_str(&title);
-                self.handle.setTitle_(title);
+            if let Some(label) = settings.label() {
+                let label = NSString::alloc(nil).init_str(&label);
+                self.handle.setTitle_(label);
             }
             //todo: more
         }

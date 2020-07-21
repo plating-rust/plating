@@ -4,14 +4,16 @@
  */
 
 use crate::events::ListenerType;
-use crate::features::serde::{Deserialize, Serialize};
-use crate::widgets::utils::{Child, Identity};
+use crate::widgets::utils::{Child, Identity, Parameters};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{default_system, System, Widget};
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct ButtonParameters {
-    pub label: Option<String>,
+pub trait ButtonParameters: Parameters {
+    fn label(&self) -> &Option<String>;
+
+    fn set_label(&mut self, label: String) -> &mut Self;
+    fn set_label_optionally(&mut self, label: Option<String>) -> &mut Self;
+    fn unset_label(&mut self) -> &mut Self;
 }
 
 pub trait ButtonHandlerTrait<S: System> //:

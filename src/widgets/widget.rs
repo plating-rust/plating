@@ -65,16 +65,12 @@ use crate::widgets::System;
 ///    // Empty struct in our case, but could be anything
 ///    type PARAMS = CocoaExampleParameters;
 ///
-///    fn new_with_id<T>(id: String, settings: T) -> PlatingResult<Self>
-///    where
-///        T: Into<Self::PARAMS> {
+///    fn new_with_id(id: String, settings: &Self::PARAMS) -> PlatingResult<Self> {
 ///        let mut result = Self {id, handle: todo!() };
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
-///    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-///    where
-///        T: Into<Self::PARAMS> {
+///    fn apply(&mut self, settings: &Self::PARAMS) -> PlatingResult<()> {
 ///        todo!() //apply settings on the backend
 ///    }
 /// }
@@ -126,7 +122,5 @@ where
     /// Applies settings to this widget
     ///
     /// See also: [`new`](Widget::new).
-    fn apply<T>(&mut self, settings: T) -> Result<(), anyhow::Error>
-    where
-        T: Into<Self::PARAMS>;
+    fn apply(&mut self, settings: &Self::PARAMS) -> Result<(), anyhow::Error>;
 }

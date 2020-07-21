@@ -10,7 +10,7 @@ use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
 use crate::widgets::menu::{Menu, MenuChildren, MenuHandlerTrait, MenuParameters};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
-use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder};
+use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder, Parameters};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::{Direction, PlatingResult};
@@ -19,6 +19,42 @@ use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 use objc::*;
+
+//todo: implement!
+pub trait CocoaMenuPlatformParameters {
+    fn auto_enables_items(&self) -> &Option<bool>;
+
+    fn set_auto_enables_items(&mut self, auto_enables_items: bool) -> &mut Self;
+    fn set_auto_enables_items_optionally(&mut self, auto_enables_items: Option<bool>) -> &mut Self;
+    fn unset_auto_enables_items(&mut self) -> &mut Self;
+
+    fn allows_context_menu_plugins(&self) -> &Option<bool>;
+
+    fn set_allows_context_menu_plugins(&mut self, allows_context_menu_plugins: bool) -> &mut Self;
+    fn set_allows_context_menu_plugins_optionally(
+        &mut self,
+        allows_context_menu_plugins: Option<bool>,
+    ) -> &mut Self;
+    fn unset_allows_context_menu_plugins(&mut self) -> &mut Self;
+
+    fn shows_state_column(&self) -> &Option<bool>;
+
+    fn set_shows_state_column(&mut self, shows_state_column: bool) -> &mut Self;
+    fn set_shows_state_column_optionally(&mut self, shows_state_column: Option<bool>) -> &mut Self;
+    fn unset_shows_state_column(&mut self) -> &mut Self;
+
+    fn user_interface_layout_direction(&self) -> &Option<Direction>;
+
+    fn set_user_interface_layout_direction(
+        &mut self,
+        user_interface_layout_direction: Direction,
+    ) -> &mut Self;
+    fn set_user_interface_layout_direction_optionally(
+        &mut self,
+        user_interface_layout_direction: Option<Direction>,
+    ) -> &mut Self;
+    fn unset_user_interface_layout_direction(&mut self) -> &mut Self;
+}
 
 /// Data passed to child in the `adding_to` function.
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
@@ -283,16 +319,12 @@ impl Widget<CocoaSystem> for CocoaMenu {
         Ok(new_menu)
     }
 
-    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        let settings = settings.into();
+    fn apply(&mut self, settings: &CocoaMenuParameters) -> PlatingResult<()> {
         log::info!("applying settings: {:?}", settings);
         unsafe {
-            if let Some(title) = settings.title {
-                let title = NSString::alloc(nil).init_str(&title);
-                self.handle.setTitle_(title);
+            if let Some(label) = settings.label() {
+                let label = NSString::alloc(nil).init_str(&label);
+                self.handle.setTitle_(label);
             }
             //todo: more
         }

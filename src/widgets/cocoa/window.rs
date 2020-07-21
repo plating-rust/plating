@@ -4,65 +4,334 @@
  */
 
 use crate::features::log;
-use crate::features::serde::{Deserialize, Serialize};
+use crate::features::serde::Serialize;
 use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaRoot, CocoaSystem};
 use crate::widgets::outlet::Outlet;
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::root::RootChildren;
-use crate::widgets::utils::{Child, Connectable, Named, OutletHolder};
+use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder};
 use crate::widgets::window::{
     MainMenuChildren, Window, WindowChildren, WindowHandlerTrait, WindowParameters,
 };
 use crate::widgets::{System, Widget};
-use crate::PlatingResult;
+use crate::{prelude::Parameters, PlatingResult};
 
 use cocoa::appkit::{
-    NSApp, NSApplication, NSBackingStoreBuffered, NSEvent, NSMenu, NSWindow, NSWindowDepth,
-    NSWindowStyleMask,
+    NSApp, NSApplication, NSBackingStoreBuffered, NSEvent, NSMenu, NSWindow,
+    NSWindowCollectionBehavior, NSWindowStyleMask,
 };
 use cocoa::base::{id, nil, NO};
 use cocoa::foundation::{NSAutoreleasePool, NSPoint, NSRect, NSSize, NSString};
 use core_graphics::base::CGFloat;
 use objc::declare::ClassDecl;
 use objc::runtime::{Object, Sel};
+use plating_macros::bitflag_parameter;
 use std::fmt;
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(PartialEq)] //required in cached version
-pub struct CocoaWindowParameters {
-    //from generic
-    pub rect: Option<crate::Rect>,
-
-    pub title: Option<String>,
-
-    //TODO: colors! pub backgroundColor: Option<Color>
-    pub alpha_value: Option<f32>,
-
-    pub works_when_modal: Option<bool>,
-
-    //todo: pub color_space: Option<NSColorSpace>,
-    pub can_hide: Option<bool>,
-    pub hides_on_deactivate: Option<bool>,
-
-    //todo: pub collection_behavior: Option<NSWindowCollectionBehavior>,
-    pub is_opaque: Option<bool>,
-    pub has_shadow: Option<bool>,
-
-    pub autorecalculate_content_border_thickness: Option<bool>,
-    pub prevents_application_termination_when_modal: Option<bool>,
-    pub can_become_visible_without_login: Option<bool>,
-    //todo: seems to be missing in cocoa:
-    //pub sharing_type: Option<NSWindowSharingType>,
-    pub depth_limit: Option<NSWindowDepth>,
-
-    pub resize_increments: Option<crate::Vec2<f32>>,
-
-    #[serde(default)]
-    #[serde(serialize_with = "super::utils::serde::serialize_ns_window_style_mask")]
-    #[serde(deserialize_with = "super::utils::serde::deserialize_ns_window_style_mask")]
-    pub window_style: Option<NSWindowStyleMask>,
+bitflag_parameter! {
+    pub StyleMaskParameter(NSWindowStyleMask: NSUInteger);
 }
 
+bitflag_parameter! {
+    pub WindowCollectionBehaviourParameter(NSWindowCollectionBehavior: NSUInteger);
+}
+
+pub trait CocoaWindowPlatformParameters {
+    fn alpha_value(&self) -> &Option<f32>;
+
+    fn set_alpha_value(&mut self, tag: f32) -> &mut Self;
+    fn set_alpha_value_optionally(&mut self, tag: Option<f32>) -> &mut Self;
+    fn unset_alpha_value(&mut self) -> &mut Self;
+
+    fn window_style(&self) -> &Option<StyleMaskParameter>;
+
+    fn set_window_style(&mut self, style: StyleMaskParameter) -> &mut Self;
+    fn set_window_style_optionally(&mut self, style: Option<StyleMaskParameter>) -> &mut Self;
+    fn unset_window_style(&mut self) -> &mut Self;
+    //todo: finalize
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Serialize)]
+//todo: Deserialize, Serialize
+pub struct CocoaWindowParameters {
+    //from generic
+    label: Option<String>,
+
+    //todo: background_color: Option<Color>,
+    alpha_value: Option<f32>,
+
+    works_when_modal: Option<bool>,
+
+    //todo: pub color_space: Option<NSColorSpace>,
+    //todo: can_hide: Option<bool>,
+    //todo: hides_on_deactivate: Option<bool>,
+
+    //todo: collection_behavior: Option<WindowCollectionBehaviourParameter>,
+    //todo: is_opaque: Option<bool>,
+    //todo: has_shadow: Option<bool>,
+
+    //todo: autorecalculate_content_border_thickness: Option<bool>,
+    //todo: prevents_application_termination_when_modal: Option<bool>,
+    //todo: can_become_visible_without_login: Option<bool>,
+    //todo: seems to be missing in cocoa:
+    //todo: sharing_type: Option<NSWindowSharingType>,
+    //todo: depth_limit: Option<NSWindowDepth>,
+
+    //todo: resize_increments: Option<crate::Vec2<f32>>,
+    window_style: Option<StyleMaskParameter>,
+}
+
+impl WindowParameters for CocoaWindowParameters {
+    fn label(&self) -> &Option<String> {
+        &self.label
+    }
+
+    fn set_label(&mut self, label: String) -> &mut Self {
+        self.label = Some(label);
+        self
+    }
+    fn set_label_optionally(&mut self, title: Option<String>) -> &mut Self {
+        if let Some(s) = title {
+            self.set_label(s);
+        }
+        self
+    }
+    fn unset_label(&mut self) -> &mut Self {
+        self.label = None;
+        self
+    }
+
+    fn resizable(&self) -> Option<bool> {
+        match &self.window_style {
+            Some(bitfield) => bitfield.is_set(NSWindowStyleMask::NSResizableWindowMask),
+            None => None,
+        }
+    }
+    fn set_resizable(&mut self, resizable: bool) -> &mut Self {
+        match &mut self.window_style {
+            Some(field) => {
+                field.set(resizable, NSWindowStyleMask::NSResizableWindowMask);
+                self
+            }
+            None => {
+                self.window_style = Some(StyleMaskParameter::default());
+                self.set_resizable(resizable)
+            }
+        }
+    }
+    fn set_resizable_optionally(&mut self, resizable: Option<bool>) -> &mut Self {
+        if let Some(b) = resizable {
+            self.set_resizable(b);
+        }
+        self
+    }
+    fn unset_resizable(&mut self) -> &mut Self {
+        if let Some(bitfield) = &mut self.window_style {
+            bitfield.unset(NSWindowStyleMask::NSResizableWindowMask)
+        }
+        self
+    }
+    fn closable(&self) -> Option<bool> {
+        match &self.window_style {
+            Some(bitfield) => bitfield.is_set(NSWindowStyleMask::NSClosableWindowMask),
+            None => None,
+        }
+    }
+    fn set_closable(&mut self, closable: bool) -> &mut Self {
+        match &mut self.window_style {
+            Some(field) => {
+                field.set(closable, NSWindowStyleMask::NSClosableWindowMask);
+                self
+            }
+            None => {
+                self.window_style = Some(StyleMaskParameter::default());
+                self.set_closable(closable)
+            }
+        }
+    }
+    fn set_closable_optionally(&mut self, closable: Option<bool>) -> &mut Self {
+        if let Some(b) = closable {
+            self.set_closable(b);
+        }
+        self
+    }
+    fn unset_closable(&mut self) -> &mut Self {
+        if let Some(bitfield) = &mut self.window_style {
+            bitfield.unset(NSWindowStyleMask::NSClosableWindowMask)
+        }
+        self
+    }
+    fn miniaturizable(&self) -> Option<bool> {
+        match &self.window_style {
+            Some(bitfield) => bitfield.is_set(NSWindowStyleMask::NSMiniaturizableWindowMask),
+            None => None,
+        }
+    }
+    fn set_miniaturizable(&mut self, miniaturizable: bool) -> &mut Self {
+        match &mut self.window_style {
+            Some(field) => {
+                field.set(
+                    miniaturizable,
+                    NSWindowStyleMask::NSMiniaturizableWindowMask,
+                );
+                self
+            }
+            None => {
+                self.window_style = Some(StyleMaskParameter::default());
+                self.set_miniaturizable(miniaturizable)
+            }
+        }
+    }
+    fn set_miniaturizable_optionally(&mut self, miniaturizable: Option<bool>) -> &mut Self {
+        if let Some(b) = miniaturizable {
+            self.set_miniaturizable(b);
+        }
+        self
+    }
+    fn unset_miniaturizable(&mut self) -> &mut Self {
+        if let Some(bitfield) = &mut self.window_style {
+            bitfield.unset(NSWindowStyleMask::NSMiniaturizableWindowMask)
+        }
+        self
+    }
+    fn maximizable(&self) -> Option<bool> {
+        match &self.window_style {
+            Some(bitfield) => bitfield.is_set(NSWindowStyleMask::NSFullScreenWindowMask),
+            None => None,
+        }
+    }
+    fn set_maximizable(&mut self, maximizable: bool) -> &mut Self {
+        match &mut self.window_style {
+            Some(field) => {
+                field.set(maximizable, NSWindowStyleMask::NSFullScreenWindowMask);
+                self
+            }
+            None => {
+                self.window_style = Some(StyleMaskParameter::default());
+                self.set_maximizable(maximizable)
+            }
+        }
+    }
+    fn set_maximizable_optionally(&mut self, maximizable: Option<bool>) -> &mut Self {
+        if let Some(b) = maximizable {
+            self.set_maximizable(b);
+        }
+        self
+    }
+
+    fn unset_maximizable(&mut self) -> &mut Self {
+        if let Some(bitfield) = &mut self.window_style {
+            bitfield.unset(NSWindowStyleMask::NSFullScreenWindowMask)
+        }
+        self
+    }
+    fn fullscreenable(&self) -> Option<bool> {
+        match &self.window_style {
+            Some(bitfield) => bitfield.is_set(NSWindowStyleMask::NSFullSizeContentViewWindowMask),
+            None => None,
+        }
+    }
+    fn set_fullscreenable(&mut self, fullscreenable: bool) -> &mut Self {
+        match &mut self.window_style {
+            Some(field) => {
+                field.set(
+                    fullscreenable,
+                    NSWindowStyleMask::NSFullSizeContentViewWindowMask,
+                );
+                self
+            }
+            None => {
+                self.window_style = Some(StyleMaskParameter::default());
+                self.set_fullscreenable(fullscreenable)
+            }
+        }
+    }
+    fn set_fullscreenable_optionally(&mut self, fullscreenable: Option<bool>) -> &mut Self {
+        if let Some(b) = fullscreenable {
+            self.set_fullscreenable(b);
+        }
+        self
+    }
+    fn unset_fullscreenable(&mut self) -> &mut Self {
+        if let Some(bitfield) = &mut self.window_style {
+            bitfield.unset(NSWindowStyleMask::NSFullSizeContentViewWindowMask)
+        }
+        self
+    }
+}
+
+impl Parameters for CocoaWindowParameters {
+    fn merge(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        if self.label().is_none() {
+            self.set_label_optionally(rhs.label);
+        }
+
+        match (&mut self.window_style(), rhs.window_style) {
+            (_, None) => { /* nothing todo */ }
+            (None, Some(rh_style)) => {
+                self.set_window_style(rh_style);
+            }
+            (Some(lh_style), Some(rh_style)) => {
+                let new_value = lh_style.merge_unchecked(rh_style);
+                self.set_window_style(new_value);
+            }
+        }
+
+        //todo: merge cocoa specific stuff
+        Ok(())
+    }
+    fn on_top(&mut self, rhs: Self) -> Result<(), anyhow::Error> {
+        self.set_label_optionally(rhs.label);
+
+        match (self.window_style(), rhs.window_style) {
+            (_, None) => { /* nothing todo */ }
+            (_, Some(rh_style)) => {
+                self.set_window_style(rh_style);
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl CocoaWindowPlatformParameters for CocoaWindowParameters {
+    fn alpha_value(&self) -> &Option<f32> {
+        &self.alpha_value
+    }
+    fn set_alpha_value(&mut self, alpha: f32) -> &mut Self {
+        self.alpha_value = Some(alpha);
+        self
+    }
+    fn set_alpha_value_optionally(&mut self, alpha: Option<f32>) -> &mut Self {
+        if let Some(f) = alpha {
+            self.set_alpha_value(f);
+        }
+        self
+    }
+    fn unset_alpha_value(&mut self) -> &mut Self {
+        self.alpha_value = None;
+        self
+    }
+    fn window_style(&self) -> &Option<StyleMaskParameter> {
+        &self.window_style
+    }
+    fn set_window_style(&mut self, style: StyleMaskParameter) -> &mut Self {
+        self.window_style = Some(style);
+        self
+    }
+    fn set_window_style_optionally(&mut self, style: Option<StyleMaskParameter>) -> &mut Self {
+        if let Some(s) = style {
+            self.set_window_style(s);
+        }
+        self
+    }
+    fn unset_window_style(&mut self) -> &mut Self {
+        self.window_style = None;
+        self
+    }
+}
+
+/*
 impl From<WindowParameters> for CocoaWindowParameters {
     fn from(generic: WindowParameters) -> Self {
         let mut window_style = NSWindowStyleMask::NSTitledWindowMask;
@@ -117,7 +386,7 @@ impl From<WindowParameters> for CocoaWindowParameters {
             ..Default::default()
         }
     }
-}
+}*/
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct CocoaMainMenuParentData {
@@ -152,7 +421,7 @@ pub struct CocoaWindow {
 
 impl Default for CocoaWindow {
     fn default() -> Self {
-        Self::new(CocoaWindowParameters::default()).unwrap()
+        Self::new(&CocoaWindowParameters::default()).unwrap()
     }
 }
 
@@ -271,26 +540,17 @@ impl Widget<CocoaSystem> for CocoaWindow {
         Ok(new_window)
     }
 
-    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        let settings = settings.into();
+    fn apply(&mut self, settings: &CocoaWindowParameters) -> PlatingResult<()> {
         log::info!("applying settings: {:?}", settings);
         unsafe {
-            if let Some(_rect) = settings.rect {
-                todo!()
-            }
-            if let Some(title) = settings.title {
-                let title = NSString::alloc(nil).init_str(&title);
+            if let Some(label) = &settings.label {
+                let title = NSString::alloc(nil).init_str(label);
                 self.handle.setTitle_(title);
             }
             if let Some(alpha_value) = settings.alpha_value {
                 self.handle.setAlphaValue_(alpha_value as CGFloat);
             }
-            if let Some(_works_when_modal) = settings.works_when_modal {
-                todo!()
-            }
+            /*todo:
             if let Some(can_hide) = settings.can_hide {
                 self.handle.setCanHide_(can_hide as i8);
             }
@@ -299,33 +559,11 @@ impl Widget<CocoaSystem> for CocoaWindow {
             }
             if let Some(is_opaque) = settings.is_opaque {
                 self.handle.setOpaque_(is_opaque as i8);
-            }
-            if let Some(_has_shadow) = settings.has_shadow {
-                todo!()
-            }
-            if let Some(_autorecalculate_content_border_thickness) =
-                settings.autorecalculate_content_border_thickness
-            {
-                todo!()
-            }
-            if let Some(_prevents_application_termination_when_modal) =
-                settings.prevents_application_termination_when_modal
-            {
-                todo!()
-            }
-            if let Some(_can_become_visible_without_login) =
-                settings.can_become_visible_without_login
-            {
-                todo!()
-            }
-            if let Some(_depth_limit) = settings.depth_limit {
-                todo!()
-            }
-            if let Some(_resize_increments) = settings.resize_increments {
-                todo!()
-            }
+            }*/
             if let Some(window_style) = settings.window_style {
-                self.handle.setStyleMask_(window_style);
+                let old_mask = self.handle.styleMask();
+                self.handle
+                    .setStyleMask_(window_style.apply_into(old_mask).unwrap());
             }
         }
 

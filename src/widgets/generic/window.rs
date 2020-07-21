@@ -8,48 +8,53 @@
 
 use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
-use crate::widgets::utils::{Child, Connectable, Identity};
+use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::{default_system, System, Widget};
 
-/// Generic parameters for creating and customizing Windows
-///
-/// All fields are optional and will either use OS Default values or sensible
-/// custom default values where appropriate. Check Documentation of native Window Parameters for more details.
-/// - [`CocoaWindowParameters`](crate::widget::cocoa::CocoaWindowParameters)
-///
-/// The above native window parameter struct implement the `From` trait to
-/// get os specific parameters from this.
-/// ```rust
-/// use plating::widgets::window::WindowParameters;
-///
-/// let params = WindowParameters::default();
-///
-/// #[cfg(target_os = "macos")]
-/// let native: plating::widgets::cocoa::CocoaWindowParameters = params.into();
-/// ```
-///
-/// You cannot generate a WindowParameter from a native Parameter struct, because they have more information that might be lost.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
-#[derive(Eq, PartialEq, Hash)] //required in cached version
-pub struct WindowParameters {
-    /// Sets the Position and Size of the window
-    pub rect: Option<crate::Rect>,
+pub trait WindowParameters: Parameters {
     /// Sets the title of the window
-    pub title: Option<String>,
+    fn label(&self) -> &Option<String>;
+
+    fn set_label(&mut self, label: String) -> &mut Self;
+    fn set_label_optionally(&mut self, label: Option<String>) -> &mut Self;
+    fn unset_label(&mut self) -> &mut Self;
 
     /// Makes the window resizable.
-    pub resizable: Option<bool>,
+    fn resizable(&self) -> Option<bool>;
+
+    fn set_resizable(&mut self, resizable: bool) -> &mut Self;
+    fn set_resizable_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_resizable(&mut self) -> &mut Self;
+
     /// Makes the window closable.
-    pub closable: Option<bool>,
+    fn closable(&self) -> Option<bool>;
+
+    fn set_closable(&mut self, closable: bool) -> &mut Self;
+    fn set_closable_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_closable(&mut self) -> &mut Self;
+
     /// Makes the window miniaturizable
-    pub miniaturizable: Option<bool>,
+    fn miniaturizable(&self) -> Option<bool>;
+
+    fn set_miniaturizable(&mut self, closable: bool) -> &mut Self;
+    fn set_miniaturizable_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_miniaturizable(&mut self) -> &mut Self;
+
     /// Makes the window maximizable.
     /// (Title and Main menu will still be shown)
-    pub maximizable: Option<bool>,
+    fn maximizable(&self) -> Option<bool>;
+
+    fn set_maximizable(&mut self, closable: bool) -> &mut Self;
+    fn set_maximizable_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_maximizable(&mut self) -> &mut Self;
     /// Allow the window to be fullscreen
     ///
     /// (Title and main menu will not be shown)
-    pub fullscreenable: Option<bool>,
+    fn fullscreenable(&self) -> Option<bool>;
+
+    fn set_fullscreenable(&mut self, closable: bool) -> &mut Self;
+    fn set_fullscreenable_optionally(&mut self, label: Option<bool>) -> &mut Self;
+    fn unset_fullscreenable(&mut self) -> &mut Self;
 }
 
 pub trait WindowHandlerTrait<S: System> //:

@@ -5,22 +5,33 @@
 
 mod defs;
 
+//////////////////////////
+// Widget modules definition
+//////////////////////////
 mod button;
-pub(crate) mod event;
+mod button_parameters;
+
 mod menu;
 mod menu_item;
 mod root;
 mod window;
 
-pub mod delegates;
-pub mod error;
-
+//////////////////////////
+// Widget modules exports
+//////////////////////////
 pub use button::*;
+pub use button_parameters::*;
+
 pub use defs::*;
 pub use menu::*;
 pub use menu_item::*;
 pub use root::*;
 pub use window::*;
+
+pub mod delegates;
+pub mod error;
+
+pub(crate) mod event;
 
 pub(self) mod utils;
 
@@ -36,7 +47,7 @@ impl System for CocoaSystem {
 
     type InternalHandle = CocoaDefaultHandleType;
 
-    type RootParameterTye = CocoaRootParameters;
+    type RootParameterType = CocoaRootParameters;
     type RootType = CocoaRoot;
 
     type ButtonParameterType = CocoaButtonParameters;

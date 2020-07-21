@@ -5,27 +5,16 @@
 
 use crate::events::{ListenerType};
 use crate::features::log::info;
-use crate::features::serde::{Deserialize, Serialize};
+
 use crate::widgets::button::{Button, ButtonChildren, ButtonHandlerTrait, ButtonParameters};
-use crate::widgets::cocoa::{CocoaDefaultHandleType, CocoaSystem, CocoaWindow};
+use crate::widgets::cocoa::{
+    CocoaButtonParameters, CocoaDefaultHandleType, CocoaSystem, CocoaWindow,
+};
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::{Child, Connectable, Identity};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
-
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Eq, PartialEq, Hash)]
-pub struct CocoaButtonParameters {
-    pub label: Option<String>,
-}
-
-impl From<ButtonParameters> for CocoaButtonParameters {
-    fn from(generic: ButtonParameters) -> Self {
-        CocoaButtonParameters {
-            label: generic.label,
-        }
-    }
-}
 
 #[derive(Debug)]
 pub struct CocoaButton {
@@ -95,12 +84,8 @@ impl Widget<CocoaSystem> for CocoaButton {
         Ok(button)
     }
 
-    fn apply<T>(&mut self, settings: T) -> PlatingResult<()>
-    where
-        T: Into<Self::PARAMS>,
-    {
-        let settings = settings.into();
-        if settings.label.is_some() {
+    fn apply(&mut self, settings: &CocoaButtonParameters) -> PlatingResult<()> {
+        if settings.label().is_some() {
             info!("settings label");
         }
         Ok(())

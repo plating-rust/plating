@@ -14,21 +14,7 @@ pub fn make_ns_string(s: &str) -> id {
 pub(super) mod serde {
     use cocoa::appkit::NSWindowStyleMask;
 
-    use serde::{de::Visitor, Deserializer, Serializer};
-
-    //todo: macroize!
-    pub fn serialize_ns_window_style_mask<S>(
-        optional_mask: &Option<NSWindowStyleMask>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        match optional_mask {
-            Some(mask) => serializer.serialize_u64(mask.bits()),
-            None => serializer.serialize_none(),
-        }
-    }
+    use serde::{de::Visitor, Deserializer};
 
     //todo: macroize!
     pub fn deserialize_ns_window_style_mask<'de, D>(

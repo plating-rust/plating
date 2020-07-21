@@ -53,18 +53,18 @@ where
     /// Could be a `pointer`, `id`or whatever. Using it directly usually means you loose cross-platform compatibility.
     type InternalHandle;
 
-    type RootParameterTye: From<RootParameters>;
+    type RootParameterType: RootParameters;
     type RootType: Root<Self>;
 
-    type ButtonParameterType: From<ButtonParameters>;
+    type ButtonParameterType: ButtonParameters;
     type ButtonType: Button<Self>;
 
-    type WindowParameterType: From<WindowParameters>;
+    type WindowParameterType: WindowParameters;
     type WindowType: Window<Self>;
 
-    type MenuParameterType: From<MenuParameters>;
+    type MenuParameterType: MenuParameters;
     type MenuType: Menu<Self>;
 
-    type MenuItemParameterType: From<MenuItemParameters>;
+    type MenuItemParameterType: MenuItemParameters;
     type MenuItemType: MenuItem<Self>;
 }
