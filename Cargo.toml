@@ -51,7 +51,7 @@ simple_logger = "1.6.0" #required to build & run examples
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.23.0"
-core-graphics = "0.21.0"
+core-graphics = "0.22.0"
 objc = "^0.2"
 libc = "0.2.73"
 
