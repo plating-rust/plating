@@ -224,7 +224,7 @@ impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenuItem 
     }
     fn added(&self) -> bool {
         //todo: get 'parent' value and check if not empty!
-        return false;
+        false
     }
 }
 

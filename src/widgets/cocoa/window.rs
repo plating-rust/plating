@@ -729,7 +729,7 @@ impl Child<CocoaRoot, RootChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     }
     fn added(&self) -> bool {
         //todo: get 'parent' value and check if not empty!
-        return false;
+        false
     }
 }
 

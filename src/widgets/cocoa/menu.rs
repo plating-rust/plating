@@ -354,7 +354,7 @@ impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     }
     fn added(&self) -> bool {
         //todo: get 'parent' value and check if not empty!
-        return false;
+        false
     }
 }
 impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
@@ -363,7 +363,7 @@ impl Child<CocoaWindow, MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaMen
     }
     fn added(&self) -> bool {
         //todo: get 'parent' value and check if not empty!
-        return false;
+        false
     }
 
     fn adding_to_parent(

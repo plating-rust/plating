@@ -54,7 +54,7 @@ impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButto
     }
     fn added(&self) -> bool {
         //todo: get 'parent' value and check if not empty!
-        return false;
+        false
     }
 }
 
