@@ -3,7 +3,7 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-use crate::events::{ListenerType};
+use crate::events::ListenerType;
 use crate::features::log::info;
 
 use crate::widgets::button::{Button, ButtonChildren, ButtonHandlerTrait, ButtonParameters};
