@@ -30,6 +30,6 @@ pub trait EventSystem<'a> {
     //todo: detach() -> Result<(), Error>
     //todo: really needed? destroy() -> ()
 
-    //todo: childinject(child) -> Result<(), Error>
-    //todo: childdetach(child) -> Result<(), Error>
+    //todo: child_inject(child) -> Result<(), Error>
+    //todo: child_detach(child) -> Result<(), Error>
 }
