@@ -55,6 +55,8 @@
     clippy::indexing_slicing,
     clippy::integer_arithmetic,
     clippy::integer_division,
+    clippy::clone_on_ref_ptr,
+    clippy::multiple_inherent_impl,
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
