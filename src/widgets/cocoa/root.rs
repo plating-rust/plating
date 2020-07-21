@@ -129,7 +129,7 @@ impl Identity for CocoaRoot {
 impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     type ParentData = ();
 
-    fn iter<'a>(&'a self) -> std::slice::Iter<'a, RootChildren<CocoaSystem>> {
+    fn iter(&self) -> std::slice::Iter<RootChildren<CocoaSystem>> {
         self.main_outlet.iter()
     }
     fn iter_mut(&mut self) -> std::slice::IterMut<'_, RootChildren<CocoaSystem>> {

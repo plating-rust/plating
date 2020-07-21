@@ -232,7 +232,7 @@ impl Identity for CocoaMenu {
 impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     type ParentData = CocoaMenuParentData;
 
-    fn iter<'a>(&'a self) -> std::slice::Iter<'a, MenuChildren<CocoaSystem>> {
+    fn iter(&self) -> std::slice::Iter<MenuChildren<CocoaSystem>> {
         self.main_outlet.iter()
     }
     fn iter_mut(&mut self) -> std::slice::IterMut<'_, MenuChildren<CocoaSystem>> {

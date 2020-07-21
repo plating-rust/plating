@@ -583,7 +583,7 @@ impl NativeWidget<CocoaSystem> for CocoaWindow {
 impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ParentData = CocoaMainMenuParentData;
 
-    fn iter<'a>(&'a self) -> std::slice::Iter<'a, MainMenuChildren<CocoaSystem>> {
+    fn iter(&self) -> std::slice::Iter<MainMenuChildren<CocoaSystem>> {
         self.menu_outlet.iter()
     }
     fn iter_mut(&mut self) -> std::slice::IterMut<'_, MainMenuChildren<CocoaSystem>> {
@@ -662,7 +662,7 @@ impl From<CocoaWindow> for RootChildren<CocoaSystem> {
 impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     type ParentData = ();
 
-    fn iter<'a>(&'a self) -> std::slice::Iter<'a, WindowChildren<CocoaSystem>> {
+    fn iter(&self) -> std::slice::Iter<WindowChildren<CocoaSystem>> {
         self.main_outlet.iter()
     }
     fn iter_mut(&mut self) -> std::slice::IterMut<'_, WindowChildren<CocoaSystem>> {
