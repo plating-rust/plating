@@ -629,7 +629,7 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn is_empty(&self) -> bool {
         self.menu_outlet.is_empty()
     }
-    fn remove_by_index(&mut self, index: usize) -> MainMenuChildren<CocoaSystem> {
+    fn remove_by_index(&mut self, index: usize) -> Option<MainMenuChildren<CocoaSystem>> {
         self.menu_outlet.remove_by_index(index)
     }
     fn remove_by_id<STR: std::borrow::Borrow<str>>(
@@ -703,7 +703,7 @@ impl Outlet<WindowChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
     fn is_empty(&self) -> bool {
         self.main_outlet.is_empty()
     }
-    fn remove_by_index(&mut self, index: usize) -> WindowChildren<CocoaSystem> {
+    fn remove_by_index(&mut self, index: usize) -> Option<WindowChildren<CocoaSystem>> {
         self.main_outlet.remove_by_index(index)
     }
     fn remove_by_id<STR: std::borrow::Borrow<str>>(

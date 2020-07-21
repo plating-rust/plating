@@ -261,13 +261,13 @@ where
     /// Makes sure [`removing_from_parent`](crate::widgets::utils::Child::removing_from_parent) is called.
     ///
     /// See also [`remove_by_id`](OutletHolder::remove_by_id) and [`remove_by_predicate`](OutletHolder::remove_by_predicate).
-    pub fn remove_by_index(&mut self, index: usize) -> CHILD {
-        let child = &mut self.children[index];
+    pub fn remove_by_index(&mut self, index: usize) -> Option<CHILD> {
+        let child = self.children.get_mut(index)?;
         if child.connected() {
             child.disconnecting();
         }
         child.removing_from_parent();
-        self.children.remove(index)
+        Some(self.children.remove(index))
     }
     /// Removes the child with given id.
     ///
@@ -304,7 +304,7 @@ where
         f: F,
     ) -> Result<CHILD, anyhow::Error> {
         match self.children.iter().position(f) {
-            Some(pos) => Ok(self.remove_by_index(pos)),
+            Some(pos) => Ok(self.remove_by_index(pos).unwrap()),
             None => Err(WidgetNotFound {
                 msg: String::from("by predicate"),
                 source: None,
@@ -334,6 +334,7 @@ where
     type Output = CHILD;
 
     fn index(&self, index: usize) -> &CHILD {
+        #[allow(clippy::indexing_slicing)]
         &self.children[index]
     }
 }

@@ -171,7 +171,7 @@ impl Outlet<RootChildren<CocoaSystem>, CocoaSystem> for CocoaRoot {
     fn is_empty(&self) -> bool {
         self.main_outlet.is_empty()
     }
-    fn remove_by_index(&mut self, index: usize) -> RootChildren<CocoaSystem> {
+    fn remove_by_index(&mut self, index: usize) -> Option<RootChildren<CocoaSystem>> {
         self.main_outlet.remove_by_index(index)
     }
     fn remove_by_id<STR: std::borrow::Borrow<str>>(

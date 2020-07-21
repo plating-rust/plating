@@ -36,7 +36,7 @@ where
     where
         T: Into<CHILD>;
 
-    fn remove_by_index(&mut self, index: usize) -> CHILD;
+    fn remove_by_index(&mut self, index: usize) -> Option<CHILD>;
     fn remove_by_id<STR: std::borrow::Borrow<str>>(
         &mut self,
         id: STR,

@@ -51,7 +51,8 @@
     clippy::cognitive_complexity,
     clippy::fallible_impl_from,
     clippy::missing_const_for_fn,
-    clippy::use_self
+    clippy::use_self,
+    clippy::indexing_slicing,
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
