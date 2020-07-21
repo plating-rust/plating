@@ -4,7 +4,7 @@ description = "Macros to use internally"
 version = "0.0.1"
 edition = "2018"
 authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 
 [badges]
 maintenance = { status = "actively-developed" }
