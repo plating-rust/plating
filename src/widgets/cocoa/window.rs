@@ -548,7 +548,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
                 self.handle.setTitle_(title);
             }
             if let Some(alpha_value) = settings.alpha_value {
-                self.handle.setAlphaValue_(alpha_value as CGFloat);
+                self.handle.setAlphaValue_(alpha_value.into());
             }
             /*todo:
             if let Some(can_hide) = settings.can_hide {
