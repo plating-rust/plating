@@ -207,7 +207,7 @@ pub struct CocoaMenu {
 }
 
 impl CocoaMenu {
-    pub(self) fn create_cocoa_menu_parent_data(&self) -> CocoaMenuParentData {
+    pub(self) const fn create_cocoa_menu_parent_data(&self) -> CocoaMenuParentData {
         CocoaMenuParentData {
             item: self.item,
             menu: self.handle,

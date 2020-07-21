@@ -29,7 +29,7 @@ impl CocoaError {
     /// Returns internal error kind.
     ///
     /// Useful for to match against for more fine grained handling of errors
-    pub fn kind(&self) -> &CocoaErrorKind {
+    pub const fn kind(&self) -> &CocoaErrorKind {
         &self.kind
     }
 }

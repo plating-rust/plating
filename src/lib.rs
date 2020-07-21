@@ -47,7 +47,11 @@
 //!
 
 #![warn(clippy::cargo_common_metadata)]
-#![deny(clippy::cognitive_complexity, clippy::fallible_impl_from)]
+#![deny(
+    clippy::cognitive_complexity,
+    clippy::fallible_impl_from,
+    clippy::missing_const_for_fn
+)]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
 //#![deny(missing_docs)]

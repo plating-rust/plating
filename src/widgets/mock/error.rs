@@ -39,7 +39,7 @@ impl MockError {
     /// Returns internal error kind.
     ///
     /// Useful for to match against for more fine grained handling of errors
-    pub fn kind(&self) -> &MockErrorKind {
+    pub const fn kind(&self) -> &MockErrorKind {
         &self.kind
     }
 }
