@@ -524,7 +524,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
                 .autorelease()
         };*/
 
-        let mut new_window = CocoaWindow {
+        let mut new_window = Self {
             id,
             handle: window,
             main_outlet: OutletHolder::default(),
@@ -654,7 +654,7 @@ impl Identity for CocoaWindow {
 
 impl From<CocoaWindow> for RootChildren<CocoaSystem> {
     fn from(window: CocoaWindow) -> Self {
-        RootChildren::WINDOW(window)
+        Self::WINDOW(window)
     }
 }
 

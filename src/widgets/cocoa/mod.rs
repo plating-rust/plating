@@ -65,6 +65,6 @@ impl System for CocoaSystem {
 
 impl std::fmt::Display for CocoaSystem {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", CocoaSystem::name())
+        write!(f, "{}", Self::name())
     }
 }

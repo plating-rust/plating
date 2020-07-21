@@ -60,13 +60,13 @@ impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButto
 
 impl From<CocoaButton> for ButtonChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
-        ButtonChildren::BUTTON(button)
+        Self::BUTTON(button)
     }
 }
 
 impl From<CocoaButton> for WindowChildren<CocoaSystem> {
     fn from(button: CocoaButton) -> Self {
-        WindowChildren::BUTTON(button)
+        Self::BUTTON(button)
     }
 }
 
@@ -74,7 +74,7 @@ impl Widget<CocoaSystem> for CocoaButton {
     type PARAMS = CocoaButtonParameters;
 
     fn new_with_id(id: String, settings: &CocoaButtonParameters) -> PlatingResult<Self> {
-        let mut button = CocoaButton {
+        let mut button = Self {
             id,
             handle: 0 as CocoaDefaultHandleType,
             connected: false,

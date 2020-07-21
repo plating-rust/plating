@@ -15,7 +15,7 @@ pub enum CocoaErrorKind {
 impl fmt::Display for CocoaErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            CocoaErrorKind::TODO => write!(f, "todo"),
+            Self::TODO => write!(f, "todo"),
         }
     }
 }

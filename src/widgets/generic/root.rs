@@ -64,10 +64,7 @@ impl<S: System> Connectable for RootChildren<S> {
 }
 
 impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
-    fn adding_to_parent(
-        &mut self,
-        parent: &<S::RootType as Outlet<RootChildren<S>, S>>::ParentData,
-    ) {
+    fn adding_to_parent(&mut self, parent: &<S::RootType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::WINDOW(window) => window.adding_to_parent(parent),
         }

@@ -96,7 +96,7 @@ impl Widget<CocoaSystem> for CocoaRoot {
             current_app.activateWithOptions_(NSApplicationActivateIgnoringOtherApps);
             app
         };
-        let mut new_root = CocoaRoot {
+        let mut new_root = Self {
             id,
             handle: app,
             main_outlet: OutletHolder::default(),

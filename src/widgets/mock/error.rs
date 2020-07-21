@@ -23,9 +23,9 @@ pub enum MockErrorKind {
 impl fmt::Display for MockErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            MockErrorKind::MockError1 => write!(f, "MockError1"),
-            MockErrorKind::MockError2 => write!(f, "MockError2"),
-            MockErrorKind::MockError3 => write!(f, "MockError3"),
+            Self::MockError1 => write!(f, "MockError1"),
+            Self::MockError2 => write!(f, "MockError2"),
+            Self::MockError3 => write!(f, "MockError3"),
         }
     }
 }

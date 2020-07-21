@@ -75,24 +75,20 @@ impl<S: System> Connectable for MenuChildren<S> {
 impl<S: System> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
     fn adding_to_parent(&mut self, parent: &<S::MenuType as Outlet<Self, S>>::ParentData) {
         match self {
-            Self::MENU(menu) => {
-                <dyn Child<S::MenuType, MenuChildren<S>, S>>::adding_to_parent(menu, parent)
-            }
+            Self::MENU(menu) => <dyn Child<S::MenuType, Self, S>>::adding_to_parent(menu, parent),
             Self::ITEM(item) => item.adding_to_parent(parent),
         }
     }
 
     fn removing_from_parent(&mut self) {
         match self {
-            Self::MENU(menu) => {
-                <dyn Child<S::MenuType, MenuChildren<S>, S>>::removing_from_parent(menu)
-            }
+            Self::MENU(menu) => <dyn Child<S::MenuType, Self, S>>::removing_from_parent(menu),
             Self::ITEM(item) => item.removing_from_parent(),
         }
     }
     fn added(&self) -> bool {
         match self {
-            Self::MENU(menu) => <dyn Child<S::MenuType, MenuChildren<S>, S>>::added(menu),
+            Self::MENU(menu) => <dyn Child<S::MenuType, Self, S>>::added(menu),
             Self::ITEM(item) => item.added(),
         }
     }

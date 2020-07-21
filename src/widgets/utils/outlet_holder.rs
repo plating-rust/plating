@@ -130,7 +130,7 @@ where
     S: System,
 {
     /// Returns an empty, unconnected OutletHolder
-    fn default() -> OutletHolder<CHILD, Parent, S> {
+    fn default() -> Self {
         Self {
             children: vec![],
             connected: false,

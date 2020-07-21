@@ -179,7 +179,7 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
 
     fn new_with_id(id: String, settings: &CocoaMenuItemParameters) -> PlatingResult<Self> {
         let menu_item = unsafe { NSMenuItem::new(nil).autorelease() };
-        let mut new_menu_item = CocoaMenuItem {
+        let mut new_menu_item = Self {
             id,
             handle: menu_item,
             connected: false,
@@ -230,7 +230,7 @@ impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenuItem 
 
 impl From<CocoaMenuItem> for MenuChildren<CocoaSystem> {
     fn from(menu_item: CocoaMenuItem) -> Self {
-        MenuChildren::ITEM(menu_item)
+        Self::ITEM(menu_item)
     }
 }
 

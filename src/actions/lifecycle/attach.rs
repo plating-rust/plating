@@ -26,7 +26,7 @@ impl<W: Widget<S>, S: System> AttachEvent<W, S> {
 }
 impl<W: Widget<S>, S: System> Clone for AttachEvent<W, S> {
     fn clone(&self) -> Self {
-        AttachEvent {
+        Self {
             _s: self._s,
             _w: self._w,
         }

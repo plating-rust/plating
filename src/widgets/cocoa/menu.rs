@@ -308,7 +308,7 @@ impl Widget<CocoaSystem> for CocoaMenu {
             item.setSubmenu_(menu);
             item
         };
-        let mut new_menu = CocoaMenu {
+        let mut new_menu = Self {
             id,
             handle: menu,
             item: menu_item,
@@ -345,7 +345,7 @@ impl NativeWidget<CocoaSystem> for CocoaMenu {
 impl Child<CocoaMenu, MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
     fn adding_to_parent(
         &mut self,
-        _parent: &<CocoaMenu as Outlet<MenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
+        _parent: &<Self as Outlet<MenuChildren<CocoaSystem>, CocoaSystem>>::ParentData,
     ) {
         //todo: invoke message handlers
     }

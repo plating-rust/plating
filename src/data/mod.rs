@@ -131,8 +131,8 @@ pub struct RGBA {
 impl RGBA {
     /// constructor taking all 4 components of a RGBA Color
     #[inline]
-    pub const fn new(r: u8, g: u8, b: u8, a: u8) -> RGBA {
-        RGBA { r, g, b, a }
+    pub const fn new(r: u8, g: u8, b: u8, a: u8) -> Self {
+        Self { r, g, b, a }
     }
 
     /// Creates a black RGBA color.
@@ -145,8 +145,8 @@ impl RGBA {
     /// assert_eq!(value, RGBA::new(0, 0, 0, 0));
     /// ```
     #[inline]
-    pub const fn black() -> RGBA {
-        RGBA::new(0, 0, 0, 0)
+    pub const fn black() -> Self {
+        Self::new(0, 0, 0, 0)
     }
     /// Creates a white RGBA color.
     /// non-transparent
@@ -158,8 +158,8 @@ impl RGBA {
     /// assert_eq!(value, RGBA::new(255, 255, 255, 0));
     /// ```
     #[inline]
-    pub const fn white() -> RGBA {
-        RGBA::new(255, 255, 255, 0)
+    pub const fn white() -> Self {
+        Self::new(255, 255, 255, 0)
     }
 
     /// Create a transparent color.
@@ -175,16 +175,16 @@ impl RGBA {
     /// assert_eq!(value, RGBA::new(0, 0, 0, 255));
     /// ```
     #[inline]
-    pub const fn transparent() -> RGBA {
-        RGBA::new(0, 0, 0, 255)
+    pub const fn transparent() -> Self {
+        Self::new(0, 0, 0, 255)
     }
 }
 /// Converts a RGB Color to an RGBA color by keeping the rgb part and
 /// setting the alpha value to `0`.
 impl From<RGB> for RGBA {
     #[inline]
-    fn from(rgb: RGB) -> RGBA {
-        RGBA::new(rgb.r, rgb.g, rgb.b, 0)
+    fn from(rgb: RGB) -> Self {
+        Self::new(rgb.r, rgb.g, rgb.b, 0)
     }
 }
 
@@ -207,8 +207,8 @@ pub struct RGB {
 impl RGB {
     /// constructor taking all 3 components of a RGBA Color
     #[inline]
-    pub const fn new(r: u8, g: u8, b: u8) -> RGB {
-        RGB { r, g, b }
+    pub const fn new(r: u8, g: u8, b: u8) -> Self {
+        Self { r, g, b }
     }
 
     /// Creates a black RGB color.
@@ -221,8 +221,8 @@ impl RGB {
     /// assert_eq!(value, RGB::new(0, 0, 0));
     /// ```
     #[inline]
-    pub const fn black() -> RGB {
-        RGB::new(0, 0, 0)
+    pub const fn black() -> Self {
+        Self::new(0, 0, 0)
     }
     /// Creates a white RGB color.
     ///
@@ -234,8 +234,8 @@ impl RGB {
     /// assert_eq!(value, RGB::new(255, 255, 255));
     /// ```
     #[inline]
-    pub const fn white() -> RGB {
-        RGB::new(255, 255, 255)
+    pub const fn white() -> Self {
+        Self::new(255, 255, 255)
     }
 }
 
@@ -254,7 +254,7 @@ pub enum Color {
 /// Defaults to a *black* [`RGB`] color.
 impl Default for Color {
     #[inline]
-    fn default() -> Color {
+    fn default() -> Self {
         Self::RGB(RGB::black())
     }
 }

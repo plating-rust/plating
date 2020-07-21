@@ -100,10 +100,7 @@ impl<S: System> Connectable for WindowChildren<S> {
 }
 
 impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
-    fn adding_to_parent(
-        &mut self,
-        parent: &<S::WindowType as Outlet<WindowChildren<S>, S>>::ParentData,
-    ) {
+    fn adding_to_parent(&mut self, parent: &<S::WindowType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::BUTTON(button) => button.adding_to_parent(parent),
         }
@@ -164,14 +161,9 @@ impl<S: System> Connectable for MainMenuChildren<S> {
     }
 }
 impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
-    fn adding_to_parent(
-        &mut self,
-        parent: &<S::WindowType as Outlet<MainMenuChildren<S>, S>>::ParentData,
-    ) {
+    fn adding_to_parent(&mut self, parent: &<S::WindowType as Outlet<Self, S>>::ParentData) {
         match self {
-            Self::MENU(menu) => {
-                <dyn Child<S::WindowType, MainMenuChildren<S>, S>>::adding_to_parent(menu, parent)
-            }
+            Self::MENU(menu) => <dyn Child<S::WindowType, Self, S>>::adding_to_parent(menu, parent),
         }
     }
     fn removing_from_parent(&mut self) {

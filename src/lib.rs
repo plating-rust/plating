@@ -50,7 +50,8 @@
 #![deny(
     clippy::cognitive_complexity,
     clippy::fallible_impl_from,
-    clippy::missing_const_for_fn
+    clippy::missing_const_for_fn,
+    clippy::use_self
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
