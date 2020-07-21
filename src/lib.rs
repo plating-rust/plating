@@ -46,6 +46,8 @@
 //! dual licensed as above, without any additional terms or conditions.
 //!
 
+#![warn(clippy::cargo_common_metadata)]
+
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
 //#![deny(missing_docs)]

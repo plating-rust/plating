@@ -1,10 +1,16 @@
 [package]
 name = "plating-uuid-macro-hack"
-description = "Macros to use internally"
+description = "Macros to use internally. Do not use this crate directly but use 'plating'"
 version = "0.0.1"
 edition = "2018"
 authors = ["Marcel Lambert <marcel.lambert@ymail.com>"]
 license = "MIT OR Apache-2.0"
+categories = ["gui", "rust-patterns"]
+keywords = ["gui", "native", "macro"]
+documentation = "https://docs.rs/plating/"
+homepage = "https://plating-rust.github.io/"
+repository = "https://github.com/plating-rust/plating"
+readme = "../README.md"
 
 [badges]
 maintenance = { status = "actively-developed" }
