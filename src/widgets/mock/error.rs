@@ -30,7 +30,7 @@ impl fmt::Display for MockErrorKind {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Error)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Error)]
 #[error("MockError: {kind}")]
 pub struct MockError {
     kind: MockErrorKind,

@@ -20,7 +20,7 @@ impl fmt::Display for CocoaErrorKind {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Error, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Error, Serialize, Deserialize)]
 #[error("CocoaError: {kind}")]
 pub struct CocoaError {
     kind: CocoaErrorKind,
