@@ -9,7 +9,7 @@ use crate::widgets::{default_system, System};
 pub trait Outlet<CHILD, S = default_system>
 where
     CHILD: Identity,
-    S: System,
+    S: System + ?Sized,
 {
     type ParentData;
 

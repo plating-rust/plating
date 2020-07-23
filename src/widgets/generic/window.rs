@@ -57,12 +57,12 @@ pub trait WindowParameters: Parameters {
     fn unset_fullscreenable(&mut self) -> &mut Self;
 }
 
-pub trait WindowHandlerTrait<S: System> //:
+pub trait WindowHandlerTrait<S: System + ?Sized> //:
 //AttachTopic<S::RootType, S>
 {
 }
 
-pub trait Window<S: System>:
+pub trait Window<S: System + ?Sized>:
     Widget<S, PARAMS = S::WindowParameterType>
     + Outlet<WindowChildren<S>, S>
     + Outlet<MainMenuChildren<S>, S>
@@ -75,11 +75,11 @@ pub trait Window<S: System>:
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum WindowChildren<S: System = default_system> {
+pub enum WindowChildren<S: System + ?Sized = default_system> {
     BUTTON(S::ButtonType),
 }
 
-impl<S: System> Connectable for WindowChildren<S> {
+impl<S: System + ?Sized> Connectable for WindowChildren<S> {
     fn connecting(&mut self) {
         match self {
             Self::BUTTON(button) => button.connecting(),
@@ -99,7 +99,7 @@ impl<S: System> Connectable for WindowChildren<S> {
     }
 }
 
-impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
+impl<S: System + ?Sized> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S> {
     fn adding_to_parent(&mut self, parent: &<S::WindowType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::BUTTON(button) => button.adding_to_parent(parent),
@@ -118,7 +118,7 @@ impl<S: System> Child<S::WindowType, WindowChildren<S>, S> for WindowChildren<S>
     }
 }
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Identity for WindowChildren<S> {
+impl<S: System + ?Sized> Identity for WindowChildren<S> {
     fn id(&self) -> &str {
         match self {
             Self::BUTTON(button) => button.id(),
@@ -128,12 +128,12 @@ impl<S: System> Identity for WindowChildren<S> {
 
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum MainMenuChildren<S: System = default_system> {
+pub enum MainMenuChildren<S: System + ?Sized = default_system> {
     MENU(S::MenuType),
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Identity for MainMenuChildren<S> {
+impl<S: System + ?Sized> Identity for MainMenuChildren<S> {
     fn id(&self) -> &str {
         match self {
             Self::MENU(menu) => menu.id(),
@@ -141,7 +141,7 @@ impl<S: System> Identity for MainMenuChildren<S> {
     }
 }
 
-impl<S: System> Connectable for MainMenuChildren<S> {
+impl<S: System + ?Sized> Connectable for MainMenuChildren<S> {
     fn connecting(&mut self) {
         match self {
             Self::MENU(menu) => menu.connecting(),
@@ -160,7 +160,7 @@ impl<S: System> Connectable for MainMenuChildren<S> {
         }
     }
 }
-impl<S: System> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
+impl<S: System + ?Sized> Child<S::WindowType, MainMenuChildren<S>, S> for MainMenuChildren<S> {
     fn adding_to_parent(&mut self, parent: &<S::WindowType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::MENU(menu) => <dyn Child<S::WindowType, Self, S>>::adding_to_parent(menu, parent),

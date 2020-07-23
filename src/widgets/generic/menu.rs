@@ -22,7 +22,7 @@ pub trait MenuHandlerTrait {
     //closing menu
 }
 
-pub trait Menu<S: System>:
+pub trait Menu<S: System + ?Sized>:
     Widget<S, PARAMS = S::MenuParameterType>
     + MenuHandlerTrait
     + Outlet<MenuChildren<S>, S>
@@ -34,13 +34,13 @@ pub trait Menu<S: System>:
 // todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum MenuChildren<S: System = default_system> {
+pub enum MenuChildren<S: System + ?Sized = default_system> {
     ITEM(S::MenuItemType), //todo
     MENU(S::MenuType),
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Identity for MenuChildren<S> {
+impl<S: System + ?Sized> Identity for MenuChildren<S> {
     fn id(&self) -> &str {
         match self {
             Self::MENU(menu) => menu.id(),
@@ -49,7 +49,7 @@ impl<S: System> Identity for MenuChildren<S> {
     }
 }
 
-impl<S: System> Connectable for MenuChildren<S> {
+impl<S: System + ?Sized> Connectable for MenuChildren<S> {
     fn connecting(&mut self) {
         match self {
             Self::MENU(menu) => menu.connecting(),
@@ -72,7 +72,7 @@ impl<S: System> Connectable for MenuChildren<S> {
     }
 }
 
-impl<S: System> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
+impl<S: System + ?Sized> Child<S::MenuType, MenuChildren<S>, S> for MenuChildren<S> {
     fn adding_to_parent(&mut self, parent: &<S::MenuType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::MENU(menu) => <dyn Child<S::MenuType, Self, S>>::adding_to_parent(menu, parent),

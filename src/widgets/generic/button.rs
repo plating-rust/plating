@@ -16,7 +16,7 @@ pub trait ButtonParameters: Parameters {
     fn unset_label(&mut self) -> &mut Self;
 }
 
-pub trait ButtonHandlerTrait<S: System> //:
+pub trait ButtonHandlerTrait<S: System + ?Sized> //:
 //    AttachTopic<S::Window, S>
 {
     fn set_exit_handler(&mut self, handler: Box<impl FnMut()>);
@@ -29,7 +29,7 @@ pub trait ButtonHandlerTrait<S: System> //:
 /// Widgets implementing this trait, also need to implement
 /// - NativeWidget
 /// - Child
-pub trait Button<S: System>:
+pub trait Button<S: System + ?Sized>:
     Widget<S, PARAMS = S::ButtonParameterType>
     + ButtonHandlerTrait<S>
     + Child<S::WindowType, WindowChildren<S>, S>

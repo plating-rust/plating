@@ -44,7 +44,7 @@ use crate::widgets::{
 /// ````
 pub trait System
 where
-    Self: std::fmt::Debug + Sized + std::fmt::Display,
+    Self: std::fmt::Debug + std::fmt::Display,
 {
     /// Returns the name of this system.
     fn name() -> &'static str;

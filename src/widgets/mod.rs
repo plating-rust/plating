@@ -137,7 +137,7 @@ pub mod platform_dependant {
     ///
     ///Anything you do with the native handle is your responsibility and can at any point fail in the future.
     /// This is not officially part of the API. You have been warned.
-    pub trait NativeWidget<S: System> {
+    pub trait NativeWidget<S: System + ?Sized> {
         fn native(&self) -> &S::InternalHandle;
         unsafe fn native_mut(&mut self) -> &mut S::InternalHandle;
     }

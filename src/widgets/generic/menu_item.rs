@@ -27,7 +27,7 @@ pub trait MenuItemHandlerTrait {
     //focusing on item
 }
 
-pub trait MenuItem<S: System>:
+pub trait MenuItem<S: System + ?Sized>:
     Widget<S, PARAMS = S::MenuItemParameterType>
     + MenuItemHandlerTrait
     + Child<S::MenuType, MenuChildren<S>, S>

@@ -97,7 +97,7 @@ use std::borrow::Borrow;
 pub trait Widget<S>
 where
     Self: Identity + std::fmt::Debug + Sized + NativeWidget<S>,
-    S: System,
+    S: System + ?Sized,
 {
     /// The Parameter type this struct requires when creating or applying changes to it.
     type PARAMS;

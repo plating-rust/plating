@@ -16,7 +16,7 @@ pub trait Child<ParentType, ChildType, S>: Connectable
 where
     ChildType: Identity,
     ParentType: Widget<S> + Outlet<ChildType, S>,
-    S: System,
+    S: System + ?Sized,
 {
     /// Will be called when this Widget gets added to a parent.
     ///

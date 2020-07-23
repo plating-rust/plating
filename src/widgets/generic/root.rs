@@ -20,7 +20,7 @@ pub trait RootHandlerTrait {
 /// #Requirements
 /// Widgets implementing this trait, also need to implement NativeWidget as well
 /// as OutletAdapter<RootChildren<S>>
-pub trait Root<S: System>:
+pub trait Root<S: System + ?Sized>:
     Widget<S, PARAMS = S::RootParameterType> + Outlet<RootChildren<S>, S> + RootHandlerTrait + Default
 {
     /// Calling this function starts the main loop.
@@ -31,11 +31,11 @@ pub trait Root<S: System>:
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
 #[derive(Debug)]
 #[non_exhaustive]
-pub enum RootChildren<S: System = default_system> {
+pub enum RootChildren<S: System + ?Sized = default_system> {
     WINDOW(S::WindowType),
 }
 
-impl<S: System> Identity for RootChildren<S> {
+impl<S: System + ?Sized> Identity for RootChildren<S> {
     fn id(&self) -> &str {
         match self {
             Self::WINDOW(window) => window.id(),
@@ -43,7 +43,7 @@ impl<S: System> Identity for RootChildren<S> {
     }
 }
 
-impl<S: System> Connectable for RootChildren<S> {
+impl<S: System + ?Sized> Connectable for RootChildren<S> {
     fn connecting(&mut self) {
         match self {
             Self::WINDOW(window) => window.connecting(),
@@ -63,7 +63,7 @@ impl<S: System> Connectable for RootChildren<S> {
     }
 }
 
-impl<S: System> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
+impl<S: System + ?Sized> Child<S::RootType, RootChildren<S>, S> for RootChildren<S> {
     fn adding_to_parent(&mut self, parent: &<S::RootType as Outlet<Self, S>>::ParentData) {
         match self {
             Self::WINDOW(window) => window.adding_to_parent(parent),
