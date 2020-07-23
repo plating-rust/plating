@@ -26,6 +26,7 @@ use core_graphics::base::CGFloat;
 use objc::declare::ClassDecl;
 use objc::runtime::{Object, Sel};
 use plating_macros::bitflag_parameter;
+use std::borrow::Borrow;
 use std::fmt;
 
 bitflag_parameter! {
@@ -492,7 +493,11 @@ extern "C" fn mouse_down(obj: &Object, _: Sel, ev: id) {
 impl Widget<CocoaSystem> for CocoaWindow {
     type PARAMS = CocoaWindowParameters;
 
-    fn new_with_id(id: String, settings: &CocoaWindowParameters) -> PlatingResult<Self> {
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<Self::PARAMS>,
+    {
         //set view controller
         let window = unsafe {
             let superclass = class!(NSWindow);
@@ -527,7 +532,7 @@ impl Widget<CocoaSystem> for CocoaWindow {
         };*/
 
         let mut new_window = Self {
-            id,
+            id: id.into(),
             handle: window,
             main_outlet: OutletHolder::default(),
             menu_outlet: OutletHolder::default(),
@@ -542,27 +547,32 @@ impl Widget<CocoaSystem> for CocoaWindow {
         Ok(new_window)
     }
 
-    fn apply(&mut self, settings: &CocoaWindowParameters) -> PlatingResult<()> {
-        log::info!("applying settings: {:?}", settings);
+    fn apply<PARAMS>(&mut self, settings: PARAMS) -> PlatingResult<()>
+    where
+        PARAMS: Borrow<Self::PARAMS>,
+    {
+        let window_parameters = settings.borrow();
+        log::info!("applying settings: {:?}", window_parameters);
+
         unsafe {
-            if let Some(label) = &settings.label {
+            if let Some(label) = &window_parameters.label {
                 let title = NSString::alloc(nil).init_str(label);
                 self.handle.setTitle_(title);
             }
-            if let Some(alpha_value) = settings.alpha_value {
+            if let Some(alpha_value) = window_parameters.alpha_value {
                 self.handle.setAlphaValue_(alpha_value.into());
             }
             /*todo:
-            if let Some(can_hide) = settings.can_hide {
+            if let Some(can_hide) = window_parameters.can_hide {
                 self.handle.setCanHide_(can_hide as i8);
             }
-            if let Some(hides_on_deactivate) = settings.hides_on_deactivate {
+            if let Some(hides_on_deactivate) = window_parameters.hides_on_deactivate {
                 self.handle.setHidesOnDeactivate_(hides_on_deactivate as i8);
             }
-            if let Some(is_opaque) = settings.is_opaque {
+            if let Some(is_opaque) = window_parameters.is_opaque {
                 self.handle.setOpaque_(is_opaque as i8);
             }*/
-            if let Some(window_style) = settings.window_style {
+            if let Some(window_style) = window_parameters.window_style {
                 let old_mask = self.handle.styleMask();
                 self.handle.setStyleMask_(
                     window_style

@@ -5,6 +5,7 @@
 use crate::widgets::platform_dependant::NativeWidget;
 use crate::widgets::utils::Identity;
 use crate::widgets::System;
+use std::borrow::Borrow;
 
 /// Trait for all Widget Objects.
 ///
@@ -110,17 +111,25 @@ where
     /// Widgets are encouraged to implement the [`Default`] trait when appropriate.
     ///
     /// See also: [`new_with_id`](Widget::new_with_id).
-    fn new(settings: &Self::PARAMS) -> Result<Self, anyhow::Error> {
-        Self::new_with_id(uuid::Uuid::new_v4().to_string(), settings)
+    fn new<PARAMS>(settings: PARAMS) -> Result<Self, anyhow::Error>
+    where
+        PARAMS: Borrow<Self::PARAMS>,
+    {
+        Self::new_with_id::<String, PARAMS>(uuid::Uuid::new_v4().to_string(), settings)
     }
 
     /// Constructor that takes an ID and settings and returns Self.
     ///
     /// See also: [`new`](Widget::new).
-    fn new_with_id(id: String, settings: &Self::PARAMS) -> Result<Self, anyhow::Error>;
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> Result<Self, anyhow::Error>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<Self::PARAMS>;
 
     /// Applies settings to this widget
     ///
     /// See also: [`new`](Widget::new).
-    fn apply(&mut self, settings: &Self::PARAMS) -> Result<(), anyhow::Error>;
+    fn apply<PARAMS>(&mut self, settings: PARAMS) -> Result<(), anyhow::Error>
+    where
+        PARAMS: Borrow<Self::PARAMS>;
 }

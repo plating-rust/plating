@@ -21,6 +21,8 @@ use cocoa::appkit::{
 use cocoa::base::nil;
 use cocoa::foundation::NSAutoreleasePool;
 
+use std::borrow::Borrow;
+
 pub trait CocoaRootPlatformParameters {}
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)] //not required but useful
@@ -84,7 +86,11 @@ impl RootHandlerTrait for CocoaRoot {
 impl Widget<CocoaSystem> for CocoaRoot {
     type PARAMS = CocoaRootParameters;
 
-    fn new_with_id(id: String, settings: &CocoaRootParameters) -> PlatingResult<Self> {
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<Self::PARAMS>,
+    {
         let app = unsafe {
             let _pool = NSAutoreleasePool::new(nil);
 
@@ -98,7 +104,7 @@ impl Widget<CocoaSystem> for CocoaRoot {
             app
         };
         let mut new_root = Self {
-            id,
+            id: id.into(),
             handle: app,
             main_outlet: OutletHolder::default(),
         };
@@ -108,7 +114,10 @@ impl Widget<CocoaSystem> for CocoaRoot {
         Ok(new_root)
     }
 
-    fn apply(&mut self, _settings: &CocoaRootParameters) -> PlatingResult<()> {
+    fn apply<PARAMS>(&mut self, _settings: PARAMS) -> PlatingResult<()>
+    where
+        PARAMS: Borrow<Self::PARAMS>,
+    {
         Ok(())
     }
 }

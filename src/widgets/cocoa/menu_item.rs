@@ -16,6 +16,8 @@ use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
+use std::borrow::Borrow;
+
 pub trait CocoaMenuPlatformParameters {
     fn tag(&self) -> &Option<i32>;
 
@@ -177,10 +179,14 @@ impl Identity for CocoaMenuItem {
 impl Widget<CocoaSystem> for CocoaMenuItem {
     type PARAMS = CocoaMenuItemParameters;
 
-    fn new_with_id(id: String, settings: &CocoaMenuItemParameters) -> PlatingResult<Self> {
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<Self::PARAMS>,
+    {
         let menu_item = unsafe { NSMenuItem::new(nil).autorelease() };
         let mut new_menu_item = Self {
-            id,
+            id: id.into(),
             handle: menu_item,
             connected: false,
         };
@@ -188,10 +194,14 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
         Ok(new_menu_item)
     }
 
-    fn apply(&mut self, settings: &CocoaMenuItemParameters) -> PlatingResult<()> {
-        log::info!("applying settings: {:?}", settings);
+    fn apply<PARAMS>(&mut self, settings: PARAMS) -> PlatingResult<()>
+    where
+        PARAMS: Borrow<Self::PARAMS>,
+    {
+        let menu_parameters = settings.borrow();
+        log::info!("applying settings: {:?}", menu_parameters);
         unsafe {
-            if let Some(label) = settings.label() {
+            if let Some(label) = menu_parameters.label() {
                 let label = NSString::alloc(nil).init_str(&label);
                 self.handle.setTitle_(label);
             }

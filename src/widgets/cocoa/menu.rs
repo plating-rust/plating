@@ -20,6 +20,8 @@ use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 use objc::*;
 
+use std::borrow::Borrow;
+
 //todo: implement!
 pub trait CocoaMenuPlatformParameters {
     fn auto_enables_items(&self) -> &Option<bool>;
@@ -296,7 +298,11 @@ impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {
 impl Widget<CocoaSystem> for CocoaMenu {
     type PARAMS = CocoaMenuParameters;
 
-    fn new_with_id(id: String, settings: &CocoaMenuParameters) -> PlatingResult<Self> {
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<Self::PARAMS>,
+    {
         log::info!("Creating menu");
         let menu = unsafe {
             let menu = NSMenu::alloc(nil);
@@ -309,7 +315,7 @@ impl Widget<CocoaSystem> for CocoaMenu {
             item
         };
         let mut new_menu = Self {
-            id,
+            id: id.into(),
             handle: menu,
             item: menu_item,
             main_outlet: OutletHolder::default(),
@@ -319,10 +325,15 @@ impl Widget<CocoaSystem> for CocoaMenu {
         Ok(new_menu)
     }
 
-    fn apply(&mut self, settings: &CocoaMenuParameters) -> PlatingResult<()> {
-        log::info!("applying settings: {:?}", settings);
+    fn apply<PARAMS>(&mut self, settings: PARAMS) -> PlatingResult<()>
+    where
+        PARAMS: Borrow<Self::PARAMS>,
+    {
+        let cocoa_params = settings.borrow();
+        log::info!("applying settings: {:?}", cocoa_params);
+
         unsafe {
-            if let Some(label) = settings.label() {
+            if let Some(label) = cocoa_params.label() {
                 let label = NSString::alloc(nil).init_str(&label);
                 self.handle.setTitle_(label);
             }

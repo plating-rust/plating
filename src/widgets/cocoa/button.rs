@@ -17,6 +17,8 @@ use crate::widgets::{System, Widget};
 use crate::PlatingResult;
 use cocoa::base::nil;
 
+use std::borrow::Borrow;
+
 #[derive(Debug)]
 pub struct CocoaButton {
     ///auto generate and add via derive(widgetParent(A, B    ))
@@ -74,9 +76,13 @@ impl From<CocoaButton> for WindowChildren<CocoaSystem> {
 impl Widget<CocoaSystem> for CocoaButton {
     type PARAMS = CocoaButtonParameters;
 
-    fn new_with_id(id: String, settings: &CocoaButtonParameters) -> PlatingResult<Self> {
+    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+    where
+        STR: Into<String>,
+        PARAMS: Borrow<CocoaButtonParameters>,
+    {
         let mut button = Self {
-            id,
+            id: id.into(),
             handle: nil,
             connected: false,
             //main_outlet: Outlet::<ButtonChildren>::default(),
@@ -85,8 +91,13 @@ impl Widget<CocoaSystem> for CocoaButton {
         Ok(button)
     }
 
-    fn apply(&mut self, settings: &CocoaButtonParameters) -> PlatingResult<()> {
-        if settings.label().is_some() {
+    fn apply<PARAMS>(&mut self, settings: PARAMS) -> PlatingResult<()>
+    where
+        PARAMS: Borrow<CocoaButtonParameters>,
+    {
+        let cocoa_params = settings.borrow();
+
+        if cocoa_params.label().is_some() {
             info!("settings label");
         }
         Ok(())
