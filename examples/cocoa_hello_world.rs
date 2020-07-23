@@ -36,7 +36,7 @@ use objc::{Encode, EncodeArguments, Encoding, Message};
 use std::ffi::CString;
 use std::fmt::Display;
 
-extern "C" fn windowWillResize(_: &Object, _: Sel, to: NSSize) -> NSSize {
+extern "C" fn window_will_resize(_: &Object, _: Sel, to: NSSize) -> NSSize {
     log::info!("new size: ({},{})", to.width, to.height);
     to
 }
@@ -113,7 +113,7 @@ fn main() -> PlatingResult<()> {
 
         decl.add_method(
             sel!(windowWillResize:),
-            windowWillResize as extern "C" fn(&Object, Sel, NSSize) -> NSSize,
+            window_will_resize as extern "C" fn(&Object, Sel, NSSize) -> NSSize,
         );
 
         decl.add_method(
