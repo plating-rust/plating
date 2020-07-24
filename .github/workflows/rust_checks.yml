@@ -1,0 +1,125 @@
+name: Rust
+
+env:
+  CARGO_TERM_COLOR: always
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+        rust:
+          - stable
+          - nightly
+          # TODO: find minimal supported rust version - 1.0.0
+
+    runs-on: ${{ matrix.os }}
+    env:
+      OS: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+          toolchain: ${{ matrix.rust }}
+          profile: minimal
+          override: true
+    - name: Build ${{ matrix.rust }}
+      run: cargo build --verbose
+
+  test_nightly:
+    name: test (nightly)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    env:
+      OS: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+          toolchain: nightly
+          profile: minimal
+          override: true
+    - name: Test (nightly)
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
+        args: --all --all-features --no-fail-fast
+      env:
+        CARGO_INCREMENTAL: '0'
+        RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests'
+        RUSTDOCFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests'
+    - name: rust-grcov
+      uses: actions-rs/grcov@v0.1.5
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        file: /tmp/lcov.info
+        env_vars: OS
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+        rust:
+          - stable
+          # TODO: find minimal supported rust version - 1.0.0
+
+    runs-on: ${{ matrix.os }}
+    env:
+      OS: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+          toolchain: ${{ matrix.rust }}
+          profile: minimal
+          override: true
+    - name: Test (${{ matrix.rust }})
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
+        args: --all --features mock_os --no-fail-fast
+      env:
+        CARGO_INCREMENTAL: '0'
+
+  lints:
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+
+    - name: Rustfmt
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+    - name: Clippy
+      uses: actions-rs/clippy-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        args: --features mock_os
+
+# todo: make sure documentation builds
