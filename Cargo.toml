@@ -30,7 +30,7 @@ maintenance = { status = "actively-developed" }
 
 [features]
 default = ["serde", "log"]
-
+nightly_docs = []
 mock_os = []
 
 [dependencies]

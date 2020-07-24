@@ -61,7 +61,7 @@
     clippy::wrong_pub_self_convention,
     clippy::unwrap_used
 )]
-#![feature(doc_cfg)]
+#![cfg_attr(feature = "nightly_docs", feature(doc_cfg))]
 #![deny(missing_debug_implementations)]
 #![warn(unreachable_pub)]
 //#![deny(missing_copy_implementations)]

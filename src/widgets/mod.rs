@@ -75,11 +75,11 @@ pub use generic::window;
 pub mod mock; //Always included, even without `mock_os` feature flag
 
 #[cfg(any(target_os = "macos", doc))]
-#[doc(cfg(target_os = "macos"))]
+#[cfg_attr(feature = "nightly_docs", doc(cfg(target_os = "macos")))]
 pub mod cocoa;
 
 #[cfg(any(target_os = "windows", doc))]
-#[doc(cfg(target_os = "windows"))]
+#[cfg_attr(feature = "nightly_docs", doc(cfg(target_os = "windows")))]
 pub mod win;
 
 //todo: pub mod linux;
@@ -113,10 +113,10 @@ pub mod native {
     ///
     /// Even if you enable the feature `mock_os` it will still use the above systems. Use [`default_system`] if you want to use the mock system instead.
     #[cfg(target_os = "macos")]
-    #[doc(cfg(target_os = "macos"))]
+    #[cfg_attr(feature = "nightly_docs", doc(cfg(target_os = "macos")))]
     pub use crate::widgets::cocoa::CocoaSystem as System;
     #[cfg(target_os = "windows")]
-    #[doc(cfg(target_os = "windows"))]
+    #[cfg_attr(feature = "nightly_docs", doc(cfg(target_os = "windows")))]
     pub use crate::widgets::win::WinSystem as System;
 }
 
