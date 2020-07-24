@@ -58,7 +58,7 @@
     clippy::clone_on_ref_ptr,
     clippy::multiple_inherent_impl,
     clippy::wrong_pub_self_convention,
-    clippy::unwrap_used,
+    clippy::unwrap_used
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
