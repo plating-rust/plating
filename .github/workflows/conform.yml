@@ -1,0 +1,11 @@
+name: Conform Check
+on:
+  pull_request:
+  push:
+    branches: [ master ]
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Conform Action
+            uses: talos-systems/conform@v0.1.0-alpha.19
