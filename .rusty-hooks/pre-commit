@@ -15,7 +15,7 @@ cargo fmt --all -- --check
 
 # Run tests of the main project as well as the subprojects
 echo '+cargo test --all'
-#cargo test --all --no-fail-fast --quiet
+cargo test --all --no-fail-fast --quiet
 
 
 # run clippy
