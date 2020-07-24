@@ -14,6 +14,7 @@ readme = "../README.md"
 
 [badges]
 maintenance = { status = "actively-developed" }
+codecov = { repository = "plating-rust/plating", branch = "master", service = "github" }
 
 [dependencies]
 uuid = { version = "^0.8", features = ["v4"] }

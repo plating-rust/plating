@@ -9,6 +9,9 @@
 [![Book](https://img.shields.io/badge/book-master-yellow.svg)](https://plating-rust.github.io/)
 [![Docs](https://docs.rs/plating/badge.svg)
 (https://docs.rs/plating/)
+[![codecov](https://codecov.io/gh/plating-rust/plating/branch/master/graph/badge.svg)](https://codecov.io/gh/plating-rust/plating)
+
+
 
  TODO: short description of what it does
 
