@@ -6,7 +6,7 @@
 use cocoa::base::{id, nil};
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
-pub fn make_ns_string(s: &str) -> id {
+pub(crate) fn make_ns_string(s: &str) -> id {
     unsafe { NSString::alloc(nil).init_str(s).autorelease() }
 }
 
@@ -17,7 +17,7 @@ pub(super) mod serde {
     use serde::{de::Visitor, Deserializer};
 
     //todo: macroize!
-    pub fn deserialize_ns_window_style_mask<'de, D>(
+    pub(crate) fn deserialize_ns_window_style_mask<'de, D>(
         d: D,
     ) -> Result<Option<NSWindowStyleMask>, D::Error>
     where
