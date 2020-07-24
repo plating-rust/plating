@@ -48,6 +48,7 @@
 
 #![warn(clippy::cargo_common_metadata)]
 #![deny(
+    //clippy::multiple_crate_versions,
     clippy::cognitive_complexity,
     clippy::fallible_impl_from,
     clippy::missing_const_for_fn,
@@ -62,6 +63,8 @@
 )]
 #![feature(doc_cfg)]
 #![deny(missing_debug_implementations)]
+#![warn(unreachable_pub)]
+//#![deny(missing_copy_implementations)]
 //#![deny(missing_docs)]
 //#![deny(missing_doc_code_examples)]
 #![doc(issue_tracker_base_url = "https://github.com/plating-rust/plating/issues/")]
