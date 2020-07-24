@@ -17,7 +17,7 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 
-uuid = { version = "^0.8.1", features = ["v4"] }
-proc-macro-hack = "0.5.16"
+uuid = { version = "^0.8", features = ["v4"] }
+proc-macro-hack = "^0.5"
 plating-uuid-macro-hack = { path = "../uuid-macro-hack", version="0.0.1" }
 syn = "^1.0"

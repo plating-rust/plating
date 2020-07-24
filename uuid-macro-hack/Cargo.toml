@@ -16,11 +16,11 @@ readme = "../README.md"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-uuid = { version = "^0.8.1", features = ["v4"] }
-proc-macro-hack = "^0.5.16"
-proc-quote = "^0.3.2"
+uuid = { version = "^0.8", features = ["v4"] }
+proc-macro-hack = "^0.5"
+proc-quote = "^0.3"
 syn = "^1.0"
-proc-macro2 = "1.0"
+proc-macro2 = "^1.0"
 
 [lib]
 proc-macro = true
