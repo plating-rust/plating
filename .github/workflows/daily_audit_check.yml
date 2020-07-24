@@ -20,3 +20,12 @@ jobs:
       - uses: actions-rs/audit-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-outdated
+      - name: Outdated dependencies
+        uses: actions-rs/cargo@v1
+        with:
+          command: outdated
+          args: --root-deps-only --exit-code -1
