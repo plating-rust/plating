@@ -34,11 +34,7 @@ cd ../
 # check outdated dependencies
 echo '+cargo outdated --root-deps-only --exit-code -1'
 cargo outdated --root-deps-only
-    #--exit-code -1
-#cargo outdated --root-deps-only --manifest-path uuid-macro/cargo.toml
-    #--exit-code -1
-#cargo outdated --root-deps-only --manifest-path uuid-macro-hack/cargo.toml
-    #--exit-code -1
+
 
 # make sure writing is good
 #write-good */**/*.rs --parse
