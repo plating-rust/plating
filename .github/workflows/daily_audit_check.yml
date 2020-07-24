@@ -1,4 +1,5 @@
-name: Security audit
+name: Dependencies
+
 on:
   push:
     paths:
@@ -14,12 +15,18 @@ on:
     - cron: '0 0 * * *'
 jobs:
   audit:
+    name: Security Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions-rs/audit-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+  outdated:
+    name: Outdated
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
       - uses: actions-rs/cargo@v1
         with:
           command: install
