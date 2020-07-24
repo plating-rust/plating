@@ -38,6 +38,8 @@ use std::borrow::Borrow;
 /// use plating::widgets::cocoa::{CocoaSystem, CocoaDefaultHandleType};
 /// use plating::widgets::cocoa::error::{CocoaError};
 ///
+/// use std::borrow::Borrow;
+///
 /// // Some imaginary config for our widget
 /// struct CocoaExampleParameters {
 ///    width: u32,
@@ -66,12 +68,20 @@ use std::borrow::Borrow;
 ///    // Empty struct in our case, but could be anything
 ///    type PARAMS = CocoaExampleParameters;
 ///
-///    fn new_with_id(id: String, settings: &Self::PARAMS) -> PlatingResult<Self> {
-///        let mut result = Self {id, handle: todo!() };
+///    fn new_with_id<STR, PARAMS>(id: STR, settings: PARAMS) -> PlatingResult<Self>
+///    where
+///        STR: Into<String>,
+///        PARAMS: Borrow<Self::PARAMS>,
+///    {
+///        let mut result = Self {id: id.into(), handle: todo!() };
 ///        result.apply(settings);
 ///        Ok(result)
 ///    }
-///    fn apply(&mut self, settings: &Self::PARAMS) -> PlatingResult<()> {
+///    fn apply<PARAMS>(&mut self, settings: PARAMS) -> PlatingResult<()>
+///    where
+///        PARAMS: Borrow<Self::PARAMS>,
+///    {
+///        let settings = settings.borrow();
 ///        todo!() //apply settings on the backend
 ///    }
 /// }
