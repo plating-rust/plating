@@ -12,6 +12,63 @@ extern crate uuid;
 use proc_macro::TokenStream;
 use proc_macro_hack::proc_macro_hack;
 use proc_quote::quote;
+use syn::{parse_macro_input, DeriveInput};
+
+#[proc_macro_derive(Identifiable, attributes(id))]
+pub fn identifiable(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
+    let ident = &input.ident;
+
+    let function_content = match &input.data {
+        syn::Data::Struct(s) => {
+            match s.fields.iter().find(|field| {
+                field
+                    .attrs
+                    .iter()
+                    .find(|&attr| {
+                        let derive_type = &attr.path.segments[0].ident;
+                        derive_type == "id"
+                    })
+                    .is_some()
+            }) {
+                Some(id_field) => {
+                    let field_ident = &id_field.ident;
+                    quote! {
+                        &self.#field_ident.as_str()
+                    }
+                }
+                None => panic!("No id field provided for Identifiable derive"),
+            }
+        }
+        syn::Data::Enum(e) => {
+            let variants = e.variants.iter().map(|v| {
+                let ident = &v.ident;
+                quote! {
+                    Self::#ident(val) => val.id()
+                }
+            });
+
+            quote! {
+                match self {
+                    #(#variants),*
+                }
+            }
+        }
+        syn::Data::Union(_) => panic!("union not supported, just yet :("),
+    };
+
+    let generated = quote! {
+        impl #impl_generics Identity for #ident #ty_generics #where_clause {
+            fn id(&self) -> &str {
+                #function_content
+            }
+        }
+    };
+
+    proc_macro::TokenStream::from(generated)
+}
 
 ///
 #[proc_macro_hack]
@@ -32,7 +89,7 @@ pub fn noop(_item: TokenStream) -> TokenStream {
 
 use proc_macro2::Span;
 use syn::parse::{Parse, ParseStream, Result};
-use syn::{parenthesized, parse_macro_input, Ident, Token, Type, Visibility};
+use syn::{parenthesized, Ident, Meta, Token, Type, Visibility};
 struct BitflagParameter {
     visibility: Visibility,
     name: Ident,

@@ -16,16 +16,17 @@ use crate::widgets::window::WindowChildren;
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
 use cocoa::base::nil;
+use plating_macros::{Identifiable};
 
 use std::borrow::Borrow;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, Identifiable)]
 pub struct CocoaButton {
     ///auto generate and add via derive(widgetParent(A, B    ))
     //main_outlet: Outlet<ButtonChildren, CocoaButton>,
     handle: CocoaDefaultHandleType,
 
-    ///auto generate and add via derive(Widget)
+    #[id]
     id: String,
 
     //todo: move to backend
@@ -46,7 +47,6 @@ impl PartialEq for CocoaButton {
         self.handle == other.handle
     }
 }
-impl Eq for CocoaButton {}
 
 impl Child<CocoaWindow, WindowChildren<CocoaSystem>, CocoaSystem> for CocoaButton {
     fn adding_to_parent(&mut self, _parent: &()) {
@@ -110,12 +110,6 @@ impl NativeWidget<CocoaSystem> for CocoaButton {
     }
     unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
         &mut self.handle
-    }
-}
-
-impl Identity for CocoaButton {
-    fn id(&self) -> &str {
-        &self.id.as_str()
     }
 }
 

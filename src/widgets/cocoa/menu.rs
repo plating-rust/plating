@@ -14,6 +14,7 @@ use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder, Paramete
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::{Direction, PlatingResult};
+use plating_macros::{Identifiable};
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
@@ -194,9 +195,9 @@ impl CocoaMenuPlatformParameters for CocoaMenuParameters {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 pub struct CocoaMenu {
-    ///auto generate and add via derive(Widget)
+    #[id]
     id: String,
 
     handle: CocoaDefaultHandleType,
@@ -223,12 +224,6 @@ impl PartialEq for CocoaMenu {
     }
 }
 impl Eq for CocoaMenu {}
-
-impl Identity for CocoaMenu {
-    fn id(&self) -> &str {
-        &self.id.as_str()
-    }
-}
 
 // auto generate impl via derive(widgetParent(A, B    ))
 impl Outlet<MenuChildren<CocoaSystem>, CocoaSystem> for CocoaMenu {

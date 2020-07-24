@@ -7,6 +7,7 @@ use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{default_system, System, Widget};
+use plating_macros::Identifiable;
 
 pub trait MenuParameters: Parameters {
     fn label(&self) -> &Option<String>;
@@ -32,21 +33,11 @@ pub trait Menu<S: System + ?Sized>:
 }
 
 // todo auto generate via derive(widgetParent(BUTTON, B    ))
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 #[non_exhaustive]
 pub enum MenuChildren<S: System + ?Sized = default_system> {
     ITEM(S::MenuItemType), //todo
     MENU(S::MenuType),
-}
-
-/// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System + ?Sized> Identity for MenuChildren<S> {
-    fn id(&self) -> &str {
-        match self {
-            Self::MENU(menu) => menu.id(),
-            Self::ITEM(item) => item.id(),
-        }
-    }
 }
 
 impl<S: System + ?Sized> Connectable for MenuChildren<S> {

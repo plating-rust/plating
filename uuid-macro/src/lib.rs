@@ -46,6 +46,8 @@ pub use plating_uuid_macro_hack::uuid;
 #[proc_macro_hack]
 pub use plating_uuid_macro_hack::noop;
 
+pub use plating_uuid_macro_hack::Identifiable;
+
 pub use plating_uuid_macro_hack::bitflag_parameter;
 
 #[cfg(test)]

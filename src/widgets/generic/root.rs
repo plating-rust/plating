@@ -7,6 +7,7 @@ use crate::events::ListenerType;
 use crate::widgets::outlet::Outlet;
 use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::{default_system, System, Widget};
+use plating_macros::Identifiable;
 
 pub trait RootParameters: Parameters {}
 
@@ -29,18 +30,10 @@ pub trait Root<S: System + ?Sized>:
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 #[non_exhaustive]
 pub enum RootChildren<S: System + ?Sized = default_system> {
     WINDOW(S::WindowType),
-}
-
-impl<S: System + ?Sized> Identity for RootChildren<S> {
-    fn id(&self) -> &str {
-        match self {
-            Self::WINDOW(window) => window.id(),
-        }
-    }
 }
 
 impl<S: System + ?Sized> Connectable for RootChildren<S> {

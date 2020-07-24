@@ -26,6 +26,7 @@ use core_graphics::base::CGFloat;
 use objc::declare::ClassDecl;
 use objc::runtime::{Object, Sel};
 use plating_macros::bitflag_parameter;
+use plating_macros::{Identifiable};
 use std::borrow::Borrow;
 use std::fmt;
 
@@ -395,8 +396,9 @@ pub struct CocoaMainMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
+#[derive(Identifiable)]
 pub struct CocoaWindow {
-    ///auto generate and add via derive(Widget)
+    #[id]
     id: String,
 
     handle: CocoaDefaultHandleType,
@@ -658,12 +660,6 @@ impl Outlet<MainMenuChildren<CocoaSystem>, CocoaSystem> for CocoaWindow {
         f: F,
     ) -> Result<MainMenuChildren<CocoaSystem>, anyhow::Error> {
         self.menu_outlet.remove_by_predicate(f)
-    }
-}
-
-impl Identity for CocoaWindow {
-    fn id(&self) -> &str {
-        &self.id.as_str()
     }
 }
 

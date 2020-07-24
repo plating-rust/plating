@@ -7,6 +7,7 @@ use crate::events::ListenerType;
 use crate::widgets::utils::{Child, Identity, Parameters};
 use crate::widgets::window::WindowChildren;
 use crate::widgets::{default_system, System, Widget};
+use plating_macros::Identifiable;
 
 pub trait ButtonParameters: Parameters {
     fn label(&self) -> &Option<String>;
@@ -37,17 +38,8 @@ pub trait Button<S: System + ?Sized>:
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 #[non_exhaustive]
 pub enum ButtonChildren<S: System = default_system> {
     BUTTON(S::ButtonType),
-}
-
-/// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System> Identity for ButtonChildren<S> {
-    fn id(&self) -> &str {
-        match self {
-            Self::BUTTON(button) => button.id(),
-        }
-    }
 }

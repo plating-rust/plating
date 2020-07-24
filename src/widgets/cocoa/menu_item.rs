@@ -16,6 +16,7 @@ use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
+use plating_macros::{Identifiable};
 use std::borrow::Borrow;
 
 pub trait CocoaMenuPlatformParameters {
@@ -149,9 +150,9 @@ impl CocoaMenuPlatformParameters for CocoaMenuItemParameters {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 pub struct CocoaMenuItem {
-    ///auto generate and add via derive(Widget)
+    #[id]
     id: String,
 
     handle: CocoaDefaultHandleType,
@@ -169,12 +170,6 @@ impl Eq for CocoaMenuItem {}
 impl MenuItem<CocoaSystem> for CocoaMenuItem {}
 
 impl MenuItemHandlerTrait for CocoaMenuItem {}
-
-impl Identity for CocoaMenuItem {
-    fn id(&self) -> &str {
-        &self.id.as_str()
-    }
-}
 
 impl Widget<CocoaSystem> for CocoaMenuItem {
     type PARAMS = CocoaMenuItemParameters;

@@ -10,7 +10,7 @@ use crate::widgets::outlet::Outlet;
 use crate::widgets::root::RootChildren;
 use crate::widgets::utils::{Child, Connectable, Identity, Parameters};
 use crate::widgets::{default_system, System, Widget};
-
+use plating_macros::Identifiable;
 pub trait WindowParameters: Parameters {
     /// Sets the title of the window
     fn label(&self) -> &Option<String>;
@@ -73,7 +73,7 @@ pub trait Window<S: System + ?Sized>:
 }
 
 /// todo auto generate via derive(widgetParent(BUTTON, B    ))
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 #[non_exhaustive]
 pub enum WindowChildren<S: System + ?Sized = default_system> {
     BUTTON(S::ButtonType),
@@ -117,28 +117,11 @@ impl<S: System + ?Sized> Child<S::WindowType, WindowChildren<S>, S> for WindowCh
         }
     }
 }
-/// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System + ?Sized> Identity for WindowChildren<S> {
-    fn id(&self) -> &str {
-        match self {
-            Self::BUTTON(button) => button.id(),
-        }
-    }
-}
 
-#[derive(Debug)]
+#[derive(Debug, Identifiable)]
 #[non_exhaustive]
 pub enum MainMenuChildren<S: System + ?Sized = default_system> {
     MENU(S::MenuType),
-}
-
-/// todo auto generate via derive(widgetParent(BUTTON, B    ))
-impl<S: System + ?Sized> Identity for MainMenuChildren<S> {
-    fn id(&self) -> &str {
-        match self {
-            Self::MENU(menu) => menu.id(),
-        }
-    }
 }
 
 impl<S: System + ?Sized> Connectable for MainMenuChildren<S> {
