@@ -20,12 +20,7 @@ cargo test --all --no-fail-fast --quiet
 
 # run clippy
 echo '+cargo clippy --all -- -D warnings'
-#cargo clippy --all -- -D warnings
-cd uuid-macro
-#cargo clippy --all -- -D warnings
-cd ../uuid-macro-hack
-#cargo clippy --all -- -D warnings
-cd ../
+
 
 # check licences of dependencies are valid
 echo '+lichking check'
