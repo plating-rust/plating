@@ -47,6 +47,7 @@ pub use plating_uuid_macro_hack::uuid;
 pub use plating_uuid_macro_hack::noop;
 
 pub use plating_uuid_macro_hack::Identifiable;
+pub use plating_uuid_macro_hack::NativeWidget;
 
 pub use plating_uuid_macro_hack::bitflag_parameter;
 

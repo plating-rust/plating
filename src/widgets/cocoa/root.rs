@@ -13,7 +13,7 @@ use crate::widgets::root::{Root, RootChildren, RootHandlerTrait, RootParameters}
 use crate::widgets::utils::{Identity, OutletHolder, Parameters};
 use crate::widgets::{System, Widget};
 use crate::PlatingResult;
-use plating_macros::{Identifiable};
+use plating_macros::{Identifiable, NativeWidget};
 
 use cocoa::appkit::{
     NSApp, NSApplication, NSApplicationActivateIgnoringOtherApps,
@@ -41,11 +41,13 @@ impl Parameters for CocoaRootParameters {
 impl RootParameters for CocoaRootParameters {}
 impl CocoaRootPlatformParameters for CocoaRootParameters {}
 
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, NativeWidget)]
+#[system = "CocoaSystem"]
 pub struct CocoaRoot {
     #[id]
     id: String,
 
+    #[native_handle]
     handle: CocoaDefaultHandleType,
 
     ///auto generate and add via derive(widgetParent(Window))
@@ -120,14 +122,6 @@ impl Widget<CocoaSystem> for CocoaRoot {
         PARAMS: Borrow<Self::PARAMS>,
     {
         Ok(())
-    }
-}
-impl NativeWidget<CocoaSystem> for CocoaRoot {
-    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
-        &self.handle
-    }
-    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
-        &mut self.handle
     }
 }
 

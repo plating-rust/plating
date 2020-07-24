@@ -26,7 +26,7 @@ use core_graphics::base::CGFloat;
 use objc::declare::ClassDecl;
 use objc::runtime::{Object, Sel};
 use plating_macros::bitflag_parameter;
-use plating_macros::{Identifiable};
+use plating_macros::{Identifiable, NativeWidget};
 use std::borrow::Borrow;
 use std::fmt;
 
@@ -396,11 +396,13 @@ pub struct CocoaMainMenuParentData {
     pub menu: CocoaDefaultHandleType,
 }
 
-#[derive(Identifiable)]
+#[derive(Identifiable, NativeWidget)]
+#[system = "CocoaSystem"]
 pub struct CocoaWindow {
     #[id]
     id: String,
 
+    #[native_handle]
     handle: CocoaDefaultHandleType,
 
     //todo: move to custom cocoa type
@@ -585,15 +587,6 @@ impl Widget<CocoaSystem> for CocoaWindow {
         }
 
         Ok(())
-    }
-}
-
-impl NativeWidget<CocoaSystem> for CocoaWindow {
-    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
-        &self.handle
-    }
-    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
-        &mut self.handle
     }
 }
 

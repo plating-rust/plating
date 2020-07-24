@@ -14,7 +14,7 @@ use crate::widgets::utils::{Child, Connectable, Identity, OutletHolder, Paramete
 use crate::widgets::window::MainMenuChildren;
 use crate::widgets::{System, Widget};
 use crate::{Direction, PlatingResult};
-use plating_macros::{Identifiable};
+use plating_macros::{Identifiable, NativeWidget};
 
 use cocoa::appkit::{NSEventModifierFlags, NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
@@ -195,11 +195,13 @@ impl CocoaMenuPlatformParameters for CocoaMenuParameters {
     }
 }
 
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, NativeWidget)]
+#[system = "CocoaSystem"]
 pub struct CocoaMenu {
     #[id]
     id: String,
 
+    #[native_handle]
     handle: CocoaDefaultHandleType,
     ///Stores the MenuItem.
     item: CocoaDefaultHandleType,
@@ -336,15 +338,6 @@ impl Widget<CocoaSystem> for CocoaMenu {
         }
 
         Ok(())
-    }
-}
-
-impl NativeWidget<CocoaSystem> for CocoaMenu {
-    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
-        &self.handle
-    }
-    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
-        &mut self.handle
     }
 }
 

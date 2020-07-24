@@ -12,7 +12,73 @@ extern crate uuid;
 use proc_macro::TokenStream;
 use proc_macro_hack::proc_macro_hack;
 use proc_quote::quote;
-use syn::{parse_macro_input, DeriveInput};
+use syn::{parse_macro_input, DeriveInput, Lit};
+
+#[proc_macro_derive(NativeWidget, attributes(native_handle, system))]
+pub fn native(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
+    let ident = &input.ident;
+
+    let system = input
+        .attrs
+        .iter()
+        .find(|&attr| {
+            let derive_type = &attr.path.segments[0].ident;
+            derive_type == "system"
+        })
+        .map(|attr| match attr.parse_meta() {
+            Ok(Meta::NameValue(n)) => match n.lit {
+                Lit::Str(path) => Ident::new(&path.value(), input.ident.span()),
+                _ => panic!(
+                    "print_partial requires utf8 string. e.g. #[print_partial=\"some/path\"]"
+                ),
+            },
+            Ok(_) => panic!("System attributes needs to be in the form of '#[system=CocoaSystem]'"),
+            Err(e) => panic!(e),
+        })
+        .expect("NativeWidget derive requires a '#[system=CocoaSystem]' declaration on the struct");
+
+    let (native_fn, native_mut_fn) = match &input.data {
+        syn::Data::Struct(s) => {
+            let handle_field = s
+                .fields
+                .iter()
+                .find(|field| {
+                    field
+                        .attrs
+                        .iter()
+                        .find(|&attr| {
+                            let derive_type = &attr.path.segments[0].ident;
+                            derive_type == "native_handle"
+                        })
+                        .is_some()
+                })
+                .map(|f| &f.ident)
+                .expect("Exactly one field needs the #[native_handle] attribute");
+
+            let native_fn = quote!(&self.#handle_field);
+            let native_mut_fn = quote!(&mut self.#handle_field);
+
+            (native_fn, native_mut_fn)
+        }
+        syn::Data::Enum(_) => panic!("NativeWidget not supported for enums"),
+        syn::Data::Union(_) => panic!("NativeWidget not supported for unions"),
+    };
+
+    let generated = quote! {
+        impl #impl_generics NativeWidget<#system> for #ident #ty_generics #where_clause {
+            fn native(&self) -> &<#system as System>::InternalHandle {
+                #native_fn
+            }
+            unsafe fn native_mut(&mut self) -> &mut <#system as System>::InternalHandle {
+                #native_mut_fn
+            }
+        }
+    };
+    proc_macro::TokenStream::from(generated)
+}
 
 #[proc_macro_derive(Identifiable, attributes(id))]
 pub fn identifiable(input: TokenStream) -> TokenStream {

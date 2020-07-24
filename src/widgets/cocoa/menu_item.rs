@@ -16,7 +16,7 @@ use cocoa::appkit::{NSMenu, NSMenuItem, NSWindow};
 use cocoa::base::nil;
 use cocoa::foundation::{NSAutoreleasePool, NSString};
 
-use plating_macros::{Identifiable};
+use plating_macros::{Identifiable, NativeWidget};
 use std::borrow::Borrow;
 
 pub trait CocoaMenuPlatformParameters {
@@ -150,11 +150,13 @@ impl CocoaMenuPlatformParameters for CocoaMenuItemParameters {
     }
 }
 
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, NativeWidget)]
+#[system = "CocoaSystem"]
 pub struct CocoaMenuItem {
     #[id]
     id: String,
 
+    #[native_handle]
     handle: CocoaDefaultHandleType,
 
     connected: bool,
@@ -204,14 +206,6 @@ impl Widget<CocoaSystem> for CocoaMenuItem {
         }
 
         Ok(())
-    }
-}
-impl NativeWidget<CocoaSystem> for CocoaMenuItem {
-    fn native(&self) -> &<CocoaSystem as System>::InternalHandle {
-        &self.handle
-    }
-    unsafe fn native_mut(&mut self) -> &mut <CocoaSystem as System>::InternalHandle {
-        &mut self.handle
     }
 }
 
