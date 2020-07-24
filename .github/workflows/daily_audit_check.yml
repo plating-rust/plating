@@ -41,3 +41,17 @@ jobs:
         with:
           command: outdated
           args: --root-deps-only --exit-code -1
+  licenses:
+    name: Licenses
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-lichking
+      - name: Allowed licenses
+        uses: actions-rs/cargo@v1
+        with:
+          command: lichking
+          args: check
