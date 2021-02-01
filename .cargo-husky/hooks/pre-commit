@@ -1,10 +1,8 @@
 #!/bin/sh
 
-# Copyright (2020) by Marcel Lambert.
-# This project is dual licensed under either MIT or Apache-2.0.
-
 set -e
 
+git stash push
 export CARGO_INCREMENTAL=0
 #export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads"
 cargo build
