@@ -1,0 +1,27 @@
+policies:
+  - type: commit
+    spec:
+      headerLength: 89
+      dco: false
+      gpg: false
+      imperative: true
+      maximumOfOneCommit: false
+      requireCommitBody: false
+      conventional:
+        types:
+          - "build"
+          - "ci"
+          - "docs"
+          - "feat"
+          - "fix"
+          - "perf"
+          - "refactor"
+          - "style"
+          - "test"
+        scopes:
+          - "generic"
+          - "native"
+          - "cocoa"
+          - "mock"
+          - "win"
+        descriptionLength: 72

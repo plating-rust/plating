@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Copyright (2020) by Marcel Lambert.
+# This project is dual licensed under either MIT or Apache-2.0.
+
+set -e
+
+export CARGO_INCREMENTAL=0
+cargo build
+
+echo '+cargo fmt'
+cargo fmt --all -- --check
+
+echo '+cargo test --all'
+#cargo test --all --no-fail-fast --quiet
+
+echo '+cargo clippy --all -- -D warnings'
+#cargo clippy --all -- -D warnings
+
+# check licences of dependencies are valid
+echo '+lichking check'
+cargo lichking check
+cd uuid-macro
+cargo lichking check
+cd ../uuid-macro-hack
+cargo lichking check
+cd ../
