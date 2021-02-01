@@ -2,23 +2,42 @@
 
 set -e
 
+git stash push --keep-index --include-untracked
 export CARGO_INCREMENTAL=0
+#export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads"
 cargo build
 
+# format main project, as well as subprojects
 echo '+cargo fmt'
 cargo fmt --all -- --check
 
+# Run tests of the main project as well as the subprojects
 echo '+cargo test --all'
-#cargo test --all --no-fail-fast --quiet
+cargo test --all --no-fail-fast --quiet
 
+
+# run clippy
 echo '+cargo clippy --all -- -D warnings'
-#cargo clippy --all -- -D warnings
+
 
 # check licences of dependencies are valid
 echo '+lichking check'
 cargo lichking check
-cd uuid-macro
-cargo lichking check
-cd ../uuid-macro-hack
-cargo lichking check
-cd ../
+
+
+# check outdated dependencies
+echo '+cargo outdated --root-deps-only --exit-code -1'
+cargo outdated --root-deps-only
+    #--exit-code -1
+#cargo outdated --root-deps-only --manifest-path uuid-macro/cargo.toml
+    #--exit-code -1
+#cargo outdated --root-deps-only --manifest-path uuid-macro-hack/cargo.toml
+    #--exit-code -1
+
+# make sure writing is good
+write-good */**/*.rs --parse
+write-good *.md --parse
+#write-good *?/*.toml --parse
+write-good ./commitmessage --parse
+
+git stash pop

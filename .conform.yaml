@@ -7,6 +7,8 @@ policies:
       imperative: true
       maximumOfOneCommit: false
       requireCommitBody: false
+      spellcheck:
+        locale: UK
       conventional:
         types:
           - "build"
