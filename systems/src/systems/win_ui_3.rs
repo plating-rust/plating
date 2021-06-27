@@ -1,3 +1,8 @@
+/*
+ * Copyright (2021) by Marcel Lambert.
+ * This project is dual licensed under either MIT or Apache-2.0.
+ */
+
 #![cfg(any(feature = "winui3", doc))]
 
 use plating_core::utils::{Deserialize, Serialize};

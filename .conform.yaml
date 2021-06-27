@@ -1,4 +1,18 @@
 policies:
+  - type: license
+    spec:
+      skipPaths:
+        - .git/
+        - target/
+        - books/usage/book
+        - books/commitments/book
+      includeSuffixes:
+        - .rs
+      header: |
+        /*
+         * Copyright (2021) by Marcel Lambert.
+         * This project is dual licensed under either MIT or Apache-2.0.
+         */
   - type: commit
     spec:
       headerLength: 89
