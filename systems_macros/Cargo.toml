@@ -1,0 +1,26 @@
+[package]
+name = "plating_systems_macros"
+version = "0.0.1"
+edition = "2018"
+description = "Macros used by the plating_systems crate."
+categories = ["gui"]
+keywords = ["gui", "native", "macro"]
+homepage = "https://plating-rust.github.io/"
+repository = "https://github.com/plating-rust/plating"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "1.0", features = ["full", "parsing"] }
+quote = "1.0"
+proc-macro2 = "^1.0"
+
+[dev-dependencies]
+plating_systems = {path = "../systems" }
+plating_core = {path = "../core" }
+
+[package.metadata.docs.rs]
+all-features = true

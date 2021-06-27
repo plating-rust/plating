@@ -1,0 +1,41 @@
+[package]
+name = "plating_systems"
+version = "0.0.1"
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+edition = "2018"
+# TODO: Description
+categories = ["gui"]
+keywords = ["gui", "native"]
+#TODO: documentation
+homepage = "https://plating-rust.github.io/"
+repository = "https://github.com/plating-rust/plating"
+#TODO: readme
+license = "MIT OR Apache-2.0"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+
+[features]
+default = ["enable_serde", "mock", "gtk", "qt", "cocoa", "winui3", "android", "ios", "native"]
+
+mock = ["plating_core/mock"]
+ios = []
+gtk = []
+qt = []
+android = []
+cocoa = []
+winui3 = []
+native = ["mock"]
+enable_serde = ["serde", "plating_core/enable_serde"]
+
+[dependencies]
+serde = { version = "^1.0", features = ["derive", "rc"], optional = true }
+default_widgets = {path = "./default_widgets" }
+plating_systems_macros = {path = "../systems_macros" }
+plating_core = {path = "../core", default = []}
+tuple_list = { version = "0.1.2" }
+
+[package.metadata.docs.rs]
+all-features = true

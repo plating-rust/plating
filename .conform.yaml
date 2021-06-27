@@ -21,9 +21,12 @@ policies:
           - "style"
           - "test"
         scopes:
+          - "systems"
           - "generic"
           - "native"
           - "cocoa"
           - "mock"
           - "win"
+          - "ios"
+          - "android"
         descriptionLength: 72

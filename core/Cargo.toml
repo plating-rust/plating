@@ -1,0 +1,47 @@
+[package]
+name = "plating_core"
+version = "0.0.1"
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+edition = "2018"
+description = "PLATING - the UI for RUST. Uses native widgets and gives the user complete and full control over the ui."
+categories = ["gui"]
+keywords = ["gui", "native"]
+documentation = "https://docs.rs/plating/"
+homepage = "https://plating-rust.github.io/"
+repository = "https://github.com/plating-rust/plating"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+
+[features]
+default = ["mock"]
+
+mock = []
+template-specialization = []
+enable_serde = ["serde"]
+apply_possible = ["template-specialization"]
+
+[dependencies]
+tuple_list = { version = "0.1.2" }
+anyhow = { version = "^1.0" }
+noop_proc_macro = { version ="0.3" }
+#thiserror = "1.0"
+
+#log = { version = "^0.4", optional = true }
+
+#futures = { version = "0.3" }
+serde = { version = "^1.0", features = ["derive", "rc"], optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+#fruity = { version = "^0.2", features = ["foundation"] }
+
+cocoa = { version = "^0.24" }
+#core-foundation = { version = "^0.9" }
+#objc = { version = "^0.2" }
+#block = { version = "0.1.6" }
+
+[package.metadata.docs.rs]
+all-features = true

@@ -1,26 +1,38 @@
 [package]
-name = "plating_test"
+name = "plating_workspace"
 version = "0.0.1"
 authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
 edition = "2018"
-description = "PLATING - the UI for RUST. Uses native widgets and gives the user complete and full control over the ui."
-categories = ["gui"]
-keywords = ["gui", "native"]
+readme = "README.md"
+license-file = "LICENSE"
 documentation = "https://docs.rs/plating/"
 homepage = "https://plating-rust.github.io/"
 repository = "https://github.com/plating-rust/plating"
-readme = "README.md"
-license-file = "LICENSE"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+exclude = [
+    "examples/*",
+    ".cargo-husky/*",
+    ".conform.yaml",
+    ".editorconfig",
+    "commitmessage",
+    "license_header_template.md",
+    "rustfmt.toml",
+    "rusty-hook.toml"
+]
+
+[workspace]
+members = ["core",
+           "systems",
+           "systems/default_widgets",
+           "systems_macros",
+           "plating"]
+default-members = ["plating"]
 
 [badges]
 maintenance = { status = "actively-developed" }
 
-[dependencies]
+[dev-dependencies]
+# cargo-husky making sure we run all the checks before commiting/pushing
+# copies our hooks from the .cargo-husky folder on first "cargo test" run
+cargo-husky = { version = "^1", features = ["user-hooks"] }
 
-[dev-dependencies.cargo-husky]
-version = "^1" # git hooks making sure we run all the checks before commiting and pushing
-features = ["user-hooks"] #copies our hooks from the hook folder on first "cargo test" run
-
-[package.metadata.docs.rs]
-all-features = true

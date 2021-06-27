@@ -3,6 +3,11 @@
 set -e
 
 git stash push --keep-index --include-untracked
+pop() {
+  git stash pop --include-untracked
+}
+trap pop 0
+
 export CARGO_INCREMENTAL=0
 #export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads"
 cargo build
@@ -18,7 +23,7 @@ cargo test --all --no-fail-fast --quiet
 
 # run clippy
 echo '+cargo clippy --all -- -D warnings'
-
+cargo clippy --all
 
 # check licences of dependencies are valid
 echo '+lichking check'
@@ -39,5 +44,3 @@ write-good */**/*.rs --parse
 write-good *.md --parse
 #write-good *?/*.toml --parse
 write-good ./commitmessage --parse
-
-git stash pop

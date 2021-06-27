@@ -1,0 +1,26 @@
+[package]
+name = "plating"
+version = "0.0.1"
+edition = "2018"
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+description = "PLATING - the UI for RUST. Uses native widgets and gives the user complete and full control over the ui."
+categories = ["gui"]
+keywords = ["gui", "native"]
+documentation = "https://docs.rs/plating/"
+homepage = "https://plating-rust.github.io/"
+license = "MIT OR Apache-2.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+default = ["serde", "plating_systems"]
+
+serde = ["plating_core/serde"]
+
+[dependencies]
+plating_core = { path = "../core" }
+plating_systems = { path = "../systems", optional = true }
+
+[package.metadata.docs.rs]
+all-features = true
