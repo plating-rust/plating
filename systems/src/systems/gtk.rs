@@ -37,6 +37,7 @@ impl WindowAvailable for GTKDefinition {}
 ///
 /// # See also
 /// See [`GTKDefinition`] for the corresponding [`SystemDefinition`].
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Hash)]
 #[doc(cfg(feature = "gtk"))]
 #[doc(cfg(target_os = "linux"))]
 #[cfg(any(target_os = "linux", doc))]
