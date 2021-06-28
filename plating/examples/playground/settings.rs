@@ -313,7 +313,7 @@ pub fn completely_native() -> plating::PlatingResult<()> {
 
     a.apply(settings)?;
     println!("{:?}", a);
-    //Requires template specialisation.
+    //Requires template specialization.
     a.apply_possible(settings2)?;
 
     println!("possible: {:?}", a);
