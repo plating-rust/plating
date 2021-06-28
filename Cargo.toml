@@ -34,4 +34,3 @@ maintenance = { status = "actively-developed" }
 # cargo-husky making sure we run all the checks before commiting/pushing
 # copies our hooks from the .cargo-husky folder on first "cargo test" run
 cargo-husky = { version = "^1", features = ["user-hooks"] }
-
