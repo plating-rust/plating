@@ -9,8 +9,8 @@
 
 #[cfg(target_os = "macos")]
 use plating_core::utils::outlet::{ChildrenOutlet, MenuOutlet, Outlet, OutletHolder};
-
 use plating_core::utils::{Deserialize, Serialize};
+
 use crate::systems::SystemDefinition;
 use crate::types::{ButtonAvailable, WindowAvailable};
 #[cfg(target_os = "macos")]
