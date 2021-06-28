@@ -202,22 +202,22 @@ pub mod module {
             &mut self,
             settings: SL,
         ) -> PlatingResult<()> {
-            match settings.provide_opt() {
-                Some(a) => self.set_a(a)?,
-                None => {},
-            };
-            match settings.provide_opt() {
-                Some(b) => self.set_b(b)?,
-                None => {},
-            };
-            match settings.provide_opt() {
-                Some(c) => self.set_c(c)?,
-                None => {},
-            };
-            match settings.provide_opt() {
-                Some(s) => self.set_s(s)?,
-                None => {},
-            };
+            if let Some(a) = settings.provide_opt() {
+                self.set_a(a)?
+            }
+
+            if let Some(b) = settings.provide_opt() {
+                self.set_b(b)?
+            }
+
+            if let Some(c) = settings.provide_opt() {
+                self.set_c(c)?
+            }
+
+            if let Some(s) = settings.provide_opt() {
+                self.set_s(s)?
+            }
+
             Ok(())
         }
 
@@ -263,13 +263,13 @@ pub mod module {
     impl AReceiver for CocoaWidget {
         fn set_a(&mut self, a: &NativeA) -> PlatingResult<()> {
             println!("a: {:?}", a);
-            self.a = a.clone();
+            self.a = *a;
             Ok(())
         }
     }
     impl BReceiver for CocoaWidget {
         fn set_b(&mut self, b: &NativeB) -> PlatingResult<()> {
-            self.b = b.clone();
+            self.b = *b;
             println!("b: {:?}", b);
 
             Ok(())
@@ -277,7 +277,7 @@ pub mod module {
     }
     impl CReceiver for CocoaWidget {
         fn set_c(&mut self, c: &NativeC) -> PlatingResult<()> {
-            self.c = c.clone();
+            self.c = *c;
             println!("b: {:?}", c);
             Ok(())
         }
