@@ -6,12 +6,15 @@
 #![cfg(any(feature = "cocoa", doc))]
 
 //TODO; use real ones
-use plating_core::mock::{MockButtonWidget, MockWindowWidget};
-use plating_core::utils::outlet::{ChildrenOutlet, MenuOutlet, Outlet, OutletHolder};
-use plating_core::utils::{Deserialize, Serialize};
 
+#[cfg(target_os = "macos")]
+use plating_core::utils::outlet::{ChildrenOutlet, MenuOutlet, Outlet, OutletHolder};
+
+use plating_core::utils::{Deserialize, Serialize};
 use crate::systems::SystemDefinition;
-use crate::types::{ButtonAvailable, HasButton, HasWindow, WindowAvailable};
+use crate::types::{ButtonAvailable, WindowAvailable};
+#[cfg(target_os = "macos")]
+use crate::types::{HasButton, HasWindow};
 
 /// [System Definition](`SystemDefinition`) for the Cocoa UI System.
 ///
@@ -54,13 +57,13 @@ impl crate::systems::System for Cocoa {
 
 #[cfg(target_os = "macos")]
 impl HasButton for Cocoa {
-    type Button<OUTLET: OutletHolder> = MockButtonWidget<OUTLET>;
+    type Button<OUTLET: OutletHolder> = plating_core::mock::MockButtonWidget<OUTLET>;
 }
 
 #[cfg(target_os = "macos")]
 impl HasWindow for Cocoa {
     type Window<OUTLET: OutletHolder + Outlet<MenuOutlet> + Outlet<ChildrenOutlet>> =
-        MockWindowWidget<OUTLET>;
+        plating_core::mock::MockWindowWidget<OUTLET>;
 }
 /*
 pub trait CocoaSpecific {
