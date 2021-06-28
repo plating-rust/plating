@@ -15,7 +15,6 @@ exclude = [
     ".conform.yaml",
     ".editorconfig",
     "commitmessage",
-    "license_header_template.md",
     "rustfmt.toml",
     "rusty-hook.toml"
 ]
