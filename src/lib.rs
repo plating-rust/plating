@@ -17,6 +17,7 @@
     unused_qualifications
 )]
 #![warn(unused_crate_dependencies)]
+
 // we don't want to keep unused dependencies around, but cargo_husky is needed
 // for git hooks even though we don't really use it in our codebase.
 // hence we `fake` use it
