@@ -41,7 +41,7 @@
 #![warn(
     missing_docs,
     rustdoc::broken_intra_doc_links,
-    rustdoc::missing_doc_code_examples,
+    //rustdoc::missing_doc_code_examples,
     missing_debug_implementations,
     missing_copy_implementations,
     unused_import_braces,

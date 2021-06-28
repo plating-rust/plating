@@ -35,8 +35,9 @@ pub use tuple_list::{tuple_list as systems_list, TupleList as SystemsList};
 /// Structs implementing a SystemDefinition are responsible to implement the
 /// 'HasFoo' Traits, indicating that a specific System has the 'Foo' widget
 /// available. ## Minimal example
-/// ```
-/// ```
+///
+/// TODO:
+///
 /// From here you are expected to implement the appropriate 'HasFoo' Traits.
 ///
 /// For a list of those that ship with plating see [types

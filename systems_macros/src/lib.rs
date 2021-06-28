@@ -211,7 +211,8 @@ pub fn tag(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// requires ```generic_associated_types```.
 ///
 /// NOTE: since this defines a `proc_macro_attribute`, this macro requires the
-/// following in `Cargo.toml` ```ignore
+/// following in `Cargo.toml`
+/// ```toml
 /// [lib]
 /// proc-macro = true
 /// ```
