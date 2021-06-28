@@ -45,7 +45,7 @@ impl WindowAvailable for CocoaDefinition {}
 #[derive(Debug, Copy, Clone, Serialize, Deserialize, Hash)]
 #[doc(cfg(feature = "cocoa"))]
 #[doc(cfg(target_os = "macos"))]
-#[cfg(target_os = "macos")]
+#[cfg(any(target_os = "macos", doc))]
 #[doc(alias = "Mac")]
 #[doc(alias = "Osx")]
 pub struct Cocoa {}
