@@ -44,5 +44,5 @@ pub struct WinUI3 {}
 
 #[cfg(target_os = "windows")]
 impl crate::systems::System for WinUI3 {
-    type Definition = CocoaDefinition;
+    type Definition = WinUI3Definition;
 }
