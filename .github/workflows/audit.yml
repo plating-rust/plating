@@ -9,8 +9,6 @@ on:
     paths:
       - '**/Cargo.toml'
       - '**/Cargo.lock'
-      - '**/plating_core/Cargo.toml'
-      - '**/plating_core/Cargo.lock'
       - '.github/workflows/audit.yml'
   pull_request:
 jobs:
