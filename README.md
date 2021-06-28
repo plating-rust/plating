@@ -1,4 +1,5 @@
 # Plating
+![Logo](assets/logo.svg "Plating")
 
 [![CI](https://github.com/plating-rust/plating/workflows/Continuous%20Integration/badge.svg)](https://github.com/plating-rust/plating/actions)
 [![Book](https://img.shields.io/badge/book-master-yellow.svg)](https://plating-rust.github.io/)
