@@ -1,0 +1,30 @@
+name: github pages
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  library:
+    strategy:
+      fail-fast: false
+      matrix:
+        books: [library/book-of-commitment, library/book-of-concept, library/book-of-usage]
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: 'latest'
+      - run: mdbook build ${{ matrix.books }}
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        #if: github.ref == 'refs/heads/main'
+        with:
+          deploy_key: ${{ secrets.BOOK_DEPLOY_SECRET }}
+          external_repository: plating-rust/plating-rust.github.io
+          publish_dir: ./${{ matrix.books }}
+
+
