@@ -1,0 +1,20 @@
+[book]
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Book of Usage"
+
+[rust]
+edition = "2018"
+
+[build]
+build-dir = "../../target/library/book-of-usage"
+
+[output.html]
+theme = "../theme"
+preferred-dark-theme = "coal"
+
+[output.html.fold]
+enable = true
+level = 1
