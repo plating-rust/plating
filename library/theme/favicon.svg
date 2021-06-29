@@ -1,0 +1,66 @@
+<!--
+ Copyright (2021) by Marcel Lambert.
+ This project is dual licensed under either MIT or Apache-2.0.
+-->
+ <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+ <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="100" height="100" viewBox="0 0 500 410">
+
+<defs>
+  <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Sarala);</style>
+</defs>
+  <rect
+    width="300"
+    height="300"
+    transform="translate(250, 30),rotate(45)"
+    style="fill: rgb(170,89,57);"
+  />
+
+
+    <g
+    transform="translate(250, 0),rotate(45)">
+        <rect
+            width="120"
+            height="120"
+            style="fill:rgb(16, 74, 86);" />
+        <circle r="4"
+              cx="10"
+              cy="10"
+              style="fill:rgb(223,220,220);"
+              >
+        </circle>
+        <circle r="4"
+              cx="10"
+              cy="22"
+              style="fill:rgb(153,150,150);"
+              >
+        </circle>
+        <circle r="4"
+              cx="10"
+              cy="34"
+              style="fill:rgb(153,150,150);"
+              >
+        </circle>
+
+        <rect
+            width="120"
+            height="120"
+            transform="translate(154, 0)"
+            style="fill:rgb(9, 45, 52);" />
+
+        <rect
+            width="120"
+            height="120"
+            transform="translate(0, 154)"
+            style="fill:rgb(22, 105, 122);" />
+
+        <rect
+            width="120"
+            height="120"
+            transform="translate(154, 154)"
+            style="fill:rgb(13, 60, 69);" />
+  </g>
+</svg>
