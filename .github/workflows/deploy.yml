@@ -25,6 +25,6 @@ jobs:
         with:
           deploy_key: ${{ secrets.BOOK_DEPLOY_SECRET }}
           external_repository: plating-rust/plating-rust.github.io
-          publish_dir: ./${{ matrix.books }}
-
+          publish_dir: ./target/${{ matrix.books }}
+          destination_dir: ${{ matrix.books }}
 
