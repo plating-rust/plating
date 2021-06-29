@@ -10,6 +10,10 @@ on:
       - '**/Cargo.lock'
       - '.github/workflows/audit.yml'
   pull_request:
+    paths:
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+      - '.github/workflows/audit.yml'
 jobs:
   audit:
     runs-on: ubuntu-latest
