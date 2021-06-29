@@ -18,13 +18,19 @@ jobs:
         uses: peaceiris/actions-mdbook@v1
         with:
           mdbook-version: 'latest'
-      - run: mdbook build ${{ matrix.books }}
+      - name: build book of commitment
+        run: mdbook build library/book-of-commitment
+      - name: build book of concept
+        run: mdbook build library/library/book-of-concept
+      - name: build book of usage
+        run: mdbook build library/book-of-usage
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         #if: github.ref == 'refs/heads/main'
         with:
           deploy_key: ${{ secrets.BOOK_DEPLOY_SECRET }}
           external_repository: plating-rust/plating-rust.github.io
-          publish_dir: ./target/${{ matrix.books }}
-          destination_dir: ${{ matrix.books }}
+          publish_dir: ./target/library
+          destination_dir: ./
+          publish_branch: master
 
