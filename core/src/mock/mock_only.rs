@@ -50,10 +50,6 @@ where
     fn outlet(&self) -> &OUTLET {
         &self.outlet
     }
-
-    fn outlet_mut(&mut self) -> &mut OUTLET {
-        &mut self.outlet
-    }
 }
 
 impl<OUTLET1, OUTLET2> ChildOf<MockWindowWidget<OUTLET1>, ChildrenOutlet>

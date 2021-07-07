@@ -13,7 +13,6 @@ where
     OUTLET: OutletHolder,
 {
     fn outlet(&self) -> &OUTLET;
-    fn outlet_mut(&mut self) -> &mut OUTLET;
 }
 
 #[derive(Debug, Default)]
