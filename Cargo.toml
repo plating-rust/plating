@@ -24,7 +24,9 @@ members = ["core",
            "systems",
            "systems/default_widgets",
            "systems_macros",
-           "plating"]
+           "plating",
+           "cocoa",
+           "WinUI3"]
 default-members = ["plating"]
 
 [badges]
