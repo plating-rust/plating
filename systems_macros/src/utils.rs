@@ -8,7 +8,7 @@ use quote::ToTokens;
 use syn::{Ident, Path};
 
 pub(crate) fn has_name(name: &Ident) -> Ident {
-    Ident::new(&format! {"Has{}", name}, Span::call_site())
+    Ident::new(&format!("Has{}", name), Span::call_site())
 }
 
 pub(crate) fn available_name(name: &Ident) -> Ident {
@@ -16,7 +16,7 @@ pub(crate) fn available_name(name: &Ident) -> Ident {
 }
 
 pub(crate) fn tag_name(name: &Ident) -> Ident {
-    Ident::new(&format! {"{}Tag", name}, Span::call_site())
+    Ident::new(&format!("{}Tag", name), Span::call_site())
 }
 
 pub(crate) fn definition_name(name: &Ident) -> Ident {
