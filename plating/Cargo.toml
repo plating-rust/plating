@@ -14,13 +14,15 @@ license = "MIT OR Apache-2.0"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = ["serde", "plating_systems"]
-
-serde = ["plating_core/serde"]
+default = ["serde", "plating_systems", "win_ui3", "cocoa"]
+serde = ["plating_core/serde", "cocoa/serde", "win_ui3/serde"]
 
 [dependencies]
-plating_core = { path = "../core" }
-plating_systems = { path = "../systems", optional = true }
+plating_core = { path = "../core", version="0.0.1" }
+plating_systems = { path = "../systems", version="0.0.1", optional = true }
+cocoa = { path = "../cocoa", package = "plating_cocoa", version="0.0.1", optional = true}
+win_ui3 = { path = "../WinUI3", package = "plating_win_ui3", version="0.0.1", optional = true }
+
 
 [package.metadata.docs.rs]
 all-features = true

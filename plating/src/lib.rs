@@ -10,11 +10,10 @@
 //! - Link to book and other resources
 //! - Document feature flags
 #![deny(
-    //missing_docs,
+    missing_docs,
     trivial_casts,
     trivial_numeric_casts,
     unsafe_code,
-    unstable_features,
     unused_qualifications
 )]
 #![warn(
@@ -24,6 +23,8 @@
     unused_import_braces,
     unused_crate_dependencies
 )]
+#![allow(incomplete_features)]
+#![feature(doc_cfg)]
 
 /// Constant representing the version of plating.
 ///
@@ -31,6 +32,20 @@
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 
+#[cfg(any(feature = "cocoa", doc))]
+#[doc(cfg(feature = "cocoa"))]
+#[doc(inline)]
+#[doc(alias = "apple")]
+#[doc(alias = "mac")]
+#[doc(alias = "osx")]
+pub use cocoa;
 pub use plating_core::*;
-#[cfg(feature = "plating_systems")]
+#[cfg(any(feature = "plating_systems", doc))]
+#[doc(cfg(feature = "plating_systems"))]
+#[doc(inline)]
 pub use plating_systems::*;
+#[cfg(any(feature = "win_ui3", doc))]
+#[doc(cfg(feature = "win_ui3"))]
+#[doc(inline)]
+#[doc(alias = "windows")]
+pub use win_ui3;
