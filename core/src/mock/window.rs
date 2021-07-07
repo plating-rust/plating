@@ -11,7 +11,7 @@ use crate::PlatingResult;
 
 
 //TODO: fully automate
-#[derive(Debug, Default, Clone, Hash)]
+#[derive(Debug, Clone, Hash, Default)]
 pub struct MockWindowOutlet<MAIN, MENU>
 where
     MAIN: ChildrenList,
