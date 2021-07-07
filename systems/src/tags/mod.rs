@@ -82,7 +82,6 @@ where
 #[allow(rustdoc::missing_doc_code_examples)]
 impl<Sys> TagTrait for Tag<Sys> where Sys: SystemsList + SystemDefinition {}
 
-
 #[default_widgets]
 #[tag(
     for (
@@ -140,11 +139,7 @@ pub trait Tier2 {}
 #[doc(notable_trait)]
 pub trait Desktop {}
 
-/*
-#[doc(cfg(any(feature = "android",
-              feature = "ios",
-              feature = "mock",
-)))]*/
+
 #[default_widgets]
 #[tag(
     for (

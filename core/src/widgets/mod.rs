@@ -81,6 +81,7 @@ where
 pub struct ButtonOutlet {}
 impl OutletHolder for ButtonOutlet {}
 
+
 pub trait Button<OUTLET>
 where
     OUTLET: OutletHolder,
