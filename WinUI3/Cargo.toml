@@ -1,8 +1,23 @@
 [package]
-name = "plating_WinUI3"
+name = "plating_win_ui3"
 version = "0.0.1"
 edition = "2018"
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+categories = ["gui"]
+keywords = ["gui", "native", "windows", "winui3"]
+homepage = "https://plating-rust.github.io/"
 license = "MIT OR Apache-2.0"
 
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+serde = ["plating_core/serde"]
+
+[lib]
 
 [dependencies]
+plating_core = { path = "../core", version="0.0.1" }
+
+[package.metadata.docs.rs]
+all-features = true

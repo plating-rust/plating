@@ -3,6 +3,6 @@
  * This project is dual licensed under either MIT or Apache-2.0.
  */
 
-fn main() {
+pub fn main() {
     println!("Hello, world!");
 }
