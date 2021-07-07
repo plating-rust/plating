@@ -1,8 +1,21 @@
 [package]
 name = "plating_cocoa"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2018"
+authors = ["Marcel Lambert <marcel_lambert@ymail.com>"]
+categories = ["gui"]
+keywords = ["gui", "native", "cocoa", "mac", "osx"]
+homepage = "https://plating-rust.github.io/"
+license = "MIT OR Apache-2.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+serde = ["plating_core/serde"]
 
 [dependencies]
+plating_core = { path = "../core", version="0.0.1" }
+
+[package.metadata.docs.rs]
+all-features = true
