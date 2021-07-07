@@ -10,7 +10,7 @@ use plating_core::utils::{Deserialize, Serialize};
 use plating_core::widgets::{Button, Window};
 
 use crate::systems::{SystemDefinition, SystemsList};
-use crate::types::{AllHaveButton, AllHaveWindow, HasButton, HasWindow};
+use crate::types::{ButtonAvailable, HasButton, HasWindow, WindowAvailable};
 use crate::{default_widgets, tag};
 
 /// A marker Trait for Tags
@@ -54,7 +54,7 @@ pub trait TagTrait {}
 /// # use plating_systems::systems::{WinUI3Definition, CocoaDefinition};
 /// # #[cfg(all(feature = "cocoa", feature = "winui3"))]
 /// # type MyCustomTag = Tag<(WinUI3Definition, CocoaDefinition)>;
-/// use plating_systems::types::AllHaveButton;
+/// use plating_systems::types::ButtonAvailable;
 /// struct SomeType {}
 ///
 /// # #[cfg(all(feature = "cocoa", feature = "winui3"))]
@@ -62,7 +62,7 @@ pub trait TagTrait {}
 /// // This is how the tag macro specifies which types are defined and which aren't.
 /// type Something
 /// where
-///     MyCustomTag: AllHaveButton,
+///     MyCustomTag: ButtonAvailable,
 /// = SomeType;
 /// ```
 /// ## See also

@@ -19,10 +19,6 @@ pub(crate) fn tag_name(name: &Ident) -> Ident {
     Ident::new(&format! {"{}Tag", name}, Span::call_site())
 }
 
-pub(crate) fn all_trait_name(name: &Ident) -> Ident {
-    Ident::new(&format!("AllHave{}", name), Span::call_site())
-}
-
 pub(crate) fn definition_name(name: &Ident) -> Ident {
     Ident::new(&format!("{}Definition", name), Span::call_site())
 }
@@ -118,7 +114,7 @@ pub(crate) mod r#where {
             paren_token: None,
             modifier: syn::TraitBoundModifier::None,
             lifetimes: None,
-            path: super::all_trait_name(&ty.ident).into(),
+            path: super::available_name(&ty.ident).into(),
         }));
         where_clause
             .predicates
