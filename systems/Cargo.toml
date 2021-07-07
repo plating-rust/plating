@@ -32,9 +32,9 @@ enable_serde = ["serde", "plating_core/enable_serde"]
 
 [dependencies]
 serde = { version = "^1.0", features = ["derive", "rc"], optional = true }
-default_widgets = {path = "./default_widgets" }
-plating_systems_macros = {path = "../systems_macros" }
-plating_core = {path = "../core", default = []}
+default_widgets = {path = "./default_widgets", version="0.0.1" }
+plating_systems_macros = {path = "../systems_macros", version="0.0.1" }
+plating_core = {path = "../core", version="0.0.1", default = []}
 tuple_list = { version = "0.1.2" }
 
 [package.metadata.docs.rs]

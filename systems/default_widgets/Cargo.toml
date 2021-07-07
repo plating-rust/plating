@@ -8,10 +8,10 @@ license = "MIT OR Apache-2.0"
 proc-macro = true
 
 [dependencies]
-plating_systems_macros = {path = "../../systems_macros" }
-plating_core = {path = "../../core" }
+plating_systems_macros = {path = "../../systems_macros", version="0.0.1" }
+plating_core = {path = "../../core", version="0.0.1" }
 syn = { version = "1.0", features = ["full", "parsing"] }
 quote = "1.0"
 
 [dev-dependencies]
-plating_systems = {path = "../" }
+plating_systems = {path = "../", version="0.0.1" }
